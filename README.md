@@ -6,6 +6,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
 - [ ] x86 Disassembler (Intel syntax)
   - [ ] 1-byte Opcodes
     - [x] 06 PUSH ES
+    - [x] 07 POP ES
     - [x] 90 NOP
     - [x] c3 RET
     - [x] cc INT3

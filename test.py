@@ -6,6 +6,7 @@ from operator import attrgetter
 if __name__ == '__main__':
     instructions = {
         'PUSH ES':  b'\x06',
+        'POP ES':   b'\x07',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
