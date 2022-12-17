@@ -51,5 +51,7 @@ if __name__ == '__main__':
         print('HLT')
     elif raw[0] == 0xf5:
         print('CMC')
+    elif raw[0] == 0xf8:
+        print('CLC')
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
