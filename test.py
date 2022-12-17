@@ -6,6 +6,7 @@ from operator import attrgetter
 if __name__ == '__main__':
     instructions = {
         'NOP': b'\x90',
+        'RET': b'\xc3',
     }
     for inst in instructions:
         raw = instructions[inst]

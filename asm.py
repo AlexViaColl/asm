@@ -13,5 +13,7 @@ if __name__ == '__main__':
 
     if raw[0] == 0x90:
         print('NOP')
+    elif raw[0] == 0xc3:
+        print('RET')
     else:
         fail('ERROR: Unknown opcode')
