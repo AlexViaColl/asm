@@ -16,6 +16,7 @@ if __name__ == '__main__':
         'DAS':      b'\x2f',
         'AAA':      b'\x37',
         'AAS':      b'\x3f',
+        'PUSHA':    b'\x60',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
