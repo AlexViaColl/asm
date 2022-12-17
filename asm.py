@@ -17,6 +17,8 @@ if __name__ == '__main__':
         print('POP ES')
     elif raw[0] == 0x0e:
         print('PUSH CS')
+    elif raw[0] == 0x16:
+        print('PUSH SS')
     elif raw[0] == 0x90:
         print('NOP')
     elif raw[0] == 0xc3:

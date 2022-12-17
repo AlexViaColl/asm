@@ -8,6 +8,7 @@ if __name__ == '__main__':
         'PUSH ES':  b'\x06',
         'POP ES':   b'\x07',
         'PUSH CS':  b'\x0e',
+        'PUSH SS':  b'\x16',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
