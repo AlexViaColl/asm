@@ -26,6 +26,7 @@ if __name__ == '__main__':
         'HLT':      b'\xf4',
         'CMC':      b'\xf5',
         'CLC':      b'\xf8',
+        'STC':      b'\xf9',
     }
     for inst in instructions:
         raw = instructions[inst]

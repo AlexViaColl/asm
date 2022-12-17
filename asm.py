@@ -53,5 +53,7 @@ if __name__ == '__main__':
         print('CMC')
     elif raw[0] == 0xf8:
         print('CLC')
+    elif raw[0] == 0xf9:
+        print('STC')
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
