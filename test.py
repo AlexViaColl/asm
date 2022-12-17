@@ -21,6 +21,8 @@ if __name__ == '__main__':
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
+        'INTO':     b'\xce',
+        'INT1':     b'\xf1',
         'HLT':      b'\xf4',
     }
     for inst in instructions:
