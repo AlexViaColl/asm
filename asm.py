@@ -61,5 +61,7 @@ if __name__ == '__main__':
         print('STI')
     elif raw[0] == 0xfc:
         print('CLD')
+    elif raw[0] == 0xfd:
+        print('STD')
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')

@@ -30,6 +30,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] fa CLI
     - [x] fb STI
     - [x] fc CLD
+    - [x] fd STD
   - [ ] ...
 - [ ] x86 Assembler
 - [ ] Add x64 support

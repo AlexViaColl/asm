@@ -30,6 +30,7 @@ if __name__ == '__main__':
         'CLI':      b'\xfa',
         'STI':      b'\xfb',
         'CLD':      b'\xfc',
+        'STD':      b'\xfd',
     }
     for inst in instructions:
         raw = instructions[inst]
