@@ -23,6 +23,8 @@ if __name__ == '__main__':
         print('POP SS')
     elif raw[0] == 0x1e:
         print('PUSH DS')
+    elif raw[0] == 0x1f:
+        print('POP DS')
     elif raw[0] == 0x90:
         print('NOP')
     elif raw[0] == 0xc3:

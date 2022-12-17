@@ -11,6 +11,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 16 PUSH SS
     - [x] 17 POP SS
     - [x] 1e PUSH DS
+    - [x] 1f POP DS
     - [x] 90 NOP
     - [x] c3 RET
     - [x] cc INT3
