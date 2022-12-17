@@ -17,6 +17,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 37 AAA
     - [x] 3f AAS
     - [x] 60 PUSHA
+    - [x] 61 POPA
     - [x] 90 NOP
     - [x] c3 RET
     - [x] cc INT3

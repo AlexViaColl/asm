@@ -35,6 +35,8 @@ if __name__ == '__main__':
         print('AAS')
     elif raw[0] == 0x60:
         print('PUSHA')
+    elif raw[0] == 0x61:
+        print('POPA')
     elif raw[0] == 0x90:
         print('NOP')
     elif raw[0] == 0xc3:
