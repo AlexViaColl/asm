@@ -8,6 +8,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 90 NOP
     - [x] c3 RET
     - [x] cc INT3
+    - [x] f4 HLT
   - [ ] ...
 - [ ] x86 Assembler
 - [ ] Add x64 support
