@@ -24,6 +24,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] ce INTO
     - [x] f1 INT1
     - [x] f4 HLT
+    - [x] f5 CMC
   - [ ] ...
 - [ ] x86 Assembler
 - [ ] Add x64 support

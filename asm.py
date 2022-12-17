@@ -49,5 +49,7 @@ if __name__ == '__main__':
         print('INT1')
     elif raw[0] == 0xf4:
         print('HLT')
+    elif raw[0] == 0xf5:
+        print('CMC')
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
