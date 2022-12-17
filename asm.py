@@ -55,5 +55,7 @@ if __name__ == '__main__':
         print('CLC')
     elif raw[0] == 0xf9:
         print('STC')
+    elif raw[0] == 0xfa:
+        print('CLI')
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
