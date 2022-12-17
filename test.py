@@ -10,6 +10,7 @@ if __name__ == '__main__':
         'PUSH CS':  b'\x0e',
         'PUSH SS':  b'\x16',
         'POP SS':   b'\x17',
+        'PUSH DS':  b'\x1e',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
