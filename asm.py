@@ -29,6 +29,8 @@ if __name__ == '__main__':
         print('DAA')
     elif raw[0] == 0x2f:
         print('DAS')
+    elif raw[0] == 0x37:
+        print('AAA')
     elif raw[0] == 0x90:
         print('NOP')
     elif raw[0] == 0xc3:
