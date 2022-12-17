@@ -12,6 +12,7 @@ if __name__ == '__main__':
         'POP SS':   b'\x17',
         'PUSH DS':  b'\x1e',
         'POP DS':   b'\x1f',
+        'DAA':      b'\x27',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
         'INT3':     b'\xcc',

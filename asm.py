@@ -25,6 +25,8 @@ if __name__ == '__main__':
         print('PUSH DS')
     elif raw[0] == 0x1f:
         print('POP DS')
+    elif raw[0] == 0x27:
+        print('DAA')
     elif raw[0] == 0x90:
         print('NOP')
     elif raw[0] == 0xc3:
