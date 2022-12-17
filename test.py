@@ -5,8 +5,9 @@ from operator import attrgetter
 
 if __name__ == '__main__':
     instructions = {
-        'NOP': b'\x90',
-        'RET': b'\xc3',
+        'NOP':  b'\x90',
+        'RET':  b'\xc3',
+        'INT3': b'\xcc',
     }
     for inst in instructions:
         raw = instructions[inst]
