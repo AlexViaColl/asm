@@ -43,6 +43,9 @@ def disassemble(raw):
             return f'INC {REGISTERS[lo]}'
         elif lo <= 0xf:
             return f'DEC {REGISTERS[lo-8]}'
+    elif hi == 5:
+        if lo <= 7:
+            return f'PUSH {REGISTERS[lo]}'
     elif opcode == 0x60:
         return 'PUSHA'
     elif opcode == 0x61:
