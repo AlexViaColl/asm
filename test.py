@@ -20,6 +20,7 @@ if __name__ == '__main__':
         'POPA':     b'\x61',
         'NOP':      b'\x90',
         'RET':      b'\xc3',
+        'LEAVE':    b'\xc9',
         'RETF':     b'\xcb',
         'INT3':     b'\xcc',
         'INTO':     b'\xce',
