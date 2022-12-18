@@ -6,68 +6,71 @@ def fail(*s):
     print(*s, file=sys.stderr)
     exit(1)
 
-if __name__ == '__main__':
-    raw = sys.stdin.buffer.read()
+def disassemble(raw):
     if len(raw) == 0:
         fail('ERROR: input was empty')
 
     if raw[0] == 0x06:
-        print('PUSH ES')
+        return 'PUSH ES'
     elif raw[0] == 0x07:
-        print('POP ES')
+        return 'POP ES'
     elif raw[0] == 0x0e:
-        print('PUSH CS')
+        return 'PUSH CS'
     elif raw[0] == 0x16:
-        print('PUSH SS')
+        return 'PUSH SS'
     elif raw[0] == 0x17:
-        print('POP SS')
+        return 'POP SS'
     elif raw[0] == 0x1e:
-        print('PUSH DS')
+        return 'PUSH DS'
     elif raw[0] == 0x1f:
-        print('POP DS')
+        return 'POP DS'
     elif raw[0] == 0x27:
-        print('DAA')
+        return 'DAA'
     elif raw[0] == 0x2f:
-        print('DAS')
+        return 'DAS'
     elif raw[0] == 0x37:
-        print('AAA')
+        return 'AAA'
     elif raw[0] == 0x3f:
-        print('AAS')
+        return 'AAS'
     elif raw[0] == 0x60:
-        print('PUSHA')
+        return 'PUSHA'
     elif raw[0] == 0x61:
-        print('POPA')
+        return 'POPA'
     elif raw[0] == 0x90:
-        print('NOP')
+        return 'NOP'
     elif raw[0] == 0xc3:
-        print('RET')
+        return 'RET'
     elif raw[0] == 0xc9:
-        print('LEAVE')
+        return 'LEAVE'
     elif raw[0] == 0xcb:
-        print('RETF')
+        return 'RETF'
     elif raw[0] == 0xcc:
-        print('INT3')
+        return 'INT3'
     elif raw[0] == 0xce:
-        print('INTO')
+        return 'INTO'
     elif raw[0] == 0xcf:
-        print('IRET')
+        return 'IRET'
     elif raw[0] == 0xf1:
-        print('INT1')
+        return 'INT1'
     elif raw[0] == 0xf4:
-        print('HLT')
+        return 'HLT'
     elif raw[0] == 0xf5:
-        print('CMC')
+        return 'CMC'
     elif raw[0] == 0xf8:
-        print('CLC')
+        return 'CLC'
     elif raw[0] == 0xf9:
-        print('STC')
+        return 'STC'
     elif raw[0] == 0xfa:
-        print('CLI')
+        return 'CLI'
     elif raw[0] == 0xfb:
-        print('STI')
+        return 'STI'
     elif raw[0] == 0xfc:
-        print('CLD')
+        return 'CLD'
     elif raw[0] == 0xfd:
-        print('STD')
+        return 'STD'
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
+
+if __name__ == '__main__':
+    raw = sys.stdin.buffer.read()
+    print(disassemble(raw))
