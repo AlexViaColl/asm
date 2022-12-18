@@ -22,6 +22,7 @@ if __name__ == '__main__':
         'RET':      b'\xc3',
         'INT3':     b'\xcc',
         'INTO':     b'\xce',
+        'IRET':     b'\xcf',
         'INT1':     b'\xf1',
         'HLT':      b'\xf4',
         'CMC':      b'\xf5',

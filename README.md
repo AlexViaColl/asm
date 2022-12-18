@@ -169,7 +169,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] cc INT3
     - [ ] cd INT Ib
     - [x] ce INTO
-    - [ ] cf IRET/D/Q
+    - [x] cf IRET/D/Q
     - [ ] f0 LOCK (Prefix)
     - [x] f1 INT1
     - [ ] f2 REPNE XACQUIRE (Prefix)
