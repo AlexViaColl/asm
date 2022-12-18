@@ -66,6 +66,8 @@ def disassemble(raw):
             return f'XOR AL, {hex(raw[1])}'
         elif lo == 7:
             return 'AAA'
+        elif lo == 0xc:
+            return f'CMP AL, {hex(raw[1])}'
         elif lo == 0xf:
             return 'AAS'
     elif hi == 4:
