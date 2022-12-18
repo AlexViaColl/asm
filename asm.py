@@ -2,6 +2,8 @@
 
 import sys
 
+REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
+
 def fail(*s):
     print(*s, file=sys.stderr)
     exit(1)
@@ -10,69 +12,76 @@ def disassemble(raw):
     if len(raw) == 0:
         fail('ERROR: input was empty')
 
-    if raw[0] == 0x06:
+    opcode = raw[0]
+    hi = (opcode & 0xF0) >> 4
+    lo = (opcode & 0x0F) >> 0
+
+    if opcode == 0x06:
         return 'PUSH ES'
-    elif raw[0] == 0x07:
+    elif opcode == 0x07:
         return 'POP ES'
-    elif raw[0] == 0x0e:
+    elif opcode == 0x0e:
         return 'PUSH CS'
-    elif raw[0] == 0x16:
+    elif opcode == 0x16:
         return 'PUSH SS'
-    elif raw[0] == 0x17:
+    elif opcode == 0x17:
         return 'POP SS'
-    elif raw[0] == 0x1e:
+    elif opcode == 0x1e:
         return 'PUSH DS'
-    elif raw[0] == 0x1f:
+    elif opcode == 0x1f:
         return 'POP DS'
-    elif raw[0] == 0x27:
+    elif opcode == 0x27:
         return 'DAA'
-    elif raw[0] == 0x2f:
+    elif opcode == 0x2f:
         return 'DAS'
-    elif raw[0] == 0x37:
+    elif opcode == 0x37:
         return 'AAA'
-    elif raw[0] == 0x3f:
+    elif opcode == 0x3f:
         return 'AAS'
-    elif raw[0] == 0x60:
+    elif hi == 4:
+        if lo <= 7:
+            return f'INC {REGISTERS[lo]}'
+    elif opcode == 0x60:
         return 'PUSHA'
-    elif raw[0] == 0x61:
+    elif opcode == 0x61:
         return 'POPA'
-    elif raw[0] == 0x90:
+    elif opcode == 0x90:
         return 'NOP'
-    elif raw[0] == 0x9b:
+    elif opcode == 0x9b:
         return 'FWAIT'
-    elif raw[0] == 0x9e:
+    elif opcode == 0x9e:
         return 'SAHF'
-    elif raw[0] == 0x9f:
+    elif opcode == 0x9f:
         return 'LAHF'
-    elif raw[0] == 0xc3:
+    elif opcode == 0xc3:
         return 'RET'
-    elif raw[0] == 0xc9:
+    elif opcode == 0xc9:
         return 'LEAVE'
-    elif raw[0] == 0xcb:
+    elif opcode == 0xcb:
         return 'RETF'
-    elif raw[0] == 0xcc:
+    elif opcode == 0xcc:
         return 'INT3'
-    elif raw[0] == 0xce:
+    elif opcode == 0xce:
         return 'INTO'
-    elif raw[0] == 0xcf:
+    elif opcode == 0xcf:
         return 'IRET'
-    elif raw[0] == 0xf1:
+    elif opcode == 0xf1:
         return 'INT1'
-    elif raw[0] == 0xf4:
+    elif opcode == 0xf4:
         return 'HLT'
-    elif raw[0] == 0xf5:
+    elif opcode == 0xf5:
         return 'CMC'
-    elif raw[0] == 0xf8:
+    elif opcode == 0xf8:
         return 'CLC'
-    elif raw[0] == 0xf9:
+    elif opcode == 0xf9:
         return 'STC'
-    elif raw[0] == 0xfa:
+    elif opcode == 0xfa:
         return 'CLI'
-    elif raw[0] == 0xfb:
+    elif opcode == 0xfb:
         return 'STI'
-    elif raw[0] == 0xfc:
+    elif opcode == 0xfc:
         return 'CLD'
-    elif raw[0] == 0xfd:
+    elif opcode == 0xfd:
         return 'STD'
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
