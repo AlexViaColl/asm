@@ -107,6 +107,8 @@ def disassemble(raw):
     elif hi == 0xb:
         if lo == 0:
             return f'MOV AL, {hex(raw[1])}'
+        elif lo == 1:
+            return f'MOV CL, {hex(raw[1])}'
     elif hi == 0xc:
         if lo == 3:
             return 'RET'

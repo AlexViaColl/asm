@@ -139,7 +139,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] ae SCAS/B AL, Yb
     - [ ] af SCAS/W/D/Q rAX, Yv
     - [x] b0 MOV AL/R8B, Ib
-    - [ ] b1 MOV CL/R9B, Ib
+    - [x] b1 MOV CL/R9B, Ib
     - [ ] b2 MOV DL/R10B, Ib
     - [ ] b3 MOV BL/R11B, Ib
     - [ ] b4 MOV AH/R12B, Ib
