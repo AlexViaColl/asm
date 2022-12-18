@@ -29,6 +29,8 @@ def disassemble(raw):
             return 'PUSH ES'
         elif lo == 7:
             return 'POP ES'
+        elif lo == 0xc:
+            return f'OR AL, {hex(raw[1])}'
         elif lo == 0xe:
             return 'PUSH CS'
     elif hi == 1:

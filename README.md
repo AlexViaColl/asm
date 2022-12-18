@@ -17,7 +17,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 09 OR Ev, Gv
     - [ ] 0a OR Gb, Eb
     - [ ] 0b OR Gv, Ev
-    - [ ] 0c OR AL, Ib
+    - [x] 0c OR AL, Ib
     - [ ] 0d OR rAX, Iz
     - [x] 0e PUSH CS
     - [ ] 0f 2-byte opcode escape
