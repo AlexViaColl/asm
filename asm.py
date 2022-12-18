@@ -8,6 +8,10 @@ def fail(*s):
     print(*s, file=sys.stderr)
     exit(1)
 
+def sign_extend(value, bits):
+    sign_bit = 1 << (bits - 1)
+    return ((value & (sign_bit - 1)) - (value & sign_bit)) & (2**32-1)
+
 def disassemble(raw):
     if len(raw) == 0:
         fail('ERROR: input was empty')
@@ -48,10 +52,15 @@ def disassemble(raw):
             return f'PUSH {REGISTERS[lo]}'
         elif lo <= 0xf:
             return f'POP {REGISTERS[lo-8]}'
-    elif opcode == 0x60:
-        return 'PUSHA'
-    elif opcode == 0x61:
-        return 'POPA'
+    elif hi == 6:
+        if lo == 0:
+            return 'PUSHA'
+        elif lo == 1:
+            return 'POPA'
+        elif lo == 0xa:
+            ib = raw[1]
+            ib = sign_extend(ib, 8)
+            return f'PUSH {hex(ib)}'
     elif hi == 9:
         if lo == 0:
             return 'NOP'
