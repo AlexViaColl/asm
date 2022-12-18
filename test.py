@@ -5,6 +5,10 @@ from operator import attrgetter
 
 if __name__ == '__main__':
     instructions = {
+        'ADD AL, 0x0': b'\x04\x00',
+        'ADD AL, 0x7f': b'\x04\x7f',
+        'ADD AL, 0x80': b'\x04\x80',
+        'ADD AL, 0xff': b'\x04\xff',
         'PUSH ES':  b'\x06',
         'POP ES':   b'\x07',
         'PUSH CS':  b'\x0e',

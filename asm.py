@@ -20,28 +20,36 @@ def disassemble(raw):
     hi = (opcode & 0xF0) >> 4
     lo = (opcode & 0x0F) >> 0
 
-    if opcode == 0x06:
-        return 'PUSH ES'
-    elif opcode == 0x07:
-        return 'POP ES'
-    elif opcode == 0x0e:
-        return 'PUSH CS'
-    elif opcode == 0x16:
-        return 'PUSH SS'
-    elif opcode == 0x17:
-        return 'POP SS'
-    elif opcode == 0x1e:
-        return 'PUSH DS'
-    elif opcode == 0x1f:
-        return 'POP DS'
-    elif opcode == 0x27:
-        return 'DAA'
-    elif opcode == 0x2f:
-        return 'DAS'
-    elif opcode == 0x37:
-        return 'AAA'
-    elif opcode == 0x3f:
-        return 'AAS'
+    if hi == 0:
+        if lo == 0:
+            pass
+        elif lo == 4:
+            return f'ADD AL, {hex(raw[1])}'
+        elif lo == 6:
+            return 'PUSH ES'
+        elif lo == 7:
+            return 'POP ES'
+        elif lo == 0xe:
+            return 'PUSH CS'
+    elif hi == 1:
+        if lo == 6:
+            return 'PUSH SS'
+        elif lo == 7:
+            return 'POP SS'
+        elif lo == 0xe:
+            return 'PUSH DS'
+        elif lo == 0xf:
+            return 'POP DS'
+    elif hi == 2:
+        if lo == 7:
+            return 'DAA'
+        elif lo == 0xf:
+            return 'DAS'
+    elif hi == 3:
+        if lo == 7:
+            return 'AAA'
+        elif lo == 0xf:
+            return 'AAS'
     elif hi == 4:
         if lo <= 7:
             return f'INC {REGISTERS[lo]}'
