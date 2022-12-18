@@ -49,7 +49,11 @@ def disassemble(raw):
         elif lo == 0xf:
             return 'POP DS'
     elif hi == 2:
-        if lo == 7:
+        if lo == 0:
+            pass
+        elif lo == 4:
+            return f'AND AL, {hex(raw[1])}'
+        elif lo == 7:
             return 'DAA'
         elif lo == 0xf:
             return 'DAS'

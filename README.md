@@ -41,7 +41,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 21 AND Ev, Gv
     - [ ] 22 AND Gb, Eb
     - [ ] 23 AND Gv, Ev
-    - [ ] 24 AND AL, Ib
+    - [x] 24 AND AL, Ib
     - [ ] 25 AND rAX, Iz
     - [ ] 26 SEG=ES (Prefix)
     - [x] 27 DAA
