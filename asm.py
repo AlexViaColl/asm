@@ -60,7 +60,11 @@ def disassemble(raw):
         elif lo == 0xf:
             return 'DAS'
     elif hi == 3:
-        if lo == 7:
+        if lo == 0:
+            pass
+        elif lo == 4:
+            return f'XOR AL, {hex(raw[1])}'
+        elif lo == 7:
             return 'AAA'
         elif lo == 0xf:
             return 'AAS'
