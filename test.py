@@ -19,6 +19,7 @@ if __name__ == '__main__':
         'PUSHA':    b'\x60',
         'POPA':     b'\x61',
         'NOP':      b'\x90',
+        'SAHF':     b'\x9e',
         'RET':      b'\xc3',
         'LEAVE':    b'\xc9',
         'RETF':     b'\xcb',

@@ -120,7 +120,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 9b FWAIT/WAIT
     - [ ] 9c PUSHF/D/Q/Fv
     - [ ] 9d POPF/D/Q/Fv
-    - [ ] 9e SAHF
+    - [x] 9e SAHF
     - [ ] 9f LAHF
     - [ ] a0 MOV AL, Ob
     - [ ] a1 MOV rAX, Ov
@@ -163,7 +163,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] c6 Grp 11 MOV Eb, Ib
     - [ ] c7 Grp 11 MOV Ev, Iz
     - [ ] c8 ENTER Iw, Ib
-    - [ ] c9 LEAVE
+    - [x] c9 LEAVE
     - [ ] ca far RET Iw
     - [x] cb far RET
     - [x] cc INT3
