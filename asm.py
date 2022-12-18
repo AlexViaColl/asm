@@ -115,6 +115,8 @@ def disassemble(raw):
             return f'MOV BL, {hex(raw[1])}'
         elif lo == 4:
             return f'MOV AH, {hex(raw[1])}'
+        elif lo == 5:
+            return f'MOV CH, {hex(raw[1])}'
     elif hi == 0xc:
         if lo == 3:
             return 'RET'
