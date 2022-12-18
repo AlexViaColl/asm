@@ -66,6 +66,8 @@ if __name__ == '__main__':
         'LEAVE':    b'\xc9',
         'RETF':     b'\xcb',
         'INT3':     b'\xcc',
+        'INT 0x0':  b'\xcd\x00',
+        'INT 0xff': b'\xcd\xff',
         'INTO':     b'\xce',
         'IRET':     b'\xcf',
         'INT1':     b'\xf1',

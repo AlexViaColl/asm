@@ -63,18 +63,21 @@ def disassemble(raw):
             return 'SAHF'
         elif lo == 0xf:
             return 'LAHF'
-    elif opcode == 0xc3:
-        return 'RET'
-    elif opcode == 0xc9:
-        return 'LEAVE'
-    elif opcode == 0xcb:
-        return 'RETF'
-    elif opcode == 0xcc:
-        return 'INT3'
-    elif opcode == 0xce:
-        return 'INTO'
-    elif opcode == 0xcf:
-        return 'IRET'
+    elif hi == 0xc:
+        if lo == 3:
+            return 'RET'
+        elif lo == 9:
+            return 'LEAVE'
+        elif lo == 0xb:
+            return 'RETF'
+        elif lo == 0xc:
+            return 'INT3'
+        elif lo == 0xd:
+            return f'INT {hex(raw[1])}'
+        elif lo == 0xe:
+            return 'INTO'
+        elif lo == 0xf:
+            return 'IRET'
     elif opcode == 0xf1:
         return 'INT1'
     elif opcode == 0xf4:

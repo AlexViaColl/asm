@@ -167,7 +167,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] ca far RET Iw
     - [x] cb far RET
     - [x] cc INT3
-    - [ ] cd INT Ib
+    - [x] cd INT Ib
     - [x] ce INTO
     - [x] cf IRET/D/Q
     - [ ] f0 LOCK (Prefix)
