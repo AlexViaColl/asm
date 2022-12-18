@@ -5,32 +5,187 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
 ## Roadmap
 - [ ] x86 Disassembler (Intel syntax)
   - [ ] 1-byte Opcodes
+    - [ ] 00 ADD Eb, Gb
+    - [ ] 01 ADD Ev, Gv
+    - [ ] 02 ADD Gb, Eb
+    - [ ] 03 ADD Gv, Ev
+    - [ ] 04 ADD AL, Ib
+    - [ ] 05 ADD rAX, Iz
     - [x] 06 PUSH ES
     - [x] 07 POP ES
+    - [ ] 08 OR Eb, Gb
+    - [ ] 09 OR Ev, Gv
+    - [ ] 0a OR Gb, Eb
+    - [ ] 0b OR Gv, Ev
+    - [ ] 0c OR AL, Ib
+    - [ ] 0d OR rAX, Iz
     - [x] 0e PUSH CS
+    - [ ] 0f 2-byte opcode escape
+    - [ ] 10 ADC Eb, Gb
+    - [ ] 11 ADC Ev, Gv
+    - [ ] 12 ADC Gb, Eb
+    - [ ] 13 ADC Gv, Ev
+    - [ ] 14 ADC AL, Ib
+    - [ ] 15 ADC rAX, Iz
     - [x] 16 PUSH SS
     - [x] 17 POP SS
+    - [ ] 18 SBB Eb, Gb
+    - [ ] 19 SBB Ev, Gv
+    - [ ] 1a SBB Gb, Eb
+    - [ ] 1b SBB Gv, Ev
+    - [ ] 1c SBB AL, Ib
+    - [ ] 1d SBB rAX, Iz
     - [x] 1e PUSH DS
     - [x] 1f POP DS
+    - [ ] 20 AND Eb, Gb
+    - [ ] 21 AND Ev, Gv
+    - [ ] 22 AND Gb, Eb
+    - [ ] 23 AND Gv, Ev
+    - [ ] 24 AND AL, Ib
+    - [ ] 25 AND rAX, Iz
+    - [ ] 26 SEG=ES (Prefix)
     - [x] 27 DAA
+    - [ ] 28 SUB Eb, Gb
+    - [ ] 29 SUB Ev, Gv
+    - [ ] 2a SUB Gb, Eb
+    - [ ] 2b SUB Gv, Ev
+    - [ ] 2c SUB AL, Ib
+    - [ ] 2d SUB rAX, Iz
+    - [ ] 2e SEG=CS (Prefix)
     - [x] 2f DAS
+    - [ ] 30 XOR Eb, Gb
+    - [ ] 31 XOR Ev, Gv
+    - [ ] 32 XOR Gb, Eb
+    - [ ] 33 XOR Gv, Ev
+    - [ ] 34 XOR AL, Ib
+    - [ ] 35 XOR rAX, Iz
+    - [ ] 36 SEG=SS (Prefix)
     - [x] 37 AAA
+    - [ ] 38 CMP Eb, Gb
+    - [ ] 39 CMP Ev, Gv
+    - [ ] 3a CMP Gb, Eb
+    - [ ] 3b CMP Gv, Ev
+    - [ ] 3c CMP AL, Ib
+    - [ ] 3d CMP rAX, Iz
+    - [ ] 3e SEG=DS (Prefix)
     - [x] 3f AAS
+    - [ ] 40-47 INC general register
+    - [ ] 48-4f DEC general register
+    - [ ] 50-57 PUSH general register
+    - [ ] 58-5f POP general register
     - [x] 60 PUSHA
     - [x] 61 POPA
-    - [x] 90 NOP
+    - [ ] 62 BOUND Gv, Ma
+    - [ ] 63 ARPL Ew, Gw
+    - [ ] 64 SEG=FS (Prefix)
+    - [ ] 65 SEG=GS (Prefix)
+    - [ ] 66 Operand Size (Prefix)
+    - [ ] 67 Address Size (Prefix)
+    - [ ] 68 PUSH Iz
+    - [ ] 69 IMUL Gv, Ev, Iz
+    - [ ] 6a PUSH Ib
+    - [ ] 6b IMUL Gv, Ev, Ib
+    - [ ] 6c INS/INSB Yb, DX
+    - [ ] 6d INS/INSW/INSD Yz, DX
+    - [ ] 6e OUTS/OUTSB DX, Xb
+    - [ ] 6f OUTS/OUTSW/OUTSD DX, Xz
+    - [ ] 70-7f JCC
+    - [ ] 80 Immediate Grp 1 Eb, Ib
+    - [ ] 81 Immediate Grp 1 Ev, Iz
+    - [ ] 82 Immediate Grp 1 Eb, Ib
+    - [ ] 83 Immediate Grp 1 Ev, Ib
+    - [ ] 84 TEST Eb, Gb
+    - [ ] 85 TEST Eb, Gb
+    - [ ] 86 XCHG Eb, Gb
+    - [ ] 87 XCHG Ev, Gv
+    - [ ] 88 MOV Eb, Gb
+    - [ ] 89 MOV Ev, Gv
+    - [ ] 8a MOV Gb, Eb
+    - [ ] 8b MOV Gv, Ev
+    - [ ] 8c MOV Ev, Sw
+    - [ ] 8d LEA Gv, M
+    - [ ] 8e MOV Sw, Ew
+    - [ ] 8f Grp 1A POP Ev
+    - [x] 90 NOP / XCHG r8, rAX
+    - [ ] 91 XCHG rCX/r9
+    - [ ] 92 XCHG rDX/r10
+    - [ ] 93 XCHG rBX/r11
+    - [ ] 94 XCHG rSP/r12
+    - [ ] 95 XCHG rBP/r13
+    - [ ] 96 XCHG rSI/r14
+    - [ ] 97 XCHG rDI/r15
+    - [ ] 98 CBW/CWDE/CDQE
+    - [ ] 99 CWD/CDQ/CQO
+    - [ ] 9a far CALL Ap
+    - [ ] 9b FWAIT/WAIT
+    - [ ] 9c PUSHF/D/Q/Fv
+    - [ ] 9d POPF/D/Q/Fv
+    - [ ] 9e SAHF
+    - [ ] 9f LAHF
+    - [ ] a0 MOV AL, Ob
+    - [ ] a1 MOV rAX, Ov
+    - [ ] a2 MOV Ob, AL
+    - [ ] a3 MOV Ov, rAX
+    - [ ] a4 MOVS/B Yb, Xb
+    - [ ] a5 MOVS/W/D/Q Yv, Xv
+    - [ ] a6 CMPS/B Xb, Yb
+    - [ ] a7 CMPS/W/D Xv, Yv
+    - [ ] a8 TEST AL, Ib
+    - [ ] a9 TEST rAX, Iz
+    - [ ] aa STOS/B Yb, AL
+    - [ ] ab STOS/W/D/Q Yv, rAX
+    - [ ] ac LODS/B AL, Xb
+    - [ ] ad LODS/W/D/Q rAX, Xv
+    - [ ] ae SCAS/B AL, Yb
+    - [ ] af SCAS/W/D/Q rAX, Yv
+    - [ ] b0 MOV AL/R8B, Ib
+    - [ ] b1 MOV CL/R9B, Ib
+    - [ ] b2 MOV DL/R10B, Ib
+    - [ ] b3 MOV BL/R11B, Ib
+    - [ ] b4 MOV AH/R12B, Ib
+    - [ ] b5 MOV CH/R13B, Ib
+    - [ ] b6 MOV DH/R14B, Ib
+    - [ ] b7 MOV BH/R15B, Ib
+    - [ ] b8 MOV rAX/r8, Iv
+    - [ ] b9 MOV rCX/r9, Iv
+    - [ ] ba MOV rDX/r10, Iv
+    - [ ] bb MOV rBX/r11, Iv
+    - [ ] bc MOV rSP/r12, Iv
+    - [ ] bd MOV rBP/r13, Iv
+    - [ ] be MOV rSI/r14, Iv
+    - [ ] bf MOV rDI/r15, Iv
+    - [ ] c0 Shift Grp 2 Eb, Ib
+    - [ ] c1 Shift Grp 2 Ev, Iv
+    - [ ] c2 near RET Iw
     - [x] c3 RET
+    - [ ] c4 LES Gz, Mp VEX + 2 byte
+    - [ ] c5 LDS Gz, Mp VEX + 1 byte
+    - [ ] c6 Grp 11 MOV Eb, Ib
+    - [ ] c7 Grp 11 MOV Ev, Iz
+    - [ ] c8 ENTER Iw, Ib
+    - [ ] c9 LEAVE
+    - [ ] ca far RET Iw
+    - [ ] cb far RET
     - [x] cc INT3
+    - [ ] cd INT Ib
     - [x] ce INTO
+    - [ ] cf IRET/D/Q
+    - [ ] f0 LOCK (Prefix)
     - [x] f1 INT1
+    - [ ] f2 REPNE XACQUIRE (Prefix)
+    - [ ] f3 REP/REPE XRELEASE (Prefix)
     - [x] f4 HLT
     - [x] f5 CMC
+    - [ ] f6 Unary Grp 3 Eb
+    - [ ] f7 Unary Grp 3 Ev
     - [x] f8 CLC
     - [x] f9 STC
     - [x] fa CLI
     - [x] fb STI
     - [x] fc CLD
     - [x] fd STD
+    - [ ] fe INC/DEC Grp 4
+    - [ ] ff INC/DEC Grp 5
   - [ ] ...
 - [ ] x86 Assembler
 - [ ] Add x64 support
