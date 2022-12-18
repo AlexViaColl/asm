@@ -49,7 +49,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 29 SUB Ev, Gv
     - [ ] 2a SUB Gb, Eb
     - [ ] 2b SUB Gv, Ev
-    - [ ] 2c SUB AL, Ib
+    - [x] 2c SUB AL, Ib
     - [ ] 2d SUB rAX, Iz
     - [ ] 2e SEG=CS (Prefix)
     - [x] 2f DAS

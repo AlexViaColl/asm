@@ -55,6 +55,8 @@ def disassemble(raw):
             return f'AND AL, {hex(raw[1])}'
         elif lo == 7:
             return 'DAA'
+        elif lo == 0xc:
+            return f'SUB AL, {hex(raw[1])}'
         elif lo == 0xf:
             return 'DAS'
     elif hi == 3:
