@@ -121,7 +121,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 9c PUSHF/D/Q/Fv
     - [ ] 9d POPF/D/Q/Fv
     - [x] 9e SAHF
-    - [ ] 9f LAHF
+    - [x] 9f LAHF
     - [ ] a0 MOV AL, Ob
     - [ ] a1 MOV rAX, Ov
     - [ ] a2 MOV Ob, AL

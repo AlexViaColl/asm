@@ -40,6 +40,8 @@ def disassemble(raw):
         return 'NOP'
     elif raw[0] == 0x9e:
         return 'SAHF'
+    elif raw[0] == 0x9f:
+        return 'LAHF'
     elif raw[0] == 0xc3:
         return 'RET'
     elif raw[0] == 0xc9:
