@@ -117,7 +117,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 98 CBW/CWDE/CDQE
     - [ ] 99 CWD/CDQ/CQO
     - [ ] 9a far CALL Ap
-    - [ ] 9b FWAIT/WAIT
+    - [x] 9b FWAIT/WAIT
     - [ ] 9c PUSHF/D/Q/Fv
     - [ ] 9d POPF/D/Q/Fv
     - [x] 9e SAHF
