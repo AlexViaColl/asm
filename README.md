@@ -130,7 +130,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] a5 MOVS/W/D/Q Yv, Xv
     - [ ] a6 CMPS/B Xb, Yb
     - [ ] a7 CMPS/W/D Xv, Yv
-    - [ ] a8 TEST AL, Ib
+    - [x] a8 TEST AL, Ib
     - [ ] a9 TEST rAX, Iz
     - [ ] aa STOS/B Yb, AL
     - [ ] ab STOS/W/D/Q Yv, rAX

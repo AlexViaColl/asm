@@ -72,6 +72,10 @@ def disassemble(raw):
             return 'SAHF'
         elif lo == 0xf:
             return 'LAHF'
+    elif hi == 0xa:
+        if lo == 8:
+            ib = raw[1]
+            return f'TEST AL, {hex(ib)}'
     elif hi == 0xc:
         if lo == 3:
             return 'RET'
