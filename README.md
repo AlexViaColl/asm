@@ -165,7 +165,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] c8 ENTER Iw, Ib
     - [ ] c9 LEAVE
     - [ ] ca far RET Iw
-    - [ ] cb far RET
+    - [x] cb far RET
     - [x] cc INT3
     - [ ] cd INT Ib
     - [x] ce INTO
