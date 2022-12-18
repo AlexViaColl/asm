@@ -70,7 +70,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 3e SEG=DS (Prefix)
     - [x] 3f AAS
     - [x] 40-47 INC general register
-    - [ ] 48-4f DEC general register
+    - [x] 48-4f DEC general register
     - [ ] 50-57 PUSH general register
     - [ ] 58-5f POP general register
     - [x] 60 PUSHA
