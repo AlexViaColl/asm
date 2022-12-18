@@ -42,6 +42,8 @@ def disassemble(raw):
             return 'PUSH SS'
         elif lo == 7:
             return 'POP SS'
+        elif lo == 0xc:
+            return f'SBB AL, {hex(raw[1])}'
         elif lo == 0xe:
             return 'PUSH DS'
         elif lo == 0xf:

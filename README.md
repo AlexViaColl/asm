@@ -33,7 +33,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 19 SBB Ev, Gv
     - [ ] 1a SBB Gb, Eb
     - [ ] 1b SBB Gv, Ev
-    - [ ] 1c SBB AL, Ib
+    - [x] 1c SBB AL, Ib
     - [ ] 1d SBB rAX, Iz
     - [x] 1e PUSH DS
     - [x] 1f POP DS
