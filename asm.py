@@ -34,7 +34,11 @@ def disassemble(raw):
         elif lo == 0xe:
             return 'PUSH CS'
     elif hi == 1:
-        if lo == 6:
+        if lo == 0:
+            pass
+        elif lo == 4:
+            return f'ADC AL, {hex(raw[1])}'
+        elif lo == 6:
             return 'PUSH SS'
         elif lo == 7:
             return 'POP SS'

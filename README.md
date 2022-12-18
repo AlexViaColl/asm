@@ -25,7 +25,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 11 ADC Ev, Gv
     - [ ] 12 ADC Gb, Eb
     - [ ] 13 ADC Gv, Ev
-    - [ ] 14 ADC AL, Ib
+    - [x] 14 ADC AL, Ib
     - [ ] 15 ADC rAX, Iz
     - [x] 16 PUSH SS
     - [x] 17 POP SS
