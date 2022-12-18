@@ -72,7 +72,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 40-47 INC general register
     - [x] 48-4f DEC general register
     - [x] 50-57 PUSH general register
-    - [ ] 58-5f POP general register
+    - [x] 58-5f POP general register
     - [x] 60 PUSHA
     - [x] 61 POPA
     - [ ] 62 BOUND Gv, Ma
