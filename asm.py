@@ -52,14 +52,17 @@ def disassemble(raw):
         return 'PUSHA'
     elif opcode == 0x61:
         return 'POPA'
-    elif opcode == 0x90:
-        return 'NOP'
-    elif opcode == 0x9b:
-        return 'FWAIT'
-    elif opcode == 0x9e:
-        return 'SAHF'
-    elif opcode == 0x9f:
-        return 'LAHF'
+    elif hi == 9:
+        if lo == 0:
+            return 'NOP'
+        elif lo <= 7:
+            return f'XCHG {REGISTERS[lo]}, eax'
+        elif lo == 0xb:
+            return 'FWAIT'
+        elif lo == 0xe:
+            return 'SAHF'
+        elif lo == 0xf:
+            return 'LAHF'
     elif opcode == 0xc3:
         return 'RET'
     elif opcode == 0xc9:

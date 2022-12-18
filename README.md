@@ -107,13 +107,13 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 8e MOV Sw, Ew
     - [ ] 8f Grp 1A POP Ev
     - [x] 90 NOP / XCHG r8, rAX
-    - [ ] 91 XCHG rCX/r9
-    - [ ] 92 XCHG rDX/r10
-    - [ ] 93 XCHG rBX/r11
-    - [ ] 94 XCHG rSP/r12
-    - [ ] 95 XCHG rBP/r13
-    - [ ] 96 XCHG rSI/r14
-    - [ ] 97 XCHG rDI/r15
+    - [x] 91 XCHG rCX/r9
+    - [x] 92 XCHG rDX/r10
+    - [x] 93 XCHG rBX/r11
+    - [x] 94 XCHG rSP/r12
+    - [x] 95 XCHG rBP/r13
+    - [x] 96 XCHG rSI/r14
+    - [x] 97 XCHG rDI/r15
     - [ ] 98 CBW/CWDE/CDQE
     - [ ] 99 CWD/CDQ/CQO
     - [ ] 9a far CALL Ap
