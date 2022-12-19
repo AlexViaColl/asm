@@ -10,7 +10,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 02 ADD Gb, Eb
     - [ ] 03 ADD Gv, Ev
     - [x] 04 ADD AL, Ib
-    - [ ] 05 ADD rAX, Iz
+    - [x] 05 ADD rAX, Iz
     - [x] 06 PUSH ES
     - [x] 07 POP ES
     - [ ] 08 OR Eb, Gb

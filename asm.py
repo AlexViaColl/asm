@@ -26,6 +26,9 @@ def disassemble(raw):
             pass
         elif lo == 4:
             return f'ADD al, {hex(raw[1])}'
+        elif lo == 5:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'ADD eax, {hex(iz)}'
         elif lo == 6:
             return 'PUSH es'
         elif lo == 7:
