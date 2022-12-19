@@ -39,6 +39,9 @@ def disassemble(raw):
             pass
         elif lo == 4:
             return f'ADC al, {hex(raw[1])}'
+        elif lo == 5:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'ADC eax, {hex(iz)}'
         elif lo == 6:
             return 'PUSH ss'
         elif lo == 7:
