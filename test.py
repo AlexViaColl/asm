@@ -290,6 +290,7 @@ if __name__ == '__main__':
         'PUSH 0xffffffff':      b'\x6a\xff',
         'TEST al, al':          b'\x84\xc0',
         'TEST eax, eax':        b'\x85\xc0',
+        'XCHG al, al':          b'\x86\xc0',
         'NOP':                  b'\x90',
         'XCHG ecx, eax':        b'\x91',
         'XCHG edx, eax':        b'\x92',
