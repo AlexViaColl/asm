@@ -9,9 +9,88 @@ def fail(*s):
     print(*s, file=sys.stderr)
     exit(1)
 
-def sign_extend(value, bits):
+def sign_extend(value, bits, unsigned=True):
     sign_bit = 1 << (bits - 1)
-    return ((value & (sign_bit - 1)) - (value & sign_bit)) & (2**32-1)
+    if unsigned:
+        return ((value & (sign_bit - 1)) - (value & sign_bit)) & (2**32-1)
+    else:
+        return (value & (sign_bit - 1)) - (value & sign_bit)
+
+def modrm(x):
+    mod     = (x & 0b11000000) >> 6
+    reg_op  = (x & 0b00111000) >> 3
+    rm      = (x & 0b00000111) >> 0
+    return (mod, reg_op, rm)
+
+def sib(x):
+    scale = (x & 0b11000000) >> 6
+    index = (x & 0b00111000) >> 3
+    base  = (x & 0b00000111) >> 0
+    return (scale, index, base)
+
+def sib_str(scale, index, base):
+    return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
+
+def disassemble_eb_gb(raw, op):
+    mod, reg_op, rm = modrm(raw[1])
+    #print(f'mod={mod}, reg_op={reg_op}, rm={rm}')
+    if mod == 0b00:
+        if rm <= 0b011 or rm == 0b110 or rm == 0b111:
+            dst = f'BYTE PTR [{REGISTERS[rm]}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            dst = f'BYTE PTR [{sib_str(scale, idx, base)}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+        elif rm == 0b101:
+            disp32 = int.from_bytes(raw[2:6], 'little')
+            dst = f'BYTE PTR ds:{hex(disp32)}'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+    elif mod == 0b01:
+        if rm <= 0b011 or rm >= 0b101:
+            disp = hex(sign_extend(raw[2], 8, unsigned=False))
+            if disp.startswith('0x'):
+                disp = f'+{disp}'
+            dst = f'BYTE PTR [{REGISTERS[rm]}{disp}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            disp = hex(sign_extend(raw[3], 8, unsigned=False))
+            if disp.startswith('0x'):
+                disp = f'+{disp}'
+            dst = f'BYTE PTR [{sib_str(scale, idx, base)}{disp}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+    elif mod == 0b10:
+        if rm <= 0b011 or rm >= 0b101:
+            disp32 = hex(sign_extend(int.from_bytes(raw[2:6], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp32}'
+            dst = f'BYTE PTR [{REGISTERS[rm]}{disp32}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            disp32 = hex(sign_extend(int.from_bytes(raw[3:7], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp32}'
+            dst = f'BYTE PTR [{sib_str(scale, idx, base)}{disp32}]'
+            src = f'{REGISTERS8[reg_op]}'
+            return f'{op} {dst}, {src}'
+    elif mod == 0b11:
+        dst = f'{REGISTERS8[rm]}'
+        src = f'{REGISTERS8[reg_op]}'
+        return f'{op} {dst}, {src}'
 
 def disassemble(raw):
     if len(raw) == 0:
@@ -23,7 +102,7 @@ def disassemble(raw):
 
     if hi == 0:
         if lo == 0:
-            pass
+            return disassemble_eb_gb(raw, 'ADD')
         elif lo == 4:
             return f'ADD al, {hex(raw[1])}'
         elif lo == 5:
