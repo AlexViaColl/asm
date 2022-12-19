@@ -58,7 +58,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 32 XOR Gb, Eb
     - [ ] 33 XOR Gv, Ev
     - [x] 34 XOR AL, Ib
-    - [ ] 35 XOR rAX, Iz
+    - [x] 35 XOR rAX, Iz
     - [ ] 36 SEG=SS (Prefix)
     - [x] 37 AAA
     - [ ] 38 CMP Eb, Gb

@@ -65,6 +65,9 @@ def disassemble(raw):
             pass
         elif lo == 4:
             return f'XOR al, {hex(raw[1])}'
+        elif lo == 5:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'XOR eax, {hex(iz)}'
         elif lo == 7:
             return 'AAA'
         elif lo == 0xc:
