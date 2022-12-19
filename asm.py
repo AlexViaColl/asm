@@ -32,6 +32,9 @@ def disassemble(raw):
             return 'POP es'
         elif lo == 0xc:
             return f'OR al, {hex(raw[1])}'
+        elif lo == 0xd:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'OR eax, {hex(iz)}'
         elif lo == 0xe:
             return 'PUSH cs'
     elif hi == 1:
