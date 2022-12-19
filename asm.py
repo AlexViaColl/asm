@@ -54,6 +54,9 @@ def disassemble(raw):
             pass
         elif lo == 4:
             return f'AND al, {hex(raw[1])}'
+        elif lo == 5:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'AND eax, {hex(iz)}'
         elif lo == 7:
             return 'DAA'
         elif lo == 0xc:
