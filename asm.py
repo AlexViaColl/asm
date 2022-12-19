@@ -3,6 +3,7 @@
 import sys
 
 REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
+REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
 
 def fail(*s):
     print(*s, file=sys.stderr)
@@ -24,50 +25,50 @@ def disassemble(raw):
         if lo == 0:
             pass
         elif lo == 4:
-            return f'ADD AL, {hex(raw[1])}'
+            return f'ADD al, {hex(raw[1])}'
         elif lo == 6:
-            return 'PUSH ES'
+            return 'PUSH es'
         elif lo == 7:
-            return 'POP ES'
+            return 'POP es'
         elif lo == 0xc:
-            return f'OR AL, {hex(raw[1])}'
+            return f'OR al, {hex(raw[1])}'
         elif lo == 0xe:
-            return 'PUSH CS'
+            return 'PUSH cs'
     elif hi == 1:
         if lo == 0:
             pass
         elif lo == 4:
-            return f'ADC AL, {hex(raw[1])}'
+            return f'ADC al, {hex(raw[1])}'
         elif lo == 6:
-            return 'PUSH SS'
+            return 'PUSH ss'
         elif lo == 7:
-            return 'POP SS'
+            return 'POP ss'
         elif lo == 0xc:
-            return f'SBB AL, {hex(raw[1])}'
+            return f'SBB al, {hex(raw[1])}'
         elif lo == 0xe:
-            return 'PUSH DS'
+            return 'PUSH ds'
         elif lo == 0xf:
-            return 'POP DS'
+            return 'POP ds'
     elif hi == 2:
         if lo == 0:
             pass
         elif lo == 4:
-            return f'AND AL, {hex(raw[1])}'
+            return f'AND al, {hex(raw[1])}'
         elif lo == 7:
             return 'DAA'
         elif lo == 0xc:
-            return f'SUB AL, {hex(raw[1])}'
+            return f'SUB al, {hex(raw[1])}'
         elif lo == 0xf:
             return 'DAS'
     elif hi == 3:
         if lo == 0:
             pass
         elif lo == 4:
-            return f'XOR AL, {hex(raw[1])}'
+            return f'XOR al, {hex(raw[1])}'
         elif lo == 7:
             return 'AAA'
         elif lo == 0xc:
-            return f'CMP AL, {hex(raw[1])}'
+            return f'CMP al, {hex(raw[1])}'
         elif lo == 0xf:
             return 'AAS'
     elif hi == 4:
@@ -103,24 +104,10 @@ def disassemble(raw):
     elif hi == 0xa:
         if lo == 8:
             ib = raw[1]
-            return f'TEST AL, {hex(ib)}'
+            return f'TEST al, {hex(ib)}'
     elif hi == 0xb:
-        if lo == 0:
-            return f'MOV AL, {hex(raw[1])}'
-        elif lo == 1:
-            return f'MOV CL, {hex(raw[1])}'
-        elif lo == 2:
-            return f'MOV DL, {hex(raw[1])}'
-        elif lo == 3:
-            return f'MOV BL, {hex(raw[1])}'
-        elif lo == 4:
-            return f'MOV AH, {hex(raw[1])}'
-        elif lo == 5:
-            return f'MOV CH, {hex(raw[1])}'
-        elif lo == 6:
-            return f'MOV DH, {hex(raw[1])}'
-        elif lo == 7:
-            return f'MOV BH, {hex(raw[1])}'
+        if lo <= 7:
+            return f'MOV {REGISTERS8[lo]}, {hex(raw[1])}'
     elif hi == 0xc:
         if lo == 3:
             return 'RET'
