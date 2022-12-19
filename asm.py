@@ -237,6 +237,8 @@ def disassemble(raw):
             return disassemble_ev_gv(raw, 'TEST') # TODO: Test
         elif lo == 6:
             return disassemble_eb_gb(raw, 'XCHG') # TODO: Test
+        elif lo == 7:
+            return disassemble_ev_gv(raw, 'XCHG') # TODO: Test
     elif hi == 9:
         if lo == 0:
             return 'NOP'
