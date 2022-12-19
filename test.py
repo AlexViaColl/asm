@@ -250,6 +250,8 @@ if __name__ == '__main__':
         'AAA':                  b'\x37',
         'CMP al, al':           b'\x38\xc0',
         'CMP eax, eax':         b'\x39\xc0',
+        'CMP al, al':           b'\x3a\xc0',
+        'CMP eax, eax':         b'\x3b\xc0',
         'CMP al, 0x0':          b'\x3c\x00',
         'CMP al, 0x7f':         b'\x3c\x7f',
         'CMP al, 0x80':         b'\x3c\x80',
