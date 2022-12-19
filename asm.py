@@ -120,6 +120,8 @@ def disassemble(raw):
             return 'PUSH es'
         elif lo == 7:
             return 'POP es'
+        if lo == 8:
+            return disassemble_eb_gb(raw, 'OR')
         elif lo == 0xc:
             return f'OR al, {hex(raw[1])}'
         elif lo == 0xd:
