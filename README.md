@@ -156,7 +156,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] bf MOV rDI/r15, Iv
     - [ ] c0 Shift Grp 2 Eb, Ib
     - [ ] c1 Shift Grp 2 Ev, Iv
-    - [ ] c2 near RET Iw
+    - [x] c2 near RET Iw
     - [x] c3 RET
     - [ ] c4 LES Gz, Mp VEX + 2 byte
     - [ ] c5 LDS Gz, Mp VEX + 1 byte
