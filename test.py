@@ -183,6 +183,8 @@ if __name__ == '__main__':
         'PUSH cs':              b'\x0e',
         'ADC al, al':           b'\x10\xc0',
         'ADC eax, eax':         b'\x11\xc0',
+        'ADC al, al':           b'\x12\xc0',
+        'ADC eax, eax':         b'\x13\xc0',
         'ADC al, 0x0':          b'\x14\x00',
         'ADC al, 0x7f':         b'\x14\x7f',
         'ADC al, 0x80':         b'\x14\x80',
