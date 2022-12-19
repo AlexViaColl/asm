@@ -116,6 +116,9 @@ def disassemble(raw):
             return 'RET'
         elif lo == 9:
             return 'LEAVE'
+        elif lo == 0xa:
+            iw = int.from_bytes(raw[1:3], 'little')
+            return f'RETF {hex(iw)}'
         elif lo == 0xb:
             return 'RETF'
         elif lo == 0xc:
