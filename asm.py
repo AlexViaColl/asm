@@ -58,6 +58,9 @@ def disassemble(raw):
             return 'DAA'
         elif lo == 0xc:
             return f'SUB al, {hex(raw[1])}'
+        elif lo == 0xd:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'SUB eax, {hex(iz)}'
         elif lo == 0xf:
             return 'DAS'
     elif hi == 3:
