@@ -4,9 +4,9 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
 
 ## Roadmap
 - [ ] x86 Disassembler (Intel syntax)
-  - [ ] 1-byte Opcodes 88/181 (48.62%)
+  - [ ] 1-byte Opcodes 89/181 (49.17%)
     - [x] 00 ADD Eb, Gb
-    - [ ] 01 ADD Ev, Gv
+    - [x] 01 ADD Ev, Gv
     - [ ] 02 ADD Gb, Eb
     - [ ] 03 ADD Gv, Ev
     - [x] 04 ADD AL, Ib
@@ -203,3 +203,10 @@ NOP
 ## References
 - [Intel Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
 - [Defuse (Online x86/x64 Assembler and Disassembler)](https://defuse.ca/online-x86-assembler.htm)
+- [GNU Assembler](https://sourceware.org/binutils/docs-2.39/as.html)
+- [Capstone](http://www.capstone-engine.org/)
+- [Keystone](https://www.keystone-engine.org/)
+- [Netwide Assembler (NASM)](https://www.nasm.us/)
+- [Flat Assembler (FASM)](https://flatassembler.net/)
+- [Microsoft Macro Assembler (MASM)](https://learn.microsoft.com/en-us/cpp/assembler/masm/microsoft-macro-assembler-reference)
+- [x64dbg](https://x64dbg.com/)

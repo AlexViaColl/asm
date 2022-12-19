@@ -154,6 +154,8 @@ if __name__ == '__main__':
         'ADD cl, al':                       b'\x00\xc1',
         'ADD bh, bh':                       b'\x00\xff',
 
+        'ADD eax, eax':                     b'\x01\xc0',
+
         'ADD al, 0x0':          b'\x04\x00',
         'ADD al, 0x7f':         b'\x04\x7f',
         'ADD al, 0x80':         b'\x04\x80',
