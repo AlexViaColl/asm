@@ -183,7 +183,7 @@ def disassemble(raw):
             return 'DAS'
     elif hi == 3:
         if lo == 0:
-            pass
+            return disassemble_eb_gb(raw, 'XOR') # TODO: Test
         elif lo == 4:
             return f'XOR al, {hex(raw[1])}'
         elif lo == 5:
