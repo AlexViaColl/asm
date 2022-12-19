@@ -224,6 +224,7 @@ if __name__ == '__main__':
         'SUB eax, 0xffffffff':  b'\x2d\xff\xff\xff\xff',
         'DAS':                  b'\x2f',
         'XOR al, al':           b'\x30\xc0',
+        'XOR eax, eax':         b'\x31\xc0',
         'XOR al, 0x0':          b'\x34\x00',
         'XOR al, 0x7f':         b'\x34\x7f',
         'XOR al, 0x80':         b'\x34\x80',
