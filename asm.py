@@ -297,6 +297,10 @@ def disassemble(raw):
             return disassemble_eb_gb(raw, 'MOV') # TODO: Test
         elif lo == 9:
             return disassemble_ev_gv(raw, 'MOV') # TODO: Test
+        elif lo == 0xa:
+            return disassemble_gb_eb(raw, 'MOV') # TODO: Test
+        elif lo == 0xb:
+            return disassemble_gv_ev(raw, 'MOV') # TODO: Test
     elif hi == 9:
         if lo == 0:
             return 'NOP'

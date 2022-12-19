@@ -310,6 +310,8 @@ if __name__ == '__main__':
         'XCHG eax, eax':        b'\x87\xc0',
         'MOV al, al':           b'\x88\xc0',
         'MOV eax, eax':         b'\x89\xc0',
+        'MOV al, al':           b'\x8a\xc0',
+        'MOV eax, eax':         b'\x8b\xc0',
         'NOP':                  b'\x90',
         'XCHG ecx, eax':        b'\x91',
         'XCHG edx, eax':        b'\x92',
