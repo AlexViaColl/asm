@@ -4,7 +4,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
 
 ## Roadmap
 - [ ] x86 Disassembler (Intel syntax)
-  - [ ] 1-byte Opcodes 101/181 (55.80%)
+  - [ ] 1-byte Opcodes 102/181 (56.35%)
     - [x] 00 ADD Eb, Gb
     - [x] 01 ADD Ev, Gv
     - [ ] 02 ADD Gb, Eb
@@ -61,7 +61,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 35 XOR rAX, Iz
     - [ ] 36 SEG=SS (Prefix)
     - [x] 37 AAA
-    - [ ] 38 CMP Eb, Gb
+    - [x] 38 CMP Eb, Gb
     - [ ] 39 CMP Ev, Gv
     - [ ] 3a CMP Gb, Eb
     - [ ] 3b CMP Gv, Ev

@@ -234,6 +234,7 @@ if __name__ == '__main__':
         'XOR eax, 0x80000000':  b'\x35\x00\x00\x00\x80',
         'XOR eax, 0xffffffff':  b'\x35\xff\xff\xff\xff',
         'AAA':                  b'\x37',
+        'CMP al, al':           b'\x38\xc0',
         'CMP al, 0x0':          b'\x3c\x00',
         'CMP al, 0x7f':         b'\x3c\x7f',
         'CMP al, 0x80':         b'\x3c\x80',
