@@ -95,6 +95,8 @@ def disassemble(raw):
             return 'NOP'
         elif lo <= 7:
             return f'XCHG {REGISTERS[lo]}, eax'
+        elif lo == 0x8:
+            return 'CWDE'
         elif lo == 0xb:
             return 'FWAIT'
         elif lo == 0xc:

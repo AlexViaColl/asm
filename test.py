@@ -95,6 +95,7 @@ if __name__ == '__main__':
         'XCHG ebp, eax': b'\x95',
         'XCHG esi, eax': b'\x96',
         'XCHG edi, eax': b'\x97',
+        'CWDE':     b'\x98',
         'FWAIT':    b'\x9b',
         'PUSHF':    b'\x9c',
         'POPF':     b'\x9d',
