@@ -146,7 +146,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] b5 MOV CH/R13B, Ib
     - [x] b6 MOV DH/R14B, Ib
     - [x] b7 MOV BH/R15B, Ib
-    - [ ] b8 MOV rAX/r8, Iv
+    - [x] b8 MOV rAX/r8, Iv
     - [ ] b9 MOV rCX/r9, Iv
     - [ ] ba MOV rDX/r10, Iv
     - [ ] bb MOV rBX/r11, Iv

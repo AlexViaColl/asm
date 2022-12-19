@@ -108,6 +108,9 @@ def disassemble(raw):
     elif hi == 0xb:
         if lo <= 7:
             return f'MOV {REGISTERS8[lo]}, {hex(raw[1])}'
+        elif lo == 8:
+            iv = int.from_bytes(raw[1:5], 'little')
+            return f'MOV eax, {hex(iv)}'
     elif hi == 0xc:
         if lo == 3:
             return 'RET'
