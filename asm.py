@@ -86,6 +86,9 @@ def disassemble(raw):
             return 'PUSHA'
         elif lo == 1:
             return 'POPA'
+        elif lo == 8:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'PUSH {hex(iz)}'
         elif lo == 0xa:
             ib = raw[1]
             ib = sign_extend(ib, 8)

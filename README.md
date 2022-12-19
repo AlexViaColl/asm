@@ -81,7 +81,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 65 SEG=GS (Prefix)
     - [ ] 66 Operand Size (Prefix)
     - [ ] 67 Address Size (Prefix)
-    - [ ] 68 PUSH Iz
+    - [x] 68 PUSH Iz
     - [ ] 69 IMUL Gv, Ev, Iz
     - [x] 6a PUSH Ib
     - [ ] 6b IMUL Gv, Ev, Ib
