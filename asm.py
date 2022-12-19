@@ -123,6 +123,77 @@ def disassemble_eb_gb(raw, op, state):
 def disassemble_ev_gv(raw, op, state):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
 
+def disassemble_eb_ib(raw, op, state):
+    seg = state['seg']
+    mod, reg_op, rm = modrm(raw[1])
+    ptr_size = 'BYTE PTR'
+    if mod == 0b00:
+        if rm <= 0b011 or rm == 0b110 or rm == 0b111:
+            dst = f'{ptr_size} [{REGISTERS[rm]}]'
+            src = f'{hex(raw[2])}'
+            state['eip'] += 3
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            dst = f'{ptr_size} [{sib_str(scale, idx, base)}]'
+            src = f'{hex(raw[3])}'
+            state['eip'] += 4
+            return f'{op} {dst}, {src}'
+        elif rm == 0b101:
+            disp32 = int.from_bytes(raw[2:6], 'little')
+            dst = f'{ptr_size} ds:{hex(disp32)}'
+            src = f'{hex(raw[6])}'
+            state['eip'] += 7
+            return f'{op} {dst}, {src}'
+    elif mod == 0b01:
+        if rm <= 0b011 or rm >= 0b101:
+            disp = hex(sign_extend(raw[2], 8, unsigned=False))
+            if disp.startswith('0x'):
+                disp = f'+{disp}'
+            dst = f'{ptr_size} {seg}[{REGISTERS[rm]}{disp}]'
+            src = f'{hex(raw[3])}'
+            state['eip'] += 4
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            disp = hex(sign_extend(raw[3], 8, unsigned=False))
+            if disp.startswith('0x'):
+                disp = f'+{disp}'
+            dst = f'{ptr_size} [{sib_str(scale, idx, base)}{disp}]'
+            src = f'{hex(raw[4])}'
+            state['eip'] += 5
+            return f'{op} {dst}, {src}'
+    elif mod == 0b10:
+        if rm <= 0b011 or rm >= 0b101:
+            disp32 = hex(sign_extend(int.from_bytes(raw[2:6], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp32}'
+            dst = f'{ptr_size} [{REGISTERS[rm]}{disp32}]'
+            src = f'{hex(raw[6])}'
+            state['eip'] += 7
+            return f'{op} {dst}, {src}'
+        elif rm == 0b100:
+            scale, idx, base = sib(raw[2])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            disp32 = hex(sign_extend(int.from_bytes(raw[3:7], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp32}'
+            dst = f'{ptr_size} [{sib_str(scale, idx, base)}{disp32}]'
+            src = f'{hex(raw[7])}'
+            state['eip'] += 8
+            return f'{op} {dst}, {src}'
+    elif mod == 0b11:
+        dst = f'{reg_size[rm]}'
+        src = f'{reg_size[reg_op]}'
+        src = f'{hex(raw[2])}'
+        state['eip'] += 3
+        return f'{op} {dst}, {src}'
+
 def disassemble_gb_eb(raw, op, state):
     return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state, swap=True)
 
@@ -359,7 +430,15 @@ def disassemble(raw, state):
         return f'{jmp_type} {hex(addr)}'
     elif hi == 8:
         if lo == 0:
+            mod, reg_op, rm = modrm(raw[1])
+            op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
+            return disassemble_eb_ib(raw, op, state) # TODO: Test
+        elif lo == 1:
             pass
+        elif lo == 2:
+            mod, reg_op, rm = modrm(raw[1])
+            op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
+            return disassemble_eb_ib(raw, op, state) # TODO: Test
         elif lo == 4:
             return disassemble_eb_gb(raw, 'TEST', state) # TODO: Test
         elif lo == 5:
