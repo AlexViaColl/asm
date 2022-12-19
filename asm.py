@@ -506,7 +506,10 @@ def disassemble(raw, state):
             return 'LAHF'
     elif hi == 0xa:
         if lo == 0:
-            pass
+            ob = int.from_bytes(raw[1:5], 'little')
+            state['eip'] += 5
+            seg = state['seg'] or 'ds:'
+            return f'MOV al, {seg}{hex(ob)}'
         elif lo == 1:
             ob = int.from_bytes(raw[1:5], 'little')
             state['eip'] += 5
