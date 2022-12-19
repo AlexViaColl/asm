@@ -115,7 +115,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 96 XCHG rSI/r14
     - [x] 97 XCHG rDI/r15
     - [x] 98 CBW/CWDE/CDQE *
-    - [ ] 99 CWD/CDQ/CQO
+    - [x] 99 CWD/CDQ/CQO *
     - [ ] 9a far CALL Ap
     - [x] 9b FWAIT/WAIT
     - [x] 9c PUSHF/D/Q/Fv *
