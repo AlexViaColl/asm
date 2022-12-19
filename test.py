@@ -288,6 +288,7 @@ if __name__ == '__main__':
         'PUSH 0x7f':            b'\x6a\x7f',
         'PUSH 0xffffff80':      b'\x6a\x80',
         'PUSH 0xffffffff':      b'\x6a\xff',
+        'TEST al, al':          b'\x84\xc0',
         'NOP':                  b'\x90',
         'XCHG ecx, eax':        b'\x91',
         'XCHG edx, eax':        b'\x92',

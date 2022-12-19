@@ -226,6 +226,13 @@ def disassemble(raw):
             ib = raw[1]
             ib = sign_extend(ib, 8)
             return f'PUSH {hex(ib)}'
+    elif hi == 7:
+        pass
+    elif hi == 8:
+        if lo == 0:
+            pass
+        elif lo == 4:
+            return disassemble_eb_gb(raw, 'TEST') # TODO: Test
     elif hi == 9:
         if lo == 0:
             return 'NOP'
