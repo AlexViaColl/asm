@@ -31,7 +31,7 @@ def sib(x):
 def sib_str(scale, index, base):
     return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
-def disassemble_ex_gx(raw, op, ptr_size, reg_size, swap=False):
+def disassemble_ex_gx(raw, op, ptr_size, reg_size, seg='', swap=False):
     mod, reg_op, rm = modrm(raw[1])
     #print(f'mod={mod}, reg_op={reg_op}, rm={rm}')
     if mod == 0b00:
@@ -62,7 +62,7 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size, swap=False):
             disp = hex(sign_extend(raw[2], 8, unsigned=False))
             if disp.startswith('0x'):
                 disp = f'+{disp}'
-            dst = f'{ptr_size} [{REGISTERS[rm]}{disp}]'
+            dst = f'{ptr_size} {seg}[{REGISTERS[rm]}{disp}]'
             src = f'{reg_size[reg_op]}'
             if swap:
                 dst,src = src,dst
@@ -108,19 +108,19 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size, swap=False):
             dst,src = src,dst
         return f'{op} {dst}, {src}'
 
-def disassemble_eb_gb(raw, op):
-    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8)
+def disassemble_eb_gb(raw, op, seg=''):
+    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, seg)
 
-def disassemble_ev_gv(raw, op):
-    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS)
+def disassemble_ev_gv(raw, op, seg=''):
+    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, seg)
 
-def disassemble_gb_eb(raw, op):
-    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, swap=True)
+def disassemble_gb_eb(raw, op, seg=''):
+    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, seg, swap=True)
 
-def disassemble_gv_ev(raw, op):
-    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, swap=True)
+def disassemble_gv_ev(raw, op, seg=''):
+    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, seg, swap=True)
 
-def disassemble(raw):
+def disassemble(raw, seg = ''):
     if len(raw) == 0:
         fail('ERROR: input was empty')
 
@@ -130,13 +130,13 @@ def disassemble(raw):
 
     if hi == 0:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'ADD')
+            return disassemble_eb_gb(raw, 'ADD', seg)
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'ADD') # TODO: Test
+            return disassemble_ev_gv(raw, 'ADD', seg) # TODO: Test
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'ADD') # TODO: Test
+            return disassemble_gb_eb(raw, 'ADD', seg) # TODO: Test
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'ADD') # TODO: Test
+            return disassemble_gv_ev(raw, 'ADD', seg) # TODO: Test
         elif lo == 4:
             return f'ADD al, {hex(raw[1])}'
         elif lo == 5:
@@ -147,13 +147,13 @@ def disassemble(raw):
         elif lo == 7:
             return 'POP es'
         if lo == 8:
-            return disassemble_eb_gb(raw, 'OR') # TODO: Test
+            return disassemble_eb_gb(raw, 'OR', seg) # TODO: Test
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'OR') # TODO: Test
+            return disassemble_ev_gv(raw, 'OR', seg) # TODO: Test
         if lo == 0xa:
-            return disassemble_gb_eb(raw, 'OR') # TODO: Test
+            return disassemble_gb_eb(raw, 'OR', seg) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'OR') # TODO: Test
+            return disassemble_gv_ev(raw, 'OR', seg) # TODO: Test
         elif lo == 0xc:
             return f'OR al, {hex(raw[1])}'
         elif lo == 0xd:
@@ -163,13 +163,13 @@ def disassemble(raw):
             return 'PUSH cs'
     elif hi == 1:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'ADC') # TODO: Test
+            return disassemble_eb_gb(raw, 'ADC', seg) # TODO: Test
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'ADC') # TODO: Test
+            return disassemble_ev_gv(raw, 'ADC', seg) # TODO: Test
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'ADC') # TODO: Test
+            return disassemble_gb_eb(raw, 'ADC', seg) # TODO: Test
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'ADC') # TODO: Test
+            return disassemble_gv_ev(raw, 'ADC', seg) # TODO: Test
         elif lo == 4:
             return f'ADC al, {hex(raw[1])}'
         elif lo == 5:
@@ -180,13 +180,13 @@ def disassemble(raw):
         elif lo == 7:
             return 'POP ss'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'SBB') # TODO: Test
+            return disassemble_eb_gb(raw, 'SBB', seg) # TODO: Test
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'SBB') # TODO: Test
+            return disassemble_ev_gv(raw, 'SBB', seg) # TODO: Test
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'SBB') # TODO: Test
+            return disassemble_gb_eb(raw, 'SBB', seg) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'SBB') # TODO: Test
+            return disassemble_gv_ev(raw, 'SBB', seg) # TODO: Test
         elif lo == 0xc:
             return f'SBB al, {hex(raw[1])}'
         elif lo == 0xd:
@@ -198,64 +198,76 @@ def disassemble(raw):
             return 'POP ds'
     elif hi == 2:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'AND') # TODO: Test
+            return disassemble_eb_gb(raw, 'AND', seg) # TODO: Test
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'AND') # TODO: Test
+            return disassemble_ev_gv(raw, 'AND', seg) # TODO: Test
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'AND') # TODO: Test
+            return disassemble_gb_eb(raw, 'AND', seg) # TODO: Test
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'AND') # TODO: Test
+            return disassemble_gv_ev(raw, 'AND', seg) # TODO: Test
         elif lo == 4:
             return f'AND al, {hex(raw[1])}'
         elif lo == 5:
             iz = int.from_bytes(raw[1:5], 'little')
             return f'AND eax, {hex(iz)}'
+        elif lo == 6:
+            seg = 'es:'
+            return disassemble(raw[1:], seg)
         elif lo == 7:
             return 'DAA'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'SUB') # TODO: Test
+            return disassemble_eb_gb(raw, 'SUB', seg) # TODO: Test
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'SUB') # TODO: Test
+            return disassemble_ev_gv(raw, 'SUB', seg) # TODO: Test
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'SUB') # TODO: Test
+            return disassemble_gb_eb(raw, 'SUB', seg) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'SUB') # TODO: Test
+            return disassemble_gv_ev(raw, 'SUB', seg) # TODO: Test
         elif lo == 0xc:
             return f'SUB al, {hex(raw[1])}'
         elif lo == 0xd:
             iz = int.from_bytes(raw[1:5], 'little')
             return f'SUB eax, {hex(iz)}'
+        elif lo == 0xe:
+            seg = 'cs:'
+            return disassemble(raw[1:], seg)
         elif lo == 0xf:
             return 'DAS'
     elif hi == 3:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'XOR') # TODO: Test
+            return disassemble_eb_gb(raw, 'XOR', seg) # TODO: Test
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'XOR') # TODO: Test
+            return disassemble_ev_gv(raw, 'XOR', seg) # TODO: Test
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'XOR') # TODO: Test
+            return disassemble_gb_eb(raw, 'XOR', seg) # TODO: Test
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'XOR') # TODO: Test
+            return disassemble_gv_ev(raw, 'XOR', seg) # TODO: Test
         elif lo == 4:
             return f'XOR al, {hex(raw[1])}'
         elif lo == 5:
             iz = int.from_bytes(raw[1:5], 'little')
             return f'XOR eax, {hex(iz)}'
+        elif lo == 6:
+            seg = 'ss:'
+            return disassemble(raw[1:], seg)
         elif lo == 7:
             return 'AAA'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'CMP') # TODO: Test
+            return disassemble_eb_gb(raw, 'CMP', seg) # TODO: Test
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'CMP') # TODO: Test
+            return disassemble_ev_gv(raw, 'CMP', seg) # TODO: Test
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'CMP') # TODO: Test
+            return disassemble_gb_eb(raw, 'CMP', seg) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'CMP') # TODO: Test
+            return disassemble_gv_ev(raw, 'CMP', seg) # TODO: Test
         elif lo == 0xc:
             return f'CMP al, {hex(raw[1])}'
         elif lo == 0xd:
             iz = int.from_bytes(raw[1:5], 'little')
             return f'CMP eax, {hex(iz)}'
+        elif lo == 0xe:
+            seg = 'ds:'
+            return disassemble(raw[1:], seg)
         elif lo == 0xf:
             return 'AAS'
     elif hi == 4:
@@ -273,6 +285,12 @@ def disassemble(raw):
             return 'PUSHA'
         elif lo == 1:
             return 'POPA'
+        elif lo == 4:
+            seg = 'fs:'
+            return disassemble(raw[1:], seg)
+        elif lo == 5:
+            seg = 'gs:'
+            return disassemble(raw[1:], seg)
         elif lo == 8:
             iz = int.from_bytes(raw[1:5], 'little')
             return f'PUSH {hex(iz)}'
@@ -286,21 +304,21 @@ def disassemble(raw):
         if lo == 0:
             pass
         elif lo == 4:
-            return disassemble_eb_gb(raw, 'TEST') # TODO: Test
+            return disassemble_eb_gb(raw, 'TEST', seg) # TODO: Test
         elif lo == 5:
-            return disassemble_ev_gv(raw, 'TEST') # TODO: Test
+            return disassemble_ev_gv(raw, 'TEST', seg) # TODO: Test
         elif lo == 6:
-            return disassemble_eb_gb(raw, 'XCHG') # TODO: Test
+            return disassemble_eb_gb(raw, 'XCHG', seg) # TODO: Test
         elif lo == 7:
-            return disassemble_ev_gv(raw, 'XCHG') # TODO: Test
+            return disassemble_ev_gv(raw, 'XCHG', seg) # TODO: Test
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'MOV') # TODO: Test
+            return disassemble_eb_gb(raw, 'MOV', seg) # TODO: Test
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'MOV') # TODO: Test
+            return disassemble_ev_gv(raw, 'MOV', seg) # TODO: Test
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'MOV') # TODO: Test
+            return disassemble_gb_eb(raw, 'MOV', seg) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'MOV') # TODO: Test
+            return disassemble_gv_ev(raw, 'MOV', seg) # TODO: Test
     elif hi == 9:
         if lo == 0:
             return 'NOP'

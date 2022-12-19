@@ -4,7 +4,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
 
 ## Roadmap
 - [ ] x86 Disassembler (Intel syntax)
-  - [ ] 1-byte Opcodes 127/181 (70.17%)
+  - [ ] 1-byte Opcodes 131/181 (72.38%)
     - [x] 00 ADD Eb, Gb
     - [x] 01 ADD Ev, Gv
     - [x] 02 ADD Gb, Eb
@@ -43,7 +43,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 23 AND Gv, Ev
     - [x] 24 AND AL, Ib
     - [x] 25 AND rAX, Iz
-    - [ ] 26 SEG=ES (Prefix)
+    - [x] 26 SEG=ES (Prefix)
     - [x] 27 DAA
     - [x] 28 SUB Eb, Gb
     - [x] 29 SUB Ev, Gv
@@ -51,7 +51,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 2b SUB Gv, Ev
     - [x] 2c SUB AL, Ib
     - [x] 2d SUB rAX, Iz
-    - [ ] 2e SEG=CS (Prefix)
+    - [x] 2e SEG=CS (Prefix)
     - [x] 2f DAS
     - [x] 30 XOR Eb, Gb
     - [x] 31 XOR Ev, Gv
@@ -59,7 +59,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 33 XOR Gv, Ev
     - [x] 34 XOR AL, Ib
     - [x] 35 XOR rAX, Iz
-    - [ ] 36 SEG=SS (Prefix)
+    - [x] 36 SEG=SS (Prefix)
     - [x] 37 AAA
     - [x] 38 CMP Eb, Gb
     - [x] 39 CMP Ev, Gv
@@ -67,7 +67,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 3b CMP Gv, Ev
     - [x] 3c CMP AL, Ib
     - [x] 3d CMP rAX, Iz
-    - [ ] 3e SEG=DS (Prefix)
+    - [x] 3e SEG=DS (Prefix)
     - [x] 3f AAS
     - [x] 40-47 INC general register
     - [x] 48-4f DEC general register
