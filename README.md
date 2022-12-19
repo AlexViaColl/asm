@@ -162,7 +162,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] c5 LDS Gz, Mp VEX + 1 byte
     - [ ] c6 Grp 11 MOV Eb, Ib
     - [ ] c7 Grp 11 MOV Ev, Iz
-    - [ ] c8 ENTER Iw, Ib
+    - [x] c8 ENTER Iw, Ib
     - [x] c9 LEAVE
     - [x] ca far RET Iw
     - [x] cb far RET

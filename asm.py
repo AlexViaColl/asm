@@ -114,6 +114,10 @@ def disassemble(raw):
     elif hi == 0xc:
         if lo == 3:
             return 'RET'
+        elif lo == 8:
+            iw = int.from_bytes(raw[1:3], 'little')
+            ib = raw[3]
+            return f'ENTER {hex(iw)}, {hex(ib)}'
         elif lo == 9:
             return 'LEAVE'
         elif lo == 0xa:
