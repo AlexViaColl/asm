@@ -349,14 +349,14 @@ def disassemble(raw, state):
             state['eip'] += 2
             return f'PUSH {hex(ib)}'
     elif hi == 7:
-        pass
-#        jmp_type = [
-#            'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
-#            'JS', 'JNS', 'JP', 'JNP', 'JL', 'JNL', 'JLE', 'JNLE',
-#        ][lo]
-#        rel8 = raw[1]
-#        addr = state['eip'] + rel8
-#        return f'{jmp_type} {hex(addr)}'
+        jmp_type = [
+            'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
+            'JS', 'JNS', 'JP', 'JNP', 'JL', 'JNL', 'JLE', 'JNLE',
+        ][lo]
+        rel8 = raw[1]
+        state['eip'] += 2
+        addr = state['eip'] + rel8
+        return f'{jmp_type} {hex(addr)}'
     elif hi == 8:
         if lo == 0:
             pass
