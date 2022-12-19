@@ -380,6 +380,7 @@ if __name__ == '__main__':
         'XCHG edi, eax':        b'\x97',
         'CWDE':                 b'\x98',
         'CDQ':                  b'\x99',
+        'CALL 0x1234:0x7f000000': b'\x9a\x00\x00\x00\x7f\x34\x12',
         'FWAIT':                b'\x9b',
         'PUSHF':                b'\x9c',
         'POPF':                 b'\x9d',

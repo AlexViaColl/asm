@@ -484,6 +484,11 @@ def disassemble(raw, state):
         elif lo == 9:
             state['eip'] += 1
             return 'CDQ'
+        elif lo == 0xa:
+            iv = int.from_bytes(raw[1:5], 'little')
+            iw = int.from_bytes(raw[5:7], 'little')
+            state['eip'] += 7
+            return f'CALL {hex(iw)}:{hex(iv)}'
         elif lo == 0xb:
             state['eip'] += 1
             return 'FWAIT'
