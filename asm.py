@@ -133,7 +133,7 @@ def disassemble(raw):
             return 'PUSH cs'
     elif hi == 1:
         if lo == 0:
-            pass
+            return disassemble_eb_gb(raw, 'ADC') # TODO: Test
         elif lo == 4:
             return f'ADC al, {hex(raw[1])}'
         elif lo == 5:
