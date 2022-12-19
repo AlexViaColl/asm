@@ -117,16 +117,9 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size, state, swap=False):
         state['eip'] += 2
         return f'{op} {dst}, {src}'
 
-def disassemble_eb_gb(raw, op, state):
-    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state)
-
-def disassemble_ev_gv(raw, op, state):
-    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
-
-def disassemble_eb_ib(raw, op, state):
+def disassemble_ex_ix(raw, op, ptr_size, reg_size, state):
     seg = state['seg']
     mod, reg_op, rm = modrm(raw[1])
-    ptr_size = 'BYTE PTR'
     if mod == 0b00:
         if rm <= 0b011 or rm == 0b110 or rm == 0b111:
             dst = f'{ptr_size} [{REGISTERS[rm]}]'
@@ -194,11 +187,23 @@ def disassemble_eb_ib(raw, op, state):
         state['eip'] += 3
         return f'{op} {dst}, {src}'
 
+def disassemble_eb_gb(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state)
+
+def disassemble_ev_gv(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
+
 def disassemble_gb_eb(raw, op, state):
     return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state, swap=True)
 
 def disassemble_gv_ev(raw, op, state):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state, swap=True)
+
+def disassemble_eb_ib(raw, op, state):
+    return disassemble_ex_ix(raw, op, 'BYTE PTR', REGISTERS8, state)
+
+def disassemble_ev_iv(raw, op, state):
+    return disassemble_ex_ix(raw, op, 'DWORD PTR', REGISTERS, state)
 
 def disassemble(raw, state):
     if len(raw) == 0:
@@ -434,7 +439,9 @@ def disassemble(raw, state):
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
             return disassemble_eb_ib(raw, op, state) # TODO: Test
         elif lo == 1:
-            pass
+            mod, reg_op, rm = modrm(raw[1])
+            op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
+            return disassemble_ev_iv(raw, op, state) # TODO: Test
         elif lo == 2:
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]

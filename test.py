@@ -335,6 +335,16 @@ if __name__ == '__main__':
         'SUB BYTE PTR [eax+eax*1], 0x0': b'\x80\x2c\x00\x00',
         'XOR BYTE PTR [eax+eax*1], 0x0': b'\x80\x34\x00\x00',
         'CMP BYTE PTR [eax+eax*1], 0x0': b'\x80\x3c\x00\x00',
+
+        'ADD DWORD PTR [eax+eax*1], 0x0': b'\x81\x04\x00\x00\x00\x00\x00',
+        'OR DWORD PTR [eax+eax*1], 0x0':  b'\x81\x0c\x00\x00\x00\x00\x00',
+        'ADC DWORD PTR [eax+eax*1], 0x0': b'\x81\x14\x00\x00\x00\x00\x00',
+        'SBB DWORD PTR [eax+eax*1], 0x0': b'\x81\x1c\x00\x00\x00\x00\x00',
+        'AND DWORD PTR [eax+eax*1], 0x0': b'\x81\x24\x00\x00\x00\x00\x00',
+        'SUB DWORD PTR [eax+eax*1], 0x0': b'\x81\x2c\x00\x00\x00\x00\x00',
+        'XOR DWORD PTR [eax+eax*1], 0x0': b'\x81\x34\x00\x00\x00\x00\x00',
+        'CMP DWORD PTR [eax+eax*1], 0x0': b'\x81\x3c\x00\x00\x00\x00\x00',
+
         'ADD BYTE PTR [eax+eax*1], 0x0': b'\x82\x04\x00\x00',
         'OR BYTE PTR [eax+eax*1], 0x0':  b'\x82\x0c\x00\x00',
         'ADC BYTE PTR [eax+eax*1], 0x0': b'\x82\x14\x00\x00',
