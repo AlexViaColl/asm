@@ -237,6 +237,8 @@ if __name__ == '__main__':
         'DAS':                  b'\x2f',
         'XOR al, al':           b'\x30\xc0',
         'XOR eax, eax':         b'\x31\xc0',
+        'XOR al, al':           b'\x32\xc0',
+        'XOR eax, eax':         b'\x33\xc0',
         'XOR al, 0x0':          b'\x34\x00',
         'XOR al, 0x7f':         b'\x34\x7f',
         'XOR al, 0x80':         b'\x34\x80',

@@ -232,6 +232,10 @@ def disassemble(raw):
             return disassemble_eb_gb(raw, 'XOR') # TODO: Test
         elif lo == 1:
             return disassemble_ev_gv(raw, 'XOR') # TODO: Test
+        elif lo == 2:
+            return disassemble_gb_eb(raw, 'XOR') # TODO: Test
+        elif lo == 3:
+            return disassemble_gv_ev(raw, 'XOR') # TODO: Test
         elif lo == 4:
             return f'XOR al, {hex(raw[1])}'
         elif lo == 5:
