@@ -45,6 +45,9 @@ def disassemble(raw):
             return 'POP ss'
         elif lo == 0xc:
             return f'SBB al, {hex(raw[1])}'
+        elif lo == 0xd:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'SBB eax, {hex(iz)}'
         elif lo == 0xe:
             return 'PUSH ds'
         elif lo == 0xf:
