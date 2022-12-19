@@ -197,6 +197,8 @@ if __name__ == '__main__':
         'POP ss':               b'\x17',
         'SBB al, al':           b'\x18\xc0',
         'SBB eax, eax':         b'\x19\xc0',
+        'SBB al, al':           b'\x1a\xc0',
+        'SBB eax, eax':         b'\x1b\xc0',
         'SBB al, 0x0':          b'\x1c\x00',
         'SBB al, 0x7f':         b'\x1c\x7f',
         'SBB al, 0x80':         b'\x1c\x80',
