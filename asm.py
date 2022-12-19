@@ -605,6 +605,14 @@ def disassemble(raw, state):
     elif opcode == 0xfd:
         state['eip'] += 1
         return 'STD'
+    elif opcode == 0xfe:
+        pass
+    elif opcode == 0xff:
+        mod, reg_op, rm = modrm(raw[1])
+        assert reg_op != 0b111
+        op = ['INC', 'DEC', 'CALL', 'CALL', 'JMP', 'JMP', 'PUSH'][reg_op]
+        xxx = disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
+        return xxx.split(',')[0]
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 

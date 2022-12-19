@@ -507,6 +507,18 @@ if __name__ == '__main__':
         'STI':                  b'\xfb',
         'CLD':                  b'\xfc',
         'STD':                  b'\xfd',
+        'INC DWORD PTR [eax]':  b'\xff\x00',
+        'INC DWORD PTR [ecx]':  b'\xff\x01',
+        'INC DWORD PTR [edx]':  b'\xff\x02',
+        'INC DWORD PTR [ebx]':  b'\xff\x03',
+        'INC DWORD PTR [eax+eax*1]': b'\xff\x04\x00',
+        'DEC DWORD PTR [eax]':  b'\xff\x08',
+        'DEC DWORD PTR [ecx]':  b'\xff\x09',
+        'DEC DWORD PTR [edx]':  b'\xff\x0a',
+        'DEC DWORD PTR [ebx]':  b'\xff\x0b',
+        'DEC DWORD PTR [eax+eax*1]': b'\xff\x0c\x00',
+        # TODO: CALL, far CALL, JMP, far JMP
+        'PUSH DWORD PTR [eax]':  b'\xff\x30',
     }
     for inst in instructions:
         raw = instructions[inst]
