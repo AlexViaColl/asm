@@ -606,7 +606,11 @@ def disassemble(raw, state):
         state['eip'] += 1
         return 'STD'
     elif opcode == 0xfe:
-        pass
+        mod, reg_op, rm = modrm(raw[1])
+        assert reg_op <= 0b001
+        op = ['INC', 'DEC'][reg_op]
+        xxx = disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS, state)
+        return xxx.split(',')[0]
     elif opcode == 0xff:
         mod, reg_op, rm = modrm(raw[1])
         assert reg_op != 0b111
