@@ -216,6 +216,10 @@ def disassemble(raw):
             return disassemble_eb_gb(raw, 'SUB') # TODO: Test
         elif lo == 9:
             return disassemble_ev_gv(raw, 'SUB') # TODO: Test
+        elif lo == 0xa:
+            return disassemble_gb_eb(raw, 'SUB') # TODO: Test
+        elif lo == 0xb:
+            return disassemble_gv_ev(raw, 'SUB') # TODO: Test
         elif lo == 0xc:
             return f'SUB al, {hex(raw[1])}'
         elif lo == 0xd:
