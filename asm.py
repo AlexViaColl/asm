@@ -102,9 +102,14 @@ def disassemble(raw):
         elif lo == 0xf:
             return 'LAHF'
     elif hi == 0xa:
-        if lo == 8:
+        if lo == 0:
+            pass
+        elif lo == 8:
             ib = raw[1]
             return f'TEST al, {hex(ib)}'
+        elif lo == 9:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'TEST eax, {hex(iz)}'
     elif hi == 0xb:
         if lo <= 7:
             return f'MOV {REGISTERS8[lo]}, {hex(raw[1])}'
