@@ -201,6 +201,7 @@ if __name__ == '__main__':
         'SBB eax, 0xffffffff':  b'\x1d\xff\xff\xff\xff',
         'PUSH ds':              b'\x1e',
         'POP ds':               b'\x1f',
+        'AND al, al':           b'\x20\xc0',
         'AND al, 0x0':          b'\x24\x00',
         'AND al, 0x7f':         b'\x24\x7f',
         'AND al, 0x80':         b'\x24\x80',

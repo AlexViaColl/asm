@@ -160,7 +160,7 @@ def disassemble(raw):
             return 'POP ds'
     elif hi == 2:
         if lo == 0:
-            pass
+            return disassemble_eb_gb(raw, 'AND') # TODO: Test
         elif lo == 4:
             return f'AND al, {hex(raw[1])}'
         elif lo == 5:
