@@ -462,6 +462,15 @@ def disassemble(raw, state):
             return disassemble_gb_eb(raw, 'MOV', state) # TODO: Test
         elif lo == 0xb:
             return disassemble_gv_ev(raw, 'MOV', state) # TODO: Test
+        elif lo == 0xc:
+            pass
+        elif lo == 0xd:
+            pass
+        elif lo == 0xf:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op == 0b000
+            xxx = disassemble_ex_gx(raw, 'POP', 'DWORD PTR', REGISTERS, state)
+            return xxx.split(',')[0]
     elif hi == 9:
         if lo == 0:
             state['eip'] += 1
