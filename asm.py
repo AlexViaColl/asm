@@ -31,13 +31,15 @@ def sib(x):
 def sib_str(scale, index, base):
     return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
-def disassemble_ex_gx(raw, op, ptr_size, reg_size):
+def disassemble_ex_gx(raw, op, ptr_size, reg_size, swap=False):
     mod, reg_op, rm = modrm(raw[1])
     #print(f'mod={mod}, reg_op={reg_op}, rm={rm}')
     if mod == 0b00:
         if rm <= 0b011 or rm == 0b110 or rm == 0b111:
             dst = f'{ptr_size} [{REGISTERS[rm]}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
@@ -45,11 +47,15 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size):
                 assert False, 'Invalid SIB'
             dst = f'{ptr_size} [{sib_str(scale, idx, base)}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
         elif rm == 0b101:
             disp32 = int.from_bytes(raw[2:6], 'little')
             dst = f'{ptr_size} ds:{hex(disp32)}'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
     elif mod == 0b01:
         if rm <= 0b011 or rm >= 0b101:
@@ -58,6 +64,8 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size):
                 disp = f'+{disp}'
             dst = f'{ptr_size} [{REGISTERS[rm]}{disp}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
@@ -68,6 +76,8 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size):
                 disp = f'+{disp}'
             dst = f'{ptr_size} [{sib_str(scale, idx, base)}{disp}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
     elif mod == 0b10:
         if rm <= 0b011 or rm >= 0b101:
@@ -76,6 +86,8 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size):
                 disp32 = f'+{disp32}'
             dst = f'{ptr_size} [{REGISTERS[rm]}{disp32}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
@@ -86,10 +98,14 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size):
                 disp32 = f'+{disp32}'
             dst = f'{ptr_size} [{sib_str(scale, idx, base)}{disp32}]'
             src = f'{reg_size[reg_op]}'
+            if swap:
+                dst,src = src,dst
             return f'{op} {dst}, {src}'
     elif mod == 0b11:
         dst = f'{reg_size[rm]}'
         src = f'{reg_size[reg_op]}'
+        if swap:
+            dst,src = src,dst
         return f'{op} {dst}, {src}'
 
 def disassemble_eb_gb(raw, op):
@@ -97,6 +113,12 @@ def disassemble_eb_gb(raw, op):
 
 def disassemble_ev_gv(raw, op):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS)
+
+def disassemble_gb_eb(raw, op):
+    return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, swap=True)
+
+def disassemble_gv_ev(raw, op):
+    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, swap=True)
 
 def disassemble(raw):
     if len(raw) == 0:
@@ -111,6 +133,10 @@ def disassemble(raw):
             return disassemble_eb_gb(raw, 'ADD')
         elif lo == 1:
             return disassemble_ev_gv(raw, 'ADD') # TODO: Test
+        elif lo == 2:
+            return disassemble_gb_eb(raw, 'ADD') # TODO: Test
+        elif lo == 3:
+            return disassemble_gv_ev(raw, 'ADD') # TODO: Test
         elif lo == 4:
             return f'ADD al, {hex(raw[1])}'
         elif lo == 5:
