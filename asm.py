@@ -97,6 +97,8 @@ def disassemble(raw):
             return f'XCHG {REGISTERS[lo]}, eax'
         elif lo == 0xb:
             return 'FWAIT'
+        elif lo == 0xc:
+            return 'PUSHF'
         elif lo == 0xe:
             return 'SAHF'
         elif lo == 0xf:

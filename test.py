@@ -96,6 +96,7 @@ if __name__ == '__main__':
         'XCHG esi, eax': b'\x96',
         'XCHG edi, eax': b'\x97',
         'FWAIT':    b'\x9b',
+        'PUSHF':    b'\x9c',
         'SAHF':     b'\x9e',
         'LAHF':     b'\x9f',
         'TEST al, 0x0': b'\xa8\x00',
