@@ -195,6 +195,8 @@ def disassemble(raw):
             return 'AAA'
         elif lo == 8:
             return disassemble_eb_gb(raw, 'CMP') # TODO: Test
+        elif lo == 9:
+            return disassemble_ev_gv(raw, 'CMP') # TODO: Test
         elif lo == 0xc:
             return f'CMP al, {hex(raw[1])}'
         elif lo == 0xd:
