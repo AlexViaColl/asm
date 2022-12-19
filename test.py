@@ -211,6 +211,8 @@ if __name__ == '__main__':
         'POP ds':               b'\x1f',
         'AND al, al':           b'\x20\xc0',
         'AND eax, eax':         b'\x21\xc0',
+        'AND al, al':           b'\x22\xc0',
+        'AND eax, eax':         b'\x23\xc0',
         'AND al, 0x0':          b'\x24\x00',
         'AND al, 0x7f':         b'\x24\x7f',
         'AND al, 0x80':         b'\x24\x80',
