@@ -69,6 +69,9 @@ def disassemble(raw):
             return 'AAA'
         elif lo == 0xc:
             return f'CMP al, {hex(raw[1])}'
+        elif lo == 0xd:
+            iz = int.from_bytes(raw[1:5], 'little')
+            return f'CMP eax, {hex(iz)}'
         elif lo == 0xf:
             return 'AAS'
     elif hi == 4:

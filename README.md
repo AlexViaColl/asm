@@ -66,7 +66,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 3a CMP Gb, Eb
     - [ ] 3b CMP Gv, Ev
     - [x] 3c CMP AL, Ib
-    - [ ] 3d CMP rAX, Iz
+    - [x] 3d CMP rAX, Iz
     - [ ] 3e SEG=DS (Prefix)
     - [x] 3f AAS
     - [x] 40-47 INC general register
