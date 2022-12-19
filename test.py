@@ -167,6 +167,7 @@ if __name__ == '__main__':
         'PUSH es':              b'\x06',
         'POP es':               b'\x07',
         'OR al, al':            b'\x08\xc0',
+        'OR eax, eax':          b'\x09\xc0',
         'OR al, 0x0':           b'\x0c\x00',
         'OR al, 0x7f':          b'\x0c\x7f',
         'OR al, 0x80':          b'\x0c\x80',
