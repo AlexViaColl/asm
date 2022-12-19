@@ -145,6 +145,8 @@ def disassemble(raw):
             return 'PUSH ss'
         elif lo == 7:
             return 'POP ss'
+        elif lo == 8:
+            return disassemble_eb_gb(raw, 'SBB') # TODO: Test
         elif lo == 0xc:
             return f'SBB al, {hex(raw[1])}'
         elif lo == 0xd:

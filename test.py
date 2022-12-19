@@ -189,6 +189,7 @@ if __name__ == '__main__':
         'ADC eax, 0xffffffff':  b'\x15\xff\xff\xff\xff',
         'PUSH ss':              b'\x16',
         'POP ss':               b'\x17',
+        'SBB al, al':           b'\x18\xc0',
         'SBB al, 0x0':          b'\x1c\x00',
         'SBB al, 0x7f':         b'\x1c\x7f',
         'SBB al, 0x80':         b'\x1c\x80',
