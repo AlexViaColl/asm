@@ -292,6 +292,7 @@ if __name__ == '__main__':
         'TEST eax, eax':        b'\x85\xc0',
         'XCHG al, al':          b'\x86\xc0',
         'XCHG eax, eax':        b'\x87\xc0',
+        'MOV al, al':           b'\x88\xc0',
         'NOP':                  b'\x90',
         'XCHG ecx, eax':        b'\x91',
         'XCHG edx, eax':        b'\x92',
