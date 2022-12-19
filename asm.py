@@ -172,6 +172,8 @@ def disassemble(raw):
             return 'DAA'
         elif lo == 8:
             return disassemble_eb_gb(raw, 'SUB') # TODO: Test
+        elif lo == 9:
+            return disassemble_ev_gv(raw, 'SUB') # TODO: Test
         elif lo == 0xc:
             return f'SUB al, {hex(raw[1])}'
         elif lo == 0xd:
