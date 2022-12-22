@@ -207,9 +207,12 @@ def disassemble_eb_ib(raw, op, state):
 def disassemble_ev_iv(raw, op, state):
     return disassemble_ex_ix(raw, op, 'DWORD PTR', REGISTERS, state)
 
-def disassemble(raw, state):
+def disassemble(raw, state=None):
     if len(raw) == 0:
         fail('ERROR: input was empty')
+
+    if state is None:
+        state = {'seg': '', 'prefix': '', 'eip': 0}
 
     prefix = state['prefix']
 
@@ -638,5 +641,4 @@ def disassemble(raw, state):
 
 if __name__ == '__main__':
     raw = sys.stdin.buffer.read()
-    state = {'seg': '', 'prefix': '', 'eip': 0}
-    print(disassemble(raw, state))
+    print(disassemble(raw))
