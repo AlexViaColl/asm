@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
 import subprocess
 from operator import attrgetter
+from asm import disassemble
 
 if __name__ == '__main__':
     instructions = {
@@ -527,12 +529,9 @@ if __name__ == '__main__':
     }
     for inst in instructions:
         raw = instructions[inst]
-        res = subprocess.run('./asm.py', input=raw, capture_output=True)
-        ret, stdout, stderr = attrgetter('returncode', 'stdout', 'stderr')(res)
-        if ret != 0:
-            print(f'[ERROR] asm.py failed with error code: {ret}, sderr: {stderr.decode().strip()}')
-        elif stdout.decode().strip() != inst:
+        actual = disassemble(raw)
+        if actual != inst:
             print(f'[ERROR] Unexpected disassembly for bytes: {raw.hex(" ")}')
             print(f'  Expected: {inst}')
-            print(f'  But got:  {stdout.decode().strip()}')
-
+            print(f'  But got:  {actual}')
+            sys.exit(1)
