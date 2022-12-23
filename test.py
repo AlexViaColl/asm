@@ -407,6 +407,7 @@ if __name__ == '__main__':
         'MOVS BYTE PTR es:[edi], BYTE PTR ds:[esi]': b'\xa4',
         'MOVS DWORD PTR es:[edi], DWORD PTR ds:[esi]': b'\xa5',
         'CMPS BYTE PTR ds:[esi], BYTE PTR es:[edi]': b'\xa6',
+        'CMPS DWORD PTR ds:[esi], DWORD PTR es:[edi]': b'\xa7',
         'TEST al, 0x0':         b'\xa8\x00',
         'TEST al, 0x7f':        b'\xa8\x7f',
         'TEST al, 0x80':        b'\xa8\x80',
