@@ -413,6 +413,7 @@ if __name__ == '__main__':
         'TEST al, 0x80':        b'\xa8\x80',
         'TEST al, 0xff':        b'\xa8\xff',
         'STOS BYTE PTR es:[edi], al': b'\xaa',
+        'STOS DWORD PTR es:[edi], eax': b'\xab',
         'TEST eax, 0x0':        b'\xa9\x00\x00\x00\x00',
         'TEST eax, 0x7fffffff': b'\xa9\xff\xff\xff\x7f',
         'TEST eax, 0x80000000': b'\xa9\x00\x00\x00\x80',
