@@ -126,7 +126,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] a1 MOV rAX, Ov
     - [x] a2 MOV Ob, AL
     - [x] a3 MOV Ov, rAX
-    - [ ] a4 MOVS/B Yb, Xb
+    - [x] a4 MOVS/B Yb, Xb
     - [ ] a5 MOVS/W/D/Q Yv, Xv
     - [ ] a6 CMPS/B Xb, Yb
     - [ ] a7 CMPS/W/D Xv, Yv

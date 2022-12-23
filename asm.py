@@ -532,6 +532,9 @@ def disassemble(raw, state=None):
             state['eip'] += 5
             seg = state['seg'] or 'ds:'
             return f'{prefix}MOV {seg}{hex(ob)}, eax'
+        elif lo == 4:
+            state['eip'] += 1
+            return f'MOVS BYTE PTR es:[edi], BYTE PTR ds:[esi]'
         elif lo == 8:
             ib = raw[1]
             state['eip'] += 2
