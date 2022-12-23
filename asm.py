@@ -414,6 +414,10 @@ def disassemble(raw, state=None):
         elif lo == 1:
             state['eip'] += 1
             return f'{prefix}POPA'
+        elif lo == 2:
+            mod, reg_op, rm = modrm(raw[1])
+            state['eip'] += 2
+            return f'BOUND {REGISTERS[reg_op]}, QWORD PTR [{REGISTERS[rm]}]'
         elif lo == 4:
             state['seg'] = 'fs:'
             state['eip'] += 1
