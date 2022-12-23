@@ -558,6 +558,9 @@ def disassemble(raw, state=None):
         elif lo == 0xb:
             state['eip'] += 1
             return f'STOS DWORD PTR es:[edi], eax'
+        elif lo == 0xc:
+            state['eip'] += 1
+            return f'LODS al, BYTE PTR ds:[esi]'
     elif hi == 0xb:
         if lo <= 7:
             state['eip'] += 2

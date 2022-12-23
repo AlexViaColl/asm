@@ -134,7 +134,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] a9 TEST rAX, Iz
     - [x] aa STOS/B Yb, AL
     - [x] ab STOS/W/D/Q Yv, rAX
-    - [ ] ac LODS/B AL, Xb
+    - [x] ac LODS/B AL, Xb
     - [ ] ad LODS/W/D/Q rAX, Xv
     - [ ] ae SCAS/B AL, Yb
     - [ ] af SCAS/W/D/Q rAX, Yv
