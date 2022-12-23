@@ -552,6 +552,9 @@ def disassemble(raw, state=None):
             iz = int.from_bytes(raw[1:5], 'little')
             state['eip'] += 5
             return f'{prefix}TEST eax, {hex(iz)}'
+        elif lo == 0xa:
+            state['eip'] += 1
+            return f'STOS BYTE PTR es:[edi], al'
     elif hi == 0xb:
         if lo <= 7:
             state['eip'] += 2
