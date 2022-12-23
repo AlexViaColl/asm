@@ -405,6 +405,7 @@ if __name__ == '__main__':
         'MOV ds:0x80000000, eax':   b'\xa3\x00\x00\x00\x80',
         'MOV ds:0xffffffff, eax':   b'\xa3\xff\xff\xff\xff',
         'MOVS BYTE PTR es:[edi], BYTE PTR ds:[esi]': b'\xa4',
+        'MOVS DWORD PTR es:[edi], DWORD PTR ds:[esi]': b'\xa5',
         'TEST al, 0x0':         b'\xa8\x00',
         'TEST al, 0x7f':        b'\xa8\x7f',
         'TEST al, 0x80':        b'\xa8\x80',
