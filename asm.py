@@ -538,6 +538,9 @@ def disassemble(raw, state=None):
         elif lo == 5:
             state['eip'] += 1
             return f'MOVS DWORD PTR es:[edi], DWORD PTR ds:[esi]'
+        elif lo == 6:
+            state['eip'] += 1
+            return f'CMPS BYTE PTR ds:[esi], BYTE PTR es:[edi]'
         elif lo == 8:
             ib = raw[1]
             state['eip'] += 2
