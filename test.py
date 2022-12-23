@@ -417,6 +417,7 @@ if __name__ == '__main__':
         'LODS al, BYTE PTR ds:[esi]': b'\xac',
         'LODS eax, DWORD PTR ds:[esi]': b'\xad',
         'SCAS al, BYTE PTR ds:[edi]': b'\xae',
+        'SCAS eax, DWORD PTR ds:[edi]': b'\xaf',
         'TEST eax, 0x0':        b'\xa9\x00\x00\x00\x00',
         'TEST eax, 0x7fffffff': b'\xa9\xff\xff\xff\x7f',
         'TEST eax, 0x80000000': b'\xa9\x00\x00\x00\x80',
