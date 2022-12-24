@@ -484,6 +484,12 @@ def disassemble(raw, state=None):
             state['seg'] = 'gs:'
             state['eip'] += 1
             return disassemble(raw[1:], state)
+        elif lo == 6:
+            state['op_size'] = 1
+            return disassemble(raw[1:], state)
+        elif lo == 7:
+            state['addr_size'] = 1
+            return disassemble(raw[1:], state)
         elif lo == 8:
             iz = int.from_bytes(raw[1:5], 'little')
             state['eip'] += 5
