@@ -317,6 +317,12 @@ def disassemble(raw, state=None):
 
     if state is None:
         state = {'seg': '', 'prefix': '', 'eip': 0}
+    if 'seg' not in state:
+        state['seg'] = ''
+    if 'prefix' not in state:
+        state['prefix'] = ''
+    if 'eip' not in state:
+        state['eip'] = 0
 
     prefix = state['prefix']
 
