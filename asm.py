@@ -31,6 +31,46 @@ def sib(x):
 def sib_str(scale, index, base):
     return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
+def modrm_addressing(m, rest):
+    mod, reg_op, rm = modrm(m)
+    if mod == 0b00:
+        if rm <= 0b011 or rm >= 0b110:
+            return f'[{REGISTERS[rm]}]'
+        elif rm == 0b100:
+            scale, idx, base = sib(rest[0])
+            if base == 0b101:
+                assert False, 'Invalid SIB'
+            return f'[{sib_str(scale, idx, base)}]'
+        elif rm == 0b101:
+            disp32 = int.from_bytes(rest[0:4], 'little')
+            return f'ds:{hex(disp32)}'
+    elif mod == 0b01:
+        if rm <= 0b011 or rm >= 0b101:
+            disp8 = hex(sign_extend(rest[0], 8, unsigned=False))
+            if disp8.startswith('0x'):
+                disp8 = f'+{disp8}'
+            return f'[{REGISTERS[rm]}{disp8}]'
+        elif rm == 0b100:
+            scale, idx, base = sib(rest[0])
+            disp8 = hex(sign_extend(rest[1], 8, unsigned=False))
+            if disp8.startswith('0x'):
+                disp8 = f'+{disp8}'
+            return f'[{sib_str(scale, idx, base)}{disp8}]'
+    elif mod == 0b10:
+        if rm <= 0b011 or rm >= 0b101:
+            disp32 = hex(sign_extend(int.from_bytes(rest[0:4], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp8}'
+            return f'[{REGISTERS[rm]}{disp32}]'
+        elif rm == 0b100:
+            scale, idx, base = sib(rest[0])
+            disp32 = hex(sign_extend(int.from_bytes(rest[1:5], 'little'), 32, unsigned=False))
+            if disp32.startswith('0x'):
+                disp32 = f'+{disp32}'
+            return f'[{sib_str(scale, idx, base)}{disp32}]'
+    elif mod == 0b11:
+        assert False, 'Invalid instruction'
+
 def disassemble_ex_gx(raw, op, ptr_size, reg_size, state, swap=False):
     seg = state['seg']
     prefix = state['prefix']
@@ -415,9 +455,10 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}POPA'
         elif lo == 2:
-            mod, reg_op, rm = modrm(raw[1])
+            _, reg_op, _ = modrm(raw[1])
+            m = modrm_addressing(raw[1], raw[2:])
             state['eip'] += 2
-            return f'BOUND {REGISTERS[reg_op]}, QWORD PTR [{REGISTERS[rm]}]'
+            return f'BOUND {REGISTERS[reg_op]}, QWORD PTR {m}'
         elif lo == 4:
             state['seg'] = 'fs:'
             state['eip'] += 1

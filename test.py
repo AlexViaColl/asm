@@ -306,10 +306,11 @@ if __name__ == '__main__':
         'BOUND eax, QWORD PTR [ecx]': b'\x62\x01',
         'BOUND eax, QWORD PTR [edx]': b'\x62\x02',
         'BOUND eax, QWORD PTR [ebx]': b'\x62\x03',
-        #'BOUND eax, QWORD PTR [eax+eax*1]': b'\x62\x04\x00',
-        #'BOUND eax, QWORD PTR ds:0x0': b'\x62\x05\x00\x00\x00\x00',
+        'BOUND eax, QWORD PTR [eax+eax*1]': b'\x62\x04\x00',
+        'BOUND eax, QWORD PTR ds:0x0': b'\x62\x05\x00\x00\x00\x00',
         'BOUND eax, QWORD PTR [esi]': b'\x62\x06',
         'BOUND eax, QWORD PTR [edi]': b'\x62\x07',
+        'BOUND eax, QWORD PTR [eax+0x0]': b'\x62\x40\x00',
 
         'BOUND ecx, QWORD PTR [eax]': b'\x62\x08',
         'BOUND edx, QWORD PTR [eax]': b'\x62\x10',
