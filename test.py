@@ -644,6 +644,7 @@ if __name__ == '__main__':
 
         # 2-byte Opcodes
         'SYSCALL':              b'\x0f\x05',
+        'CLTS':                 b'\x0f\x06',
     }
     for inst in instructions:
         raw = instructions[inst]

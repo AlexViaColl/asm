@@ -274,6 +274,9 @@ def disassemble_2b(raw, state):
         elif lo == 5:
             state['eip'] += 1
             return f'SYSCALL'
+        elif lo == 6:
+            state['eip'] += 1
+            return f'CLTS'
     elif hi == 1:
         pass
     elif hi == 2:
