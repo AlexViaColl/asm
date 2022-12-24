@@ -478,6 +478,12 @@ def disassemble(raw, state=None):
             iz = int.from_bytes(raw[1:5], 'little')
             state['eip'] += 5
             return f'{prefix}PUSH {hex(iz)}'
+        elif lo == 9:
+            # TODO: More tests
+            inst = disassemble_gv_ev(raw, 'IMUL', state)
+            iz = int.from_bytes(raw[state['eip']:state['eip']+4], 'little')
+            state['eip'] += 4
+            return f'{inst}, {hex(iz)}'
         elif lo == 0xa:
             ib = raw[1]
             ib = sign_extend(ib, 8)

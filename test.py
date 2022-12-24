@@ -329,6 +329,10 @@ if __name__ == '__main__':
         'PUSH 0x7fffffff':      b'\x68\xff\xff\xff\x7f',
         'PUSH 0x80000000':      b'\x68\x00\x00\x00\x80',
         'PUSH 0xffffffff':      b'\x68\xff\xff\xff\xff',
+
+        'IMUL eax, DWORD PTR [eax], 0x0': b'\x69\x00\x00\x00\x00\x00',
+        'IMUL eax, DWORD PTR [eax], 0xffffffff': b'\x69\x00\xff\xff\xff\xff',
+
         'PUSH 0x0':             b'\x6a\x00',
         'PUSH 0x7f':            b'\x6a\x7f',
         'PUSH 0xffffff80':      b'\x6a\x80',
