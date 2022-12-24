@@ -76,7 +76,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 60 PUSHA
     - [x] 61 POPA
     - [x] 62 BOUND Gv, Ma
-    - [ ] 63 ARPL Ew, Gw
+    - [x] 63 ARPL Ew, Gw
     - [x] 64 SEG=FS (Prefix)
     - [x] 65 SEG=GS (Prefix)
     - [ ] 66 Operand Size (Prefix)

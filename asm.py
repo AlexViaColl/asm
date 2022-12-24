@@ -3,6 +3,7 @@
 import sys
 
 REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
+REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
 
 def fail(*s):
@@ -232,6 +233,9 @@ def disassemble_ex_ix(raw, op, ptr_size, reg_size, state):
 def disassemble_eb_gb(raw, op, state):
     return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state)
 
+def disassemble_ew_gw(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS16, state)
+
 def disassemble_ev_gv(raw, op, state):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
 
@@ -457,8 +461,11 @@ def disassemble(raw, state=None):
         elif lo == 2:
             _, reg_op, _ = modrm(raw[1])
             m = modrm_addressing(raw[1], raw[2:])
-            state['eip'] += 2
+            state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'BOUND {REGISTERS[reg_op]}, QWORD PTR {m}'
+        elif lo == 3:
+            # TODO: More tests
+            return disassemble_ew_gw(raw, 'ARPL', state)
         elif lo == 4:
             state['seg'] = 'fs:'
             state['eip'] += 1

@@ -319,6 +319,10 @@ if __name__ == '__main__':
         'BOUND ebp, QWORD PTR [eax]': b'\x62\x28',
         'BOUND esi, QWORD PTR [eax]': b'\x62\x30',
         'BOUND edi, QWORD PTR [eax]': b'\x62\x38',
+
+        'ARPL WORD PTR [eax], ax': b'\x63\x00',
+        'ARPL WORD PTR [edi], di': b'\x63\x3f',
+
         'ADD BYTE PTR fs:[eax+0x0], al': b'\x64\x00\x40\x00',
         'ADD BYTE PTR gs:[eax+0x0], al': b'\x65\x00\x40\x00',
         'PUSH 0x0':             b'\x68\x00\x00\x00\x00',
