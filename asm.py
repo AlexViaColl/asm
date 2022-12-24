@@ -277,6 +277,9 @@ def disassemble_2b(raw, state):
         elif lo == 6:
             state['eip'] += 1
             return f'CLTS'
+        elif lo == 7:
+            state['eip'] += 1
+            return f'SYSRET'
     elif hi == 1:
         pass
     elif hi == 2:

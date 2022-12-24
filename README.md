@@ -193,7 +193,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 03 LSL Gv, Ew
     - [x] 05 SYSCALL
     - [x] 06 CLTS
-    - [ ] 07 SYSRET
+    - [x] 07 SYSRET
     - [ ] 08 INVD
     - [ ] 09 WBINVD
     - [ ] 0B 2-byte Illegal Opcodes UD2
