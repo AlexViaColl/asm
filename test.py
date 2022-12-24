@@ -523,6 +523,7 @@ if __name__ == '__main__':
         'MOV edi, 0x7fffffff':  b'\xbf\xff\xff\xff\x7f',
         'MOV edi, 0x80000000':  b'\xbf\x00\x00\x00\x80',
         'MOV edi, 0xffffffff':  b'\xbf\xff\xff\xff\xff',
+        'ROL BYTE PTR [eax], 0x0': b'\xc0\x00\x00',
         'RET 0x0':              b'\xc2\x00\x00',
         'RET 0x7fff':           b'\xc2\xff\x7f',
         'RET 0x8000':           b'\xc2\x00\x80',
