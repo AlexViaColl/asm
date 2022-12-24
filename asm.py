@@ -489,6 +489,13 @@ def disassemble(raw, state=None):
             ib = sign_extend(ib, 8)
             state['eip'] += 2
             return f'{prefix}PUSH {hex(ib)}'
+        elif lo == 0xb:
+            # TODO: More tests
+            inst = disassemble_gv_ev(raw, 'IMUL', state)
+            ib = raw[state['eip']]
+            ib = sign_extend(ib, 8)
+            state['eip'] += 1
+            return f'{inst}, {hex(ib)}'
     elif hi == 7:
         jmp_type = [
             'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',

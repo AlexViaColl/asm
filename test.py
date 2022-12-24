@@ -337,6 +337,8 @@ if __name__ == '__main__':
         'PUSH 0x7f':            b'\x6a\x7f',
         'PUSH 0xffffff80':      b'\x6a\x80',
         'PUSH 0xffffffff':      b'\x6a\xff',
+        'IMUL eax, DWORD PTR [eax], 0x0': b'\x6b\x00\x00',
+        'IMUL eax, DWORD PTR [eax], 0xffffffff': b'\x6b\x00\xff',
         'JO 0x2':               b'\x70\x00',
         'JNO 0x2':              b'\x71\x00',
         'JB 0x2':               b'\x72\x00',
