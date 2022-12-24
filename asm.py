@@ -255,6 +255,9 @@ def disassemble_eb_ib(raw, op, state):
 def disassemble_ev_iv(raw, op, state):
     return disassemble_ex_ix(raw, op, 'DWORD PTR', REGISTERS, state)
 
+def disassemble_2b(raw, state):
+    assert False, 'Not implemented yet!'
+
 def disassemble(raw, state=None):
     if len(raw) == 0:
         fail('ERROR: input was empty')
@@ -308,6 +311,9 @@ def disassemble(raw, state=None):
         elif lo == 0xe:
             state['eip'] += 1
             return f'{prefix}PUSH cs'
+        elif lo == 0xf:
+            state['eip'] += 1
+            return disassemble_2b(raw[1:], state)
     elif hi == 1:
         if lo == 0:
             return disassemble_eb_gb(raw, 'ADC', state) # TODO: Test
