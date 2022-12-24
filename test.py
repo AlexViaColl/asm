@@ -649,7 +649,8 @@ if __name__ == '__main__':
     }
     for inst in instructions:
         raw = instructions[inst]
-        actual = disassemble(raw)
+        state = {}
+        actual = disassemble(raw, state)
         if actual != inst:
             print(f'[ERROR] Unexpected disassembly for bytes: {raw.hex(" ")}')
             print(f'  Expected: {inst}')
