@@ -87,8 +87,8 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 6b IMUL Gv, Ev, Ib
     - [x] 6c INS/INSB Yb, DX
     - [x] 6d INS/INSW/INSD Yz, DX
-    - [ ] 6e OUTS/OUTSB DX, Xb
-    - [ ] 6f OUTS/OUTSW/OUTSD DX, Xz
+    - [x] 6e OUTS/OUTSB DX, Xb
+    - [x] 6f OUTS/OUTSW/OUTSD DX, Xz
     - [x] 70-7f JCC
     - [x] 80 Immediate Grp 1 Eb, Ib
     - [x] 81 Immediate Grp 1 Ev, Iz
@@ -158,7 +158,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] c1 Shift Grp 2 Ev, Iv
     - [x] c2 near RET Iw
     - [x] c3 RET
-    - [ ] c4 LES Gz, Mp VEX + 2 byte
+    - [x] c4 LES Gz, Mp VEX + 2 byte
     - [ ] c5 LDS Gz, Mp VEX + 1 byte
     - [ ] c6 Grp 11 MOV Eb, Ib
     - [ ] c7 Grp 11 MOV Ev, Iz

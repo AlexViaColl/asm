@@ -500,6 +500,10 @@ def disassemble(raw, state=None):
             return f'INS BYTE PTR es:[edi], dx'
         elif lo == 0xd:
             return f'INS DWORD PTR es:[edi], dx'
+        elif lo == 0xe:
+            return f'OUTS dx, BYTE PTR ds:[esi]'
+        elif lo == 0xf:
+            return f'OUTS dx, DWORD PTR ds:[esi]'
     elif hi == 7:
         jmp_type = [
             'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
@@ -657,6 +661,12 @@ def disassemble(raw, state=None):
         elif lo == 3:
             state['eip'] += 1
             return f'{prefix}RET'
+        elif lo == 4:
+            # TODO: More tests
+            mod, reg_op, rm = modrm(raw[1])
+            m = modrm_addressing(raw[1], raw[2:])
+            state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
+            return f'LES {REGISTERS[reg_op]}, FWORD PTR {m}'
         elif lo == 8:
             iw = int.from_bytes(raw[1:3], 'little')
             ib = raw[3]
