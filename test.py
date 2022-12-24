@@ -340,6 +340,7 @@ if __name__ == '__main__':
         'IMUL eax, DWORD PTR [eax], 0x0': b'\x6b\x00\x00',
         'IMUL eax, DWORD PTR [eax], 0xffffffff': b'\x6b\x00\xff',
         'INS BYTE PTR es:[edi], dx': b'\x6c',
+        'INS DWORD PTR es:[edi], dx': b'\x6d',
         'JO 0x2':               b'\x70\x00',
         'JNO 0x2':              b'\x71\x00',
         'JB 0x2':               b'\x72\x00',

@@ -498,6 +498,8 @@ def disassemble(raw, state=None):
             return f'{inst}, {hex(ib)}'
         elif lo == 0xc:
             return f'INS BYTE PTR es:[edi], dx'
+        elif lo == 0xd:
+            return f'INS DWORD PTR es:[edi], dx'
     elif hi == 7:
         jmp_type = [
             'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',

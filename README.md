@@ -86,7 +86,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 6a PUSH Ib
     - [x] 6b IMUL Gv, Ev, Ib
     - [x] 6c INS/INSB Yb, DX
-    - [ ] 6d INS/INSW/INSD Yz, DX
+    - [x] 6d INS/INSW/INSD Yz, DX
     - [ ] 6e OUTS/OUTSB DX, Xb
     - [ ] 6f OUTS/OUTSW/OUTSD DX, Xz
     - [x] 70-7f JCC
