@@ -7,6 +7,7 @@ from asm import disassemble
 
 if __name__ == '__main__':
     instructions = {
+        # 1-byte Opcodes
         'ADD BYTE PTR [eax], al':   b'\x00\x00',
         'ADD BYTE PTR [ecx], al':   b'\x00\x01',
         'ADD BYTE PTR [edx], al':   b'\x00\x02',
@@ -639,6 +640,10 @@ if __name__ == '__main__':
         'DEC DWORD PTR [eax+eax*1]': b'\xff\x0c\x00',
         # TODO: CALL, far CALL, JMP, far JMP
         'PUSH DWORD PTR [eax]':  b'\xff\x30',
+
+
+        # 2-byte Opcodes
+        'SYSCALL':              b'\x0f\x05',
     }
     for inst in instructions:
         raw = instructions[inst]

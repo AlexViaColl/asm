@@ -191,7 +191,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 01 Grp 7
     - [ ] 02 LAR Gv, Ew
     - [ ] 03 LSL Gv, Ew
-    - [ ] 05 SYSCALL
+    - [x] 05 SYSCALL
     - [ ] 06 CLTS
     - [ ] 07 SYSRET
     - [ ] 08 INVD

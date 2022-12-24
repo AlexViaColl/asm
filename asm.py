@@ -256,7 +256,54 @@ def disassemble_ev_iv(raw, op, state):
     return disassemble_ex_ix(raw, op, 'DWORD PTR', REGISTERS, state)
 
 def disassemble_2b(raw, state):
-    assert False, 'Not implemented yet!'
+    opcode = raw[0]
+    hi = (opcode & 0xF0) >> 4
+    lo = (opcode & 0x0F) >> 0
+
+    if hi == 0:
+        if lo == 0:
+            pass
+        elif lo == 1:
+            pass
+        elif lo == 2:
+            pass
+        elif lo == 3:
+            pass
+        elif lo == 4:
+            pass
+        elif lo == 5:
+            state['eip'] += 1
+            return f'SYSCALL'
+    elif hi == 1:
+        pass
+    elif hi == 2:
+        pass
+    elif hi == 3:
+        pass
+    elif hi == 4:
+        pass
+    elif hi == 5:
+        pass
+    elif hi == 6:
+        pass
+    elif hi == 7:
+        pass
+    elif hi == 8:
+        pass
+    elif hi == 9:
+        pass
+    elif hi == 0xa:
+        pass
+    elif hi == 0xb:
+        pass
+    elif hi == 0xc:
+        pass
+    elif hi == 0xd:
+        pass
+    elif hi == 0xe:
+        pass
+    elif hi == 0xf:
+        pass
 
 def disassemble(raw, state=None):
     if len(raw) == 0:
