@@ -776,7 +776,6 @@ def disassemble(raw, state=None):
             return f'{inst}, {hex(ib)}'
         else:
             return inst
-            return f'{op} BYTE PTR [eax]'
     elif opcode == 0xf8:
         state['eip'] += 1
         return f'{prefix}CLC'
