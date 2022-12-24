@@ -661,12 +661,13 @@ def disassemble(raw, state=None):
         elif lo == 3:
             state['eip'] += 1
             return f'{prefix}RET'
-        elif lo == 4:
+        elif lo == 4 or lo == 5:
             # TODO: More tests
+            op = ['LES', 'LDS'][lo - 4]
             mod, reg_op, rm = modrm(raw[1])
             m = modrm_addressing(raw[1], raw[2:])
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
-            return f'LES {REGISTERS[reg_op]}, FWORD PTR {m}'
+            return f'{op} {REGISTERS[reg_op]}, FWORD PTR {m}'
         elif lo == 8:
             iw = int.from_bytes(raw[1:3], 'little')
             ib = raw[3]
