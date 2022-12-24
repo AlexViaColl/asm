@@ -703,6 +703,10 @@ def disassemble(raw, state=None):
             m = modrm_addressing(raw[1], raw[2:])
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'{op} {REGISTERS[reg_op]}, FWORD PTR {m}'
+        elif lo == 6:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op == 0b000, 'Invalid Grp 11 MOV'
+            return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
         elif lo == 8:
             iw = int.from_bytes(raw[1:3], 'little')
             ib = raw[3]

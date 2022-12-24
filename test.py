@@ -532,6 +532,7 @@ if __name__ == '__main__':
         'RET':                  b'\xc3',
         'LES eax, FWORD PTR [eax]': b'\xc4\x00',
         'LDS eax, FWORD PTR [eax]': b'\xc5\x00',
+        'MOV BYTE PTR [eax], 0x0': b'\xc6\x00\x00',
         'ENTER 0x0, 0x0':       b'\xc8\x00\x00\x00',
         'ENTER 0x7fff, 0x0':    b'\xc8\xff\x7f\x00',
         'ENTER 0x8000, 0x0':    b'\xc8\x00\x80\x00',
