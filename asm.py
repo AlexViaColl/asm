@@ -243,6 +243,9 @@ def disassemble_ev_gv(raw, op, state):
 def disassemble_gb_eb(raw, op, state):
     return disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS8, state, swap=True)
 
+def disassemble_gw_ew(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS16, state, swap=True)
+
 def disassemble_gv_ev(raw, op, state):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state, swap=True)
 
@@ -553,6 +556,11 @@ def disassemble(raw, state=None):
             m = modrm_addressing(raw[1], raw[2:])
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'LEA {REGISTERS[reg_op]}, {m}'
+        elif lo == 0xe:
+            _, reg_op, _ = modrm(raw[1])
+            inst = disassemble_gw_ew(raw, 'MOV', state) # TODO: Test
+            # TODO: No dirty hacks...
+            return f'MOV {SEGMENTS[reg_op]},{inst.split(",")[1]}'
         elif lo == 0xf:
             mod, reg_op, rm = modrm(raw[1])
             assert reg_op == 0b000
