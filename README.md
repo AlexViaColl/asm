@@ -75,7 +75,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 58-5f POP general register
     - [x] 60 PUSHA
     - [x] 61 POPA
-    - [ ] 62 BOUND Gv, Ma
+    - [x] 62 BOUND Gv, Ma
     - [ ] 63 ARPL Ew, Gw
     - [x] 64 SEG=FS (Prefix)
     - [x] 65 SEG=GS (Prefix)
