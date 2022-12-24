@@ -496,6 +496,8 @@ def disassemble(raw, state=None):
             ib = sign_extend(ib, 8)
             state['eip'] += 1
             return f'{inst}, {hex(ib)}'
+        elif lo == 0xc:
+            return f'INS BYTE PTR es:[edi], dx'
     elif hi == 7:
         jmp_type = [
             'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
