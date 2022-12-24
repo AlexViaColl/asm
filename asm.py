@@ -776,6 +776,19 @@ def disassemble(raw, state=None):
             return f'{inst}, {hex(ib)}'
         else:
             return inst
+    elif opcode == 0xf7:
+        mod, reg_op, rm = modrm(raw[1])
+        assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
+        op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
+        # TODO: No dirty hacks!
+        inst = disassemble_ev_gv(raw, op, state)
+        inst = inst.split(',')[0]
+        if op == 'TEST':
+            ib = raw[state['eip']]
+            state['eip'] += 1
+            return f'{inst}, {hex(ib)}'
+        else:
+            return inst
     elif opcode == 0xf8:
         state['eip'] += 1
         return f'{prefix}CLC'
