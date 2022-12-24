@@ -549,7 +549,10 @@ def disassemble(raw, state=None):
             # TODO: No dirty hacks...
             return f'{inst.split(",")[0]}, {SEGMENTS[reg_op]}'
         elif lo == 0xd:
-            pass
+            _, reg_op, _ = modrm(raw[1])
+            m = modrm_addressing(raw[1], raw[2:])
+            state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
+            return f'LEA {REGISTERS[reg_op]}, {m}'
         elif lo == 0xf:
             mod, reg_op, rm = modrm(raw[1])
             assert reg_op == 0b000
