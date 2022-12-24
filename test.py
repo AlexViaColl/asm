@@ -394,6 +394,8 @@ if __name__ == '__main__':
         'MOV eax, eax':         b'\x89\xc0',
         'MOV al, al':           b'\x8a\xc0',
         'MOV eax, eax':         b'\x8b\xc0',
+        'MOV WORD PTR [eax], es': b'\x8c\x00',
+        'MOV WORD PTR [eax], gs': b'\x8c\x28',
         'POP DWORD PTR [eax]':  b'\x8f\x00',
         'POP DWORD PTR [ecx]':  b'\x8f\x01',
         'POP DWORD PTR [edx]':  b'\x8f\x02',

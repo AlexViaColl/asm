@@ -5,6 +5,7 @@ import sys
 REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
 REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
+SEGMENTS = ['es', 'cs', 'ss', 'ds', 'fs', 'gs']
 
 def fail(*s):
     print(*s, file=sys.stderr)
@@ -543,7 +544,10 @@ def disassemble(raw, state=None):
         elif lo == 0xb:
             return disassemble_gv_ev(raw, 'MOV', state) # TODO: Test
         elif lo == 0xc:
-            pass
+            _, reg_op, _ = modrm(raw[1])
+            inst = disassemble_ew_gw(raw, 'MOV', state) # TODO: Test
+            # TODO: No dirty hacks...
+            return f'{inst.split(",")[0]}, {SEGMENTS[reg_op]}'
         elif lo == 0xd:
             pass
         elif lo == 0xf:

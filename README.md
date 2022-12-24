@@ -102,7 +102,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 89 MOV Ev, Gv
     - [x] 8a MOV Gb, Eb
     - [x] 8b MOV Gv, Ev
-    - [ ] 8c MOV Ev, Sw
+    - [x] 8c MOV Ev, Sw ***
     - [ ] 8d LEA Gv, M
     - [ ] 8e MOV Sw, Ew
     - [x] 8f Grp 1A POP Ev
