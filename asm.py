@@ -315,6 +315,9 @@ def disassemble_2b(raw, state):
         elif lo == 5:
             state['eip'] += 1
             return f'SYSEXIT'
+        elif lo == 7:
+            state['eip'] += 1
+            return f'GETSEC'
     elif hi == 4:
         pass
     elif hi == 5:

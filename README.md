@@ -209,7 +209,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 33 RDPMC
     - [x] 34 SYSENTER
     - [x] 35 SYSEXIT
-    - [ ] 37 GETSEC
+    - [x] 37 GETSEC
     - [ ] 38 3-byte opcode escape
     - [ ] 3a 3-byte opcode escape
     - [ ] 40-4f CMOVcc (Gv, Ev) - Conditional Move
