@@ -206,7 +206,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 30 WRMSR
     - [x] 31 RDTSC
     - [x] 32 RDMSR
-    - [ ] 33 RDPMC
+    - [x] 33 RDPMC
     - [ ] 34 SYSENTER
     - [ ] 35 SYSCALL
     - [ ] 37 GETSEC
