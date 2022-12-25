@@ -938,6 +938,9 @@ def disassemble(raw, state=None):
                 if raw[1] == 0xe2:
                     state['eip'] += 2
                     return f'FNCLEX'
+                if raw[1] == 0xe3:
+                    state['eip'] += 2
+                    return f'FNINIT'
                 pass
         elif lo == 0xc:
             _, nnn, _ = modrm(raw[1])
