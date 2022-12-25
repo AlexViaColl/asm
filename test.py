@@ -560,6 +560,8 @@ if __name__ == '__main__':
         'INTO':                 b'\xce',
         'IRET':                 b'\xcf',
 
+        'FLD QWORD PTR [ebp-0x8]': b'\xdd\x45\xf8',
+
         'CALL 0x23d1':          b'\xe8\xcc\x23\x00\x00',
         'JMP 0x5':              b'\xeb\x03',
 

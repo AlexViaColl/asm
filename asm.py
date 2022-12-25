@@ -879,7 +879,16 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}IRET'
     elif hi == 0xd:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 0xd:
+            _, nnn, _ = modrm(raw[1])
+            if nnn == 0b000:
+                addr = modrm_addressing(raw[1], raw[2:], state)
+                state['eip'] += 2
+                return f'FLD QWORD PTR {addr}' # double-real
+            elif nnn == 0b001:
+                pass
     elif hi == 0xe:
         if lo == 0:
             pass
