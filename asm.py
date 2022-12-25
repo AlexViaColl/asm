@@ -297,7 +297,11 @@ def disassemble_2b(raw, state):
     elif hi == 2:
         pass
     elif hi == 3:
-        pass
+        if lo == 0:
+            state['eip'] += 1
+            return f'WRMSR'
+        elif lo == 1:
+            pass
     elif hi == 4:
         pass
     elif hi == 5:
