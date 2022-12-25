@@ -659,6 +659,16 @@ def disassemble(raw, state=None):
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
             return disassemble_eb_ib(raw, op, state) # TODO: Test
+        elif lo == 3:
+            mod, reg_op, rm = modrm(raw[1])
+            op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
+            # TODO: More tests
+            inst = disassemble_ev_gv(raw, op, state)
+            inst = inst.split(',')[0]
+            ib = raw[state['eip']]
+            ib = sign_extend(ib, 8)
+            state['eip'] += 1
+            return f'{inst}, {hex(ib)}'
         elif lo == 4:
             return disassemble_eb_gb(raw, 'TEST', state) # TODO: Test
         elif lo == 5:

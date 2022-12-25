@@ -379,6 +379,7 @@ if __name__ == '__main__':
         'SUB DWORD PTR [eax+eax*1], 0x0': b'\x81\x2c\x00\x00\x00\x00\x00',
         'XOR DWORD PTR [eax+eax*1], 0x0': b'\x81\x34\x00\x00\x00\x00\x00',
         'CMP DWORD PTR [eax+eax*1], 0x0': b'\x81\x3c\x00\x00\x00\x00\x00',
+        'AND ecx, 0xff':                  b'\x81\xe1\xff\x00\x00\x00',
 
         'ADD BYTE PTR [eax+eax*1], 0x0': b'\x82\x04\x00\x00',
         'OR BYTE PTR [eax+eax*1], 0x0':  b'\x82\x0c\x00\x00',
@@ -388,6 +389,7 @@ if __name__ == '__main__':
         'SUB BYTE PTR [eax+eax*1], 0x0': b'\x82\x2c\x00\x00',
         'XOR BYTE PTR [eax+eax*1], 0x0': b'\x82\x34\x00\x00',
         'CMP BYTE PTR [eax+eax*1], 0x0': b'\x82\x3c\x00\x00',
+        'SUB esp, 0x58':                 b'\x83\xec\x58',
         'TEST al, al':          b'\x84\xc0',
         'TEST eax, eax':        b'\x85\xc0',
         'XCHG al, al':          b'\x86\xc0',
