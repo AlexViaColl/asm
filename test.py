@@ -648,6 +648,7 @@ if __name__ == '__main__':
         'CLTS':                 b'\x0f\x06',
         'SYSRET':               b'\x0f\x07',
         'INVD':                 b'\x0f\x08',
+        'WBINVD':               b'\x0f\x09',
     }
     for inst in instructions:
         raw = instructions[inst]

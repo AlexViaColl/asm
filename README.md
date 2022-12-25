@@ -195,7 +195,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 06 CLTS
     - [x] 07 SYSRET
     - [x] 08 INVD
-    - [ ] 09 WBINVD
+    - [x] 09 WBINVD
     - [ ] 0B 2-byte Illegal Opcodes UD2
     - [ ] 10-1f
     - [ ] 20 MOV Rd, Cd
