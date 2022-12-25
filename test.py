@@ -561,6 +561,7 @@ if __name__ == '__main__':
         'IRET':                 b'\xcf',
 
         'CALL 0x23d1':          b'\xe8\xcc\x23\x00\x00',
+        'JMP 0x5':              b'\xeb\x03',
 
         'INT1':                 b'\xf1',
         'HLT':                  b'\xf4',
