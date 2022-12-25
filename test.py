@@ -565,6 +565,7 @@ if __name__ == '__main__':
         'FADD QWORD PTR ds:0x895528': b'\xdc\x05\x28\x55\x89\x00',
         'FSTP QWORD PTR [esp]':    b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]': b'\xdd\x45\xf8',
+        'FNSTSW WORD PTR [ebp-0x4]': b'\xdd\x7d\xfc',
 
         'CALL 0x23d1':          b'\xe8\xcc\x23\x00\x00',
         'JMP 0xffe8:0x45f76175': b'\xea\x75\x61\xf7\x45\xe8\xff',

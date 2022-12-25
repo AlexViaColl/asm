@@ -954,6 +954,16 @@ def disassemble(raw, state=None):
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
                     return f'FSTP QWORD PTR {addr}'
+                elif nnn == 0b100:
+                    pass
+                elif nnn == 0b101:
+                    pass
+                elif nnn == 0b110:
+                    pass
+                elif nnn == 0b111:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FNSTSW WORD PTR {addr}'
             else:
                 if raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
