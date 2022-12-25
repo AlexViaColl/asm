@@ -337,6 +337,9 @@ def disassemble_2b(raw, state):
         elif lo == 1:
             state['eip'] += 1
             return f'POP fs'
+        elif lo == 2:
+            state['eip'] += 1
+            return f'CPUID'
     elif hi == 0xb:
         pass
     elif hi == 0xc:
