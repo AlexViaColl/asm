@@ -315,6 +315,7 @@ nop
     - Opcode Extensions by Group Number: 2672
     - ModR/M Addressing Forms (32-bit): 512
     - Key to Abbreviations: 2655
+    - FPU x87: 2679
 - [Defuse (Online x86/x64 Assembler and Disassembler)](https://defuse.ca/online-x86-assembler.htm)
 - [GNU Assembler](https://sourceware.org/binutils/docs-2.39/as.html)
 - [Capstone](http://www.capstone-engine.org/)

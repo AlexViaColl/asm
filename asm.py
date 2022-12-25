@@ -31,7 +31,10 @@ def sib(x):
     return (scale, index, base)
 
 def sib_str(scale, index, base):
-    return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
+    if index == 0b100:
+        return f'{REGISTERS[base]}'
+    else:
+        return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
 def modrm_addressing(m, rest, state):
     mod, reg_op, rm = modrm(m)
@@ -889,6 +892,12 @@ def disassemble(raw, state=None):
                 return f'FLD QWORD PTR {addr}' # double-real
             elif nnn == 0b001:
                 pass
+            elif nnn == 0b010:
+                pass
+            elif nnn == 0b011:
+                addr = modrm_addressing(raw[1], raw[2:], state)
+                state['eip'] += 2
+                return f'FSTP QWORD PTR {addr}' # double-real
     elif hi == 0xe:
         if lo == 0:
             pass
