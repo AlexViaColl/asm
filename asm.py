@@ -36,7 +36,7 @@ def sib_str(scale, index, base):
     else:
         return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
-def modrm_addressing(m, rest, state):
+def modrm_addressing(m, rest, state, reg_size=32):
     mod, reg_op, rm = modrm(m)
     if mod == 0b00:
         if rm <= 0b011 or rm >= 0b110:
@@ -80,7 +80,12 @@ def modrm_addressing(m, rest, state):
             state['eip'] += 5
             return f'[{sib_str(scale, idx, base)}{disp32}]'
     elif mod == 0b11:
-        assert False, 'Invalid instruction'
+        regs = {
+            8:  REGISTERS8,
+            16: REGISTERS16,
+            32: REGISTERS,
+        }[reg_size]
+        return regs[rm]
 
 def disassemble_ex_gx(raw, op, ptr_size, reg_size, state, swap=False):
     seg = state['seg']
@@ -342,7 +347,13 @@ def disassemble_2b(raw, state):
         addr = state['eip'] + rel32
         return f'{jmp_type} {hex(addr)}'
     elif hi == 9:
-        pass
+        set_type = [
+            'SETO', 'SETNO', 'SETB', 'SETNB', 'SETE', 'SETNE', 'SETBE', 'SETNBE',
+            'SETS', 'SETNS', 'SETP', 'SETNP', 'SETL', 'SETNL', 'SETLE', 'SETNLE',
+        ][lo]
+        addr = modrm_addressing(raw[1], raw[2:], state, 8)
+        state['eip'] += 2
+        return f'{set_type} {addr}'
     elif hi == 0xa:
         if lo == 0:
             state['eip'] += 1

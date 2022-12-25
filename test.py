@@ -673,6 +673,7 @@ if __name__ == '__main__':
         'GETSEC':               b'\x0f\x37',
 
         'JE 0x1dc':             b'\x0f\x84\xd6\x01\x00\x00',
+        'SETNE cl':             b'\x0f\x95\xc1',
 
         'PUSH fs':              b'\x0f\xa0',
         'POP fs':               b'\x0f\xa1',
