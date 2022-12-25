@@ -891,7 +891,14 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FCHS'
         elif lo == 0xb:
-            pass
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FILD QWORD PTR {addr}'
+            else:
+                pass
         elif lo == 0xc:
             _, nnn, _ = modrm(raw[1])
             if nnn == 0b000:
