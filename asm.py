@@ -924,6 +924,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FILD QWORD PTR {addr}'
             else:
+                if raw[1] == 0xe2:
+                    state['eip'] += 2
+                    return f'FNCLEX'
                 pass
         elif lo == 0xc:
             _, nnn, _ = modrm(raw[1])
