@@ -869,6 +869,10 @@ def disassemble(raw, state=None):
         elif lo == 0xf:
             state['eip'] += 1
             return f'{prefix}IRET'
+    elif hi == 0xd:
+        pass
+    elif hi == 0xe:
+        pass
     elif opcode == 0xf0:
         state['prefix'] = 'lock '
         state['eip'] += 1
@@ -951,4 +955,7 @@ def disassemble(raw, state=None):
 
 if __name__ == '__main__':
     raw = sys.stdin.buffer.read()
-    print(disassemble(raw))
+    state = {'eip': 0}
+    while state['eip'] != len(raw):
+        code = raw[state['eip']:]
+        print(disassemble(code, state))
