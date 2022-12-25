@@ -303,6 +303,9 @@ def disassemble_2b(raw, state):
         elif lo == 1:
             state['eip'] += 1
             return f'RDTSC'
+        elif lo == 2:
+            state['eip'] += 1
+            return f'RDMSR'
     elif hi == 4:
         pass
     elif hi == 5:

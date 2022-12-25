@@ -651,6 +651,7 @@ if __name__ == '__main__':
         'WBINVD':               b'\x0f\x09',
         'WRMSR':                b'\x0f\x30',
         'RDTSC':                b'\x0f\x31',
+        'RDMSR':                b'\x0f\x32',
     }
     for inst in instructions:
         raw = instructions[inst]
