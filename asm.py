@@ -956,6 +956,11 @@ def disassemble(raw, state=None):
             state['eip'] += 5
             addr = state['eip'] + rel32
             return f'JMP {hex(addr)}'
+        elif lo == 0xa:
+            iv = int.from_bytes(raw[1:5], 'little')
+            iw = int.from_bytes(raw[5:7], 'little')
+            state['eip'] += 7
+            return f'JMP {hex(iw)}:{hex(iv)}'
         elif lo == 0xb:
             rel8 = raw[1]
             state['eip'] += 2
