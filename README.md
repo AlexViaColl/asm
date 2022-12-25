@@ -276,6 +276,15 @@ $ echo -ne '\x90' | ./asm.py
 NOP
 ```
 
+## Using other disassemblers
+```console
+$ ndisasm -b32 <(echo -ne '\x90')
+00000000  90                nop
+
+$ ndisasm -b32 <(echo -ne '\x90') | tr -s ' ' | cut -d ' ' -f3-
+nop
+```
+
 ## References
 - [Intel Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
     - One-byte Opcode Map: 2661, 2662
