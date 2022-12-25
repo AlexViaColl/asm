@@ -334,6 +334,9 @@ def disassemble_2b(raw, state):
         if lo == 0:
             state['eip'] += 1
             return f'PUSH fs'
+        elif lo == 1:
+            state['eip'] += 1
+            return f'POP fs'
     elif hi == 0xb:
         pass
     elif hi == 0xc:

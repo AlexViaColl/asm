@@ -219,7 +219,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 80-8f Jcc, Jz - Long-displacement jump on condition
     - [ ] 90-9f SETcc, Eb - Byte Set on condition
     - [x] a0 PUSH FS
-    - [ ] a1 POP FS
+    - [x] a1 POP FS
     - [ ] a2 CPUID
     - [ ] a3 BT Ev, Gv
     - [ ] a4 SHLD Ev, Gv, Ib

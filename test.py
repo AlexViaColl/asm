@@ -658,6 +658,7 @@ if __name__ == '__main__':
         'GETSEC':               b'\x0f\x37',
 
         'PUSH fs':              b'\x0f\xa0',
+        'POP fs':               b'\x0f\xa1',
     }
     for inst in instructions:
         raw = instructions[inst]
