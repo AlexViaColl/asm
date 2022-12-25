@@ -33,7 +33,7 @@ def sib(x):
 def sib_str(scale, index, base):
     return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
-def modrm_addressing(m, rest):
+def modrm_addressing(m, rest, state):
     mod, reg_op, rm = modrm(m)
     if mod == 0b00:
         if rm <= 0b011 or rm >= 0b110:
@@ -42,33 +42,39 @@ def modrm_addressing(m, rest):
             scale, idx, base = sib(rest[0])
             if base == 0b101:
                 assert False, 'Invalid SIB'
+            state['eip'] += 1
             return f'[{sib_str(scale, idx, base)}]'
         elif rm == 0b101:
             disp32 = int.from_bytes(rest[0:4], 'little')
+            state['eip'] += 4
             return f'ds:{hex(disp32)}'
     elif mod == 0b01:
         if rm <= 0b011 or rm >= 0b101:
             disp8 = hex(sign_extend(rest[0], 8, unsigned=False))
             if disp8.startswith('0x'):
                 disp8 = f'+{disp8}'
+            state['eip'] += 1
             return f'[{REGISTERS[rm]}{disp8}]'
         elif rm == 0b100:
             scale, idx, base = sib(rest[0])
             disp8 = hex(sign_extend(rest[1], 8, unsigned=False))
             if disp8.startswith('0x'):
                 disp8 = f'+{disp8}'
+            state['eip'] += 2
             return f'[{sib_str(scale, idx, base)}{disp8}]'
     elif mod == 0b10:
         if rm <= 0b011 or rm >= 0b101:
             disp32 = hex(sign_extend(int.from_bytes(rest[0:4], 'little'), 32, unsigned=False))
             if disp32.startswith('0x'):
                 disp32 = f'+{disp8}'
+            state['eip'] += 4
             return f'[{REGISTERS[rm]}{disp32}]'
         elif rm == 0b100:
             scale, idx, base = sib(rest[0])
             disp32 = hex(sign_extend(int.from_bytes(rest[1:5], 'little'), 32, unsigned=False))
             if disp32.startswith('0x'):
                 disp32 = f'+{disp32}'
+            state['eip'] += 5
             return f'[{sib_str(scale, idx, base)}{disp32}]'
     elif mod == 0b11:
         assert False, 'Invalid instruction'
@@ -529,8 +535,8 @@ def disassemble(raw, state=None):
             return f'{prefix}POPA'
         elif lo == 2:
             _, reg_op, _ = modrm(raw[1])
-            m = modrm_addressing(raw[1], raw[2:])
-            state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
+            m = modrm_addressing(raw[1], raw[2:], state)
+            state['eip'] += 2
             return f'BOUND {REGISTERS[reg_op]}, QWORD PTR {m}'
         elif lo == 3:
             # TODO: More tests
@@ -572,12 +578,16 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{inst}, {hex(ib)}'
         elif lo == 0xc:
+            state['eip'] += 1
             return f'INS BYTE PTR es:[edi], dx'
         elif lo == 0xd:
+            state['eip'] += 1
             return f'INS DWORD PTR es:[edi], dx'
         elif lo == 0xe:
+            state['eip'] += 1
             return f'OUTS dx, BYTE PTR ds:[esi]'
         elif lo == 0xf:
+            state['eip'] += 1
             return f'OUTS dx, DWORD PTR ds:[esi]'
     elif hi == 7:
         jmp_type = [
@@ -596,7 +606,12 @@ def disassemble(raw, state=None):
         elif lo == 1:
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
-            return disassemble_ev_iv(raw, op, state) # TODO: Test
+            # TODO: No dirty hacks!
+            inst = disassemble_ev_iv(raw, op, state) # TODO: Test
+            inst = inst.split(',')[0]
+            iz = int.from_bytes(raw[state['eip']-1:state['eip']+3], 'little')
+            state['eip'] += 3
+            return f'{inst}, {hex(iz)}'
         elif lo == 2:
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
@@ -624,7 +639,7 @@ def disassemble(raw, state=None):
             return f'{inst.split(",")[0]}, {SEGMENTS[reg_op]}'
         elif lo == 0xd:
             _, reg_op, _ = modrm(raw[1])
-            m = modrm_addressing(raw[1], raw[2:])
+            m = modrm_addressing(raw[1], raw[2:], state)
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'LEA {REGISTERS[reg_op]}, {m}'
         elif lo == 0xe:
@@ -759,7 +774,7 @@ def disassemble(raw, state=None):
             # TODO: More tests
             op = ['LES', 'LDS'][lo - 4]
             mod, reg_op, rm = modrm(raw[1])
-            m = modrm_addressing(raw[1], raw[2:])
+            m = modrm_addressing(raw[1], raw[2:], state)
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'{op} {REGISTERS[reg_op]}, FWORD PTR {m}'
         elif lo == 6:
@@ -843,9 +858,9 @@ def disassemble(raw, state=None):
         inst = disassemble_ev_gv(raw, op, state)
         inst = inst.split(',')[0]
         if op == 'TEST':
-            ib = raw[state['eip']]
-            state['eip'] += 1
-            return f'{inst}, {hex(ib)}'
+            iz = int.from_bytes(raw[state['eip']:state['eip']+4], 'little')
+            state['eip'] += 4
+            return f'{inst}, {hex(iz)}'
         else:
             return inst
     elif opcode == 0xf8:

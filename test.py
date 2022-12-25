@@ -371,6 +371,7 @@ if __name__ == '__main__':
         'CMP BYTE PTR [eax+eax*1], 0x0': b'\x80\x3c\x00\x00',
 
         'ADD DWORD PTR [eax+eax*1], 0x0': b'\x81\x04\x00\x00\x00\x00\x00',
+        'ADD DWORD PTR [eax+eax*1], 0xffffffff': b'\x81\x04\x00\xff\xff\xff\xff',
         'OR DWORD PTR [eax+eax*1], 0x0':  b'\x81\x0c\x00\x00\x00\x00\x00',
         'ADC DWORD PTR [eax+eax*1], 0x0': b'\x81\x14\x00\x00\x00\x00\x00',
         'SBB DWORD PTR [eax+eax*1], 0x0': b'\x81\x1c\x00\x00\x00\x00\x00',
@@ -655,4 +656,9 @@ if __name__ == '__main__':
             print(f'[ERROR] Unexpected disassembly for bytes: {raw.hex(" ")}')
             print(f'  Expected: {inst}')
             print(f'  But got:  {actual}')
+            sys.exit(1)
+        if state['eip'] != len(raw):
+            print(f'[ERROR] Unexpected eip after disassembly of bytes: {raw.hex(" ")}')
+            print(f'  Expected: {len(raw)} ({inst})')
+            print(f'  But got:  {state["eip"]} ({actual})')
             sys.exit(1)
