@@ -312,6 +312,9 @@ def disassemble_2b(raw, state):
         elif lo == 4:
             state['eip'] += 1
             return f'SYSENTER'
+        elif lo == 5:
+            state['eip'] += 1
+            return f'SYSEXIT'
     elif hi == 4:
         pass
     elif hi == 5:

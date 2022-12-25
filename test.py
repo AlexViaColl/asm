@@ -654,6 +654,7 @@ if __name__ == '__main__':
         'RDMSR':                b'\x0f\x32',
         'RDPMC':                b'\x0f\x33',
         'SYSENTER':             b'\x0f\x34',
+        'SYSEXIT':              b'\x0f\x35',
     }
     for inst in instructions:
         raw = instructions[inst]
