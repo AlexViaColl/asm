@@ -204,7 +204,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] 23 MOV Dd, Rd
     - [ ] 28-2f
     - [x] 30 WRMSR
-    - [ ] 31 RDTSC
+    - [x] 31 RDTSC
     - [ ] 32 RDMSR
     - [ ] 33 RDPMC
     - [ ] 34 SYSENTER
