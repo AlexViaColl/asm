@@ -890,83 +890,84 @@ def disassemble(raw, state=None):
             state['eip'] += 5
             addr = state['eip'] + rel32
             return f'CALL {hex(addr)}'
-    elif opcode == 0xf0:
-        state['prefix'] = 'lock '
-        state['eip'] += 1
-        return disassemble(raw[1:], state)
-    elif opcode == 0xf1:
-        state['eip'] += 1
-        return f'{prefix}INT1'
-    elif opcode == 0xf2:
-        state['prefix'] = 'repne '
-        state['eip'] += 1
-        return disassemble(raw[1:], state)
-    elif opcode == 0xf3:
-        state['prefix'] = 'repe '
-        state['eip'] += 1
-        return disassemble(raw[1:], state)
-    elif opcode == 0xf4:
-        state['eip'] += 1
-        return f'{prefix}HLT'
-    elif opcode == 0xf5:
-        state['eip'] += 1
-        return f'{prefix}CMC'
-    elif opcode == 0xf6:
-        mod, reg_op, rm = modrm(raw[1])
-        assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
-        op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
-        # TODO: No dirty hacks!
-        inst = disassemble_eb_gb(raw, op, state)
-        inst = inst.split(',')[0]
-        if op == 'TEST':
-            ib = raw[state['eip']-eip]
+    elif hi == 0xf:
+        if lo == 0:
+            state['prefix'] = 'lock '
             state['eip'] += 1
-            return f'{inst}, {hex(ib)}'
-        else:
-            return inst
-    elif opcode == 0xf7:
-        mod, reg_op, rm = modrm(raw[1])
-        assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
-        op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
-        # TODO: No dirty hacks!
-        inst = disassemble_ev_gv(raw, op, state)
-        inst = inst.split(',')[0]
-        if op == 'TEST':
-            iz = int.from_bytes(raw[state['eip']:state['eip']+4], 'little')
-            state['eip'] += 4
-            return f'{inst}, {hex(iz)}'
-        else:
-            return inst
-    elif opcode == 0xf8:
-        state['eip'] += 1
-        return f'{prefix}CLC'
-    elif opcode == 0xf9:
-        state['eip'] += 1
-        return f'{prefix}STC'
-    elif opcode == 0xfa:
-        state['eip'] += 1
-        return f'{prefix}CLI'
-    elif opcode == 0xfb:
-        state['eip'] += 1
-        return f'{prefix}STI'
-    elif opcode == 0xfc:
-        state['eip'] += 1
-        return f'{prefix}CLD'
-    elif opcode == 0xfd:
-        state['eip'] += 1
-        return f'{prefix}STD'
-    elif opcode == 0xfe:
-        mod, reg_op, rm = modrm(raw[1])
-        assert reg_op <= 0b001
-        op = ['INC', 'DEC'][reg_op]
-        xxx = disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS, state)
-        return xxx.split(',')[0]
-    elif opcode == 0xff:
-        mod, reg_op, rm = modrm(raw[1])
-        assert reg_op != 0b111
-        op = ['INC', 'DEC', 'CALL', 'CALL', 'JMP', 'JMP', 'PUSH'][reg_op]
-        xxx = disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
-        return xxx.split(',')[0]
+            return disassemble(raw[1:], state)
+        elif lo == 1:
+            state['eip'] += 1
+            return f'{prefix}INT1'
+        elif lo == 2:
+            state['prefix'] = 'repne '
+            state['eip'] += 1
+            return disassemble(raw[1:], state)
+        elif lo == 3:
+            state['prefix'] = 'repe '
+            state['eip'] += 1
+            return disassemble(raw[1:], state)
+        elif lo == 4:
+            state['eip'] += 1
+            return f'{prefix}HLT'
+        elif lo == 5:
+            state['eip'] += 1
+            return f'{prefix}CMC'
+        elif lo == 6:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
+            op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
+            # TODO: No dirty hacks!
+            inst = disassemble_eb_gb(raw, op, state)
+            inst = inst.split(',')[0]
+            if op == 'TEST':
+                ib = raw[state['eip']-eip]
+                state['eip'] += 1
+                return f'{inst}, {hex(ib)}'
+            else:
+                return inst
+        elif lo == 7:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
+            op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
+            # TODO: No dirty hacks!
+            inst = disassemble_ev_gv(raw, op, state)
+            inst = inst.split(',')[0]
+            if op == 'TEST':
+                iz = int.from_bytes(raw[state['eip']:state['eip']+4], 'little')
+                state['eip'] += 4
+                return f'{inst}, {hex(iz)}'
+            else:
+                return inst
+        elif lo == 8:
+            state['eip'] += 1
+            return f'{prefix}CLC'
+        elif lo == 9:
+            state['eip'] += 1
+            return f'{prefix}STC'
+        elif lo == 0xa:
+            state['eip'] += 1
+            return f'{prefix}CLI'
+        elif lo == 0xb:
+            state['eip'] += 1
+            return f'{prefix}STI'
+        elif lo == 0xc:
+            state['eip'] += 1
+            return f'{prefix}CLD'
+        elif lo == 0xd:
+            state['eip'] += 1
+            return f'{prefix}STD'
+        elif lo == 0xe:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op <= 0b001
+            op = ['INC', 'DEC'][reg_op]
+            xxx = disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS, state)
+            return xxx.split(',')[0]
+        elif lo == 0xf:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op != 0b111
+            op = ['INC', 'DEC', 'CALL', 'CALL', 'JMP', 'JMP', 'PUSH'][reg_op]
+            xxx = disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
+            return xxx.split(',')[0]
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 
@@ -984,6 +985,9 @@ if __name__ == '__main__':
         #print(code[:8])
         inst = disassemble(code, state)
         end = state['eip']
+        if start == end:
+            print(code[:8].hex(' '))
+            end += 1
         print(f'{raw[start:end].hex(" ") : <30}', end='')
         print(inst)
         #print(state)
