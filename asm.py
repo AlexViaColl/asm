@@ -912,7 +912,14 @@ def disassemble(raw, state=None):
             pass
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
-            if raw[1] >= 0xc0:
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    pass
+                elif nnn == 0b111:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FNSTCW WORD PTR {addr}'
+            else:
                 if raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FCHS'

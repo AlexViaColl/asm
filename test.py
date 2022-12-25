@@ -561,6 +561,7 @@ if __name__ == '__main__':
         'INTO':                 b'\xce',
         'IRET':                 b'\xcf',
 
+        'FNSTCW WORD PTR [ebp-0x4]': b'\xd9\x7d\xfc',
         'FILD QWORD PTR [ebp+0xc]': b'\xdb\x45\x0c',
         'FNCLEX':                   b'\xdb\xe2',
         'FADD QWORD PTR ds:0x895528': b'\xdc\x05\x28\x55\x89\x00',
