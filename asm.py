@@ -38,6 +38,9 @@ def sib(x):
     return (scale, index, base)
 
 def sib_str(scale, index, base):
+    if base == None:
+        return f'{REGISTERS[index]}*{2**scale}'
+
     if index == 0b100:
         return f'{REGISTERS[base]}'
     else:
@@ -109,9 +112,13 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size, state, swap=False):
             return f'{prefix}{op} {dst}, {src}'
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
+            disp = ''
             if base == 0b101:
-                assert False, 'Invalid SIB'
-            dst = f'{ptr_size} [{sib_str(scale, idx, base)}]'
+                disp32 = int.from_bytes(raw[3:7], 'little')
+                disp = f'+{hex(disp32)}'
+                base = None
+                state['eip'] += 4
+            dst = f'{ptr_size} [{sib_str(scale, idx, base)}{disp}]'
             src = f'{reg_size[reg_op]}'
             if swap:
                 dst,src = src,dst
