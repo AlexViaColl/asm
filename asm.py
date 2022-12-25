@@ -2,6 +2,13 @@
 
 import sys
 
+VERSION = '0.0.1'
+USAGE = '''
+Usage: asm [OPTION]...
+        -v, --version   Print version information
+        -h, --help      Display this information
+'''
+
 REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
 REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
@@ -1071,18 +1078,45 @@ if __name__ == '__main__':
     #print(disassemble(b'\xf6\x45\xd0\x01', state))
     #sys.exit(0)
 
+    show_version = False
+    show_usage = False
+    base = 0
+    if len(sys.argv) > 1:
+        args = sys.argv[1:]
+        for i, arg in enumerate(args):
+            if arg == '-v' or arg == '--version':
+                show_version = True
+            elif arg == '-h' or arg == '--help':
+                show_usage = True
+            elif (arg == '-b' or arg == '--base') and len(args) > i:
+                base = args[i+1]
+                if base.startswith('0x'):
+                    base = int(base, base=16)
+                elif base.startswith('0b'):
+                    base = int(base, base=2)
+                else:
+                    base = int(base)
+
+    if show_version:
+        print(f'asm version {VERSION}')
+        sys.exit(0)
+    elif show_usage:
+        print(USAGE)
+        sys.exit(0)
+
     raw = sys.stdin.buffer.read()
     state = {'eip': 0}
     while state['eip'] != len(raw):
         start = state['eip']
         code = raw[start:]
         state['seg'] = ''
+        state['prefix'] = ''
         #print(code[:8])
         inst = disassemble(code, state)
         end = state['eip']
         if start == end:
             print(code[:8].hex(' '))
             end += 1
-        print(f'{raw[start:end].hex(" ") : <30}', end='')
+        print(f'{base+start:08x}: {raw[start:end].hex(" ") : <30}', end='')
         print(inst)
         #print(state)
