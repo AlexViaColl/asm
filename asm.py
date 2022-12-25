@@ -827,7 +827,7 @@ def disassemble(raw, state=None):
             mod, reg_op, rm = modrm(raw[1])
             assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
             op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
-            return disassemble_ev_iv(raw, op, state) # TODO: Test
+            return disassemble_eb_ib(raw, op, state).replace('BYTE', 'DWORD') # TODO: Test
         elif lo == 2:
             iw = int.from_bytes(raw[1:3], 'little')
             state['eip'] += 3
@@ -884,12 +884,20 @@ def disassemble(raw, state=None):
     elif hi == 0xd:
         if lo == 0:
             pass
-        elif lo == 0xd:
+        elif lo == 9:
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] >= 0xc0:
+                if raw[1] == 0xe0:
+                    state['eip'] += 2
+                    return f'FCHS'
+        elif lo == 0xb:
+            pass
+        elif lo == 0xc:
             _, nnn, _ = modrm(raw[1])
             if nnn == 0b000:
                 addr = modrm_addressing(raw[1], raw[2:], state)
                 state['eip'] += 2
-                return f'FLD QWORD PTR {addr}' # double-real
+                return f'FADD QWORD PTR {addr}'
             elif nnn == 0b001:
                 pass
             elif nnn == 0b010:
@@ -897,7 +905,35 @@ def disassemble(raw, state=None):
             elif nnn == 0b011:
                 addr = modrm_addressing(raw[1], raw[2:], state)
                 state['eip'] += 2
-                return f'FSTP QWORD PTR {addr}' # double-real
+                return f'FCOMP QWORD PTR {addr}'
+        elif lo == 0xd:
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FLD QWORD PTR {addr}'
+                elif nnn == 0b001:
+                    pass
+                elif nnn == 0b010:
+                    pass
+                elif nnn == 0b011:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FSTP QWORD PTR {addr}'
+            else:
+                if raw[1] >= 0xd8 and raw[1] <= 0xdf:
+                    state['eip'] += 2
+                    return f'FSTP st({raw[1] - 0xd8})'
+        elif lo == 0xe:
+            pass
+        elif lo == 0xf:
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] >= 0xc0:
+                if raw[1] == 0xe0:
+                    state['eip'] += 2
+                    return f'FNSTSW ax'
+            pass
     elif hi == 0xe:
         if lo == 0:
             pass
@@ -908,6 +944,11 @@ def disassemble(raw, state=None):
             state['eip'] += 5
             addr = state['eip'] + rel32
             return f'CALL {hex(addr)}'
+        elif lo == 9:
+            rel32 = int.from_bytes(raw[1:5], 'little')
+            state['eip'] += 5
+            addr = state['eip'] + rel32
+            return f'JMP {hex(addr)}'
         elif lo == 0xb:
             rel8 = raw[1]
             state['eip'] += 2
