@@ -661,6 +661,7 @@ if __name__ == '__main__':
         'POP fs':               b'\x0f\xa1',
         'CPUID':                b'\x0f\xa2',
         'PUSH gs':              b'\x0f\xa8',
+        'POP gs':               b'\x0f\xa9',
     }
     for inst in instructions:
         raw = instructions[inst]
