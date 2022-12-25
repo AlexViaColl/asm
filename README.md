@@ -263,7 +263,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] b4 LFS Gv, Mp
     - [ ] b5 LGS Gv, Mp
     - [ ] b6 MOVZ Gv, Eb
-    - [ ] b7 MOVZ Gv, Ew
+    - [x] b7 MOVZ Gv, Ew
     - [ ] b8 JMPE/POPCNT Gv, Ev
     - [ ] b9 Grp 10 Invalid Opcode
     - [ ] ba Grp 8 Ev, Ib

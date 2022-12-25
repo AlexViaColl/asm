@@ -396,6 +396,7 @@ if __name__ == '__main__':
         'XCHG eax, eax':        b'\x87\xc0',
         'MOV al, al':           b'\x88\xc0',
         'MOV eax, eax':         b'\x89\xc0',
+        'MOV DWORD PTR [ebp-0x4], esi': b'\x89\x75\xfc',
         'MOV al, al':           b'\x8a\xc0',
         'MOV eax, eax':         b'\x8b\xc0',
         'MOV WORD PTR [eax], es': b'\x8c\x00',
@@ -558,6 +559,9 @@ if __name__ == '__main__':
         'INT 0xff':             b'\xcd\xff',
         'INTO':                 b'\xce',
         'IRET':                 b'\xcf',
+
+        'CALL 0x23d1':          b'\xe8\xcc\x23\x00\x00',
+
         'INT1':                 b'\xf1',
         'HLT':                  b'\xf4',
         'CMC':                  b'\xf5',
@@ -570,6 +574,7 @@ if __name__ == '__main__':
         'DIV BYTE PTR [eax]':   b'\xf6\x30',
         'IDIV BYTE PTR [eax]':  b'\xf6\x38',
         'TEST BYTE PTR [eax+0x0], 0x0': b'\xf6\x40\x00\x00',
+        'TEST BYTE PTR [ebp-0x30], 0x1': b'\xf6\x45\xd0\x01',
         'NOT BYTE PTR [eax+0x0]':   b'\xf6\x50\x00',
         'NEG BYTE PTR [eax+0x0]':   b'\xf6\x58\x00',
         'MUL BYTE PTR [eax+0x0]':   b'\xf6\x60\x00',
@@ -665,6 +670,8 @@ if __name__ == '__main__':
         'PUSH gs':              b'\x0f\xa8',
         'POP gs':               b'\x0f\xa9',
         'RSM':                  b'\x0f\xaa',
+
+        'MOVZX eax, WORD PTR [ebp-0x2c]': b'\x0f\xb7\x45\xd4',
     }
     for inst in instructions:
         raw = instructions[inst]

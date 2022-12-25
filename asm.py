@@ -252,6 +252,9 @@ def disassemble_gb_eb(raw, op, state):
 def disassemble_gw_ew(raw, op, state):
     return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS16, state, swap=True)
 
+def disassemble_gv_ew(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS, state, swap=True)
+
 def disassemble_gv_ev(raw, op, state):
     return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state, swap=True)
 
@@ -350,7 +353,12 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'RSM'
     elif hi == 0xb:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 7:
+            inst = disassemble_gv_ew(raw, 'MOVZX', state)
+            return inst
+            return f'MOVZX'
     elif hi == 0xc:
         pass
     elif hi == 0xd:
@@ -378,6 +386,7 @@ def disassemble(raw, state=None):
     opcode = raw[0]
     hi = (opcode & 0xF0) >> 4
     lo = (opcode & 0x0F) >> 0
+    eip = state['eip']
 
     if hi == 0:
         if lo == 0:
@@ -872,7 +881,15 @@ def disassemble(raw, state=None):
     elif hi == 0xd:
         pass
     elif hi == 0xe:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 1:
+            pass
+        elif lo == 8:
+            rel32 = int.from_bytes(raw[1:5], 'little')
+            state['eip'] += 5
+            addr = state['eip'] + rel32
+            return f'CALL {hex(addr)}'
     elif opcode == 0xf0:
         state['prefix'] = 'lock '
         state['eip'] += 1
@@ -902,7 +919,7 @@ def disassemble(raw, state=None):
         inst = disassemble_eb_gb(raw, op, state)
         inst = inst.split(',')[0]
         if op == 'TEST':
-            ib = raw[state['eip']]
+            ib = raw[state['eip']-eip]
             state['eip'] += 1
             return f'{inst}, {hex(ib)}'
         else:
@@ -954,8 +971,19 @@ def disassemble(raw, state=None):
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 
 if __name__ == '__main__':
+    #state = {'eip': 191, 'seg': '', 'prefix': ''}
+    #print(disassemble(b'\xf6\x45\xd0\x01', state))
+    #sys.exit(0)
+
     raw = sys.stdin.buffer.read()
     state = {'eip': 0}
     while state['eip'] != len(raw):
-        code = raw[state['eip']:]
-        print(disassemble(code, state))
+        start = state['eip']
+        code = raw[start:]
+        state['seg'] = ''
+        #print(code[:8])
+        inst = disassemble(code, state)
+        end = state['eip']
+        print(f'{raw[start:end].hex(" ") : <30}', end='')
+        print(inst)
+        #print(state)
