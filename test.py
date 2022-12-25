@@ -258,6 +258,7 @@ if __name__ == '__main__':
         'CMP eax, eax':         b'\x39\xc0',
         'CMP al, al':           b'\x3a\xc0',
         'CMP eax, eax':         b'\x3b\xc0',
+        #'CMP si,ecx':           b'\x66\x3b\xf1',
         'CMP al, 0x0':          b'\x3c\x00',
         'CMP al, 0x7f':         b'\x3c\x7f',
         'CMP al, 0x80':         b'\x3c\x80',
@@ -670,6 +671,8 @@ if __name__ == '__main__':
         'SYSENTER':             b'\x0f\x34',
         'SYSEXIT':              b'\x0f\x35',
         'GETSEC':               b'\x0f\x37',
+
+        'JE 0x1dc':             b'\x0f\x84\xd6\x01\x00\x00',
 
         'PUSH fs':              b'\x0f\xa0',
         'POP fs':               b'\x0f\xa1',

@@ -333,7 +333,14 @@ def disassemble_2b(raw, state):
     elif hi == 7:
         pass
     elif hi == 8:
-        pass
+        jmp_type = [
+            'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
+            'JS', 'JNS', 'JP', 'JNP', 'JL', 'JNL', 'JLE', 'JNLE',
+        ][lo]
+        rel32 = int.from_bytes(raw[1:5], 'little')
+        state['eip'] += 5
+        addr = state['eip'] + rel32
+        return f'{jmp_type} {hex(addr)}'
     elif hi == 9:
         pass
     elif hi == 0xa:
@@ -606,6 +613,7 @@ def disassemble(raw, state=None):
             return disassemble(raw[1:], state)
         elif lo == 6:
             state['op_size'] = 1
+            state['eip'] += 1
             return disassemble(raw[1:], state)
         elif lo == 7:
             state['addr_size'] = 1
