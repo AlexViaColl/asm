@@ -331,7 +331,9 @@ def disassemble_2b(raw, state):
     elif hi == 9:
         pass
     elif hi == 0xa:
-        pass
+        if lo == 0:
+            state['eip'] += 1
+            return f'PUSH fs'
     elif hi == 0xb:
         pass
     elif hi == 0xc:
