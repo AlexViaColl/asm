@@ -346,6 +346,9 @@ def disassemble_2b(raw, state):
         elif lo == 9:
             state['eip'] += 1
             return f'POP gs'
+        elif lo == 0xa:
+            state['eip'] += 1
+            return f'RSM'
     elif hi == 0xb:
         pass
     elif hi == 0xc:

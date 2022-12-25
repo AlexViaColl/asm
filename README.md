@@ -226,7 +226,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [ ] a5 SHLD Ev, Gv, CL
     - [x] a8 PUSH GS
     - [x] a9 POP GS
-    - [ ] aa RSM
+    - [x] aa RSM
     - [ ] ab BTS Ev, Gv
     - [ ] ac SHRD Ev, Gv, Ib
     - [ ] ad SHRD Ev, Gv, CL
