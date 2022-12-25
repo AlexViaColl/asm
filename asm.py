@@ -913,6 +913,12 @@ def disassemble(raw, state=None):
     elif hi == 0xd:
         if lo == 0:
             pass
+        elif lo == 3:
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            inst = disassemble_ev_gv(raw, op, state).split(',')[0]
+            return f'{inst}, cl'
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
