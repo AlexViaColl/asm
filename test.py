@@ -686,6 +686,7 @@ if __name__ == '__main__':
         'PUSH gs':                          b'\x0f\xa8',
         'POP gs':                           b'\x0f\xa9',
         'RSM':                              b'\x0f\xaa',
+        'SHRD eax, edx, cl':                b'\x0f\xad\xd0',
 
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
     }

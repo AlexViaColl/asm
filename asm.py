@@ -380,6 +380,9 @@ def disassemble_2b(raw, state):
         elif lo == 0xa:
             state['eip'] += 1
             return f'RSM'
+        elif lo == 0xd:
+            inst = disassemble_ev_gv(raw, 'SHRD', state)
+            return f'{inst}, cl'
     elif hi == 0xb:
         if lo == 0:
             pass
