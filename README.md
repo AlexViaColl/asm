@@ -207,7 +207,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
     - [x] 31 RDTSC
     - [x] 32 RDMSR
     - [x] 33 RDPMC
-    - [ ] 34 SYSENTER
+    - [x] 34 SYSENTER
     - [ ] 35 SYSCALL
     - [ ] 37 GETSEC
     - [ ] 38 3-byte opcode escape
