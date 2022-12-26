@@ -692,6 +692,7 @@ if __name__ == '__main__':
         'RSM':                              b'\x0f\xaa',
         'SHRD eax, edx, cl':                b'\x0f\xad\xd0',
 
+        'IMUL esi, DWORD PTR [ebp+0x10]':   b'\x0f\xaf\x75\x10',
         'MOVZX ecx, al':                    b'\x0f\xb6\xc8',
         'MOVZX eax, BYTE PTR [ebp-0x4]':    b'\x0f\xb6\x45\xfc',
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',

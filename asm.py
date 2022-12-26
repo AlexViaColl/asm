@@ -60,6 +60,8 @@ def modrm_op(raw, op, state):
         elif mod == 0b01:
             if rm != 0b100:
                 disp = hex(sign_extend(raw[1], 8, unsigned=False))
+                if disp.startswith('0x'):
+                    disp = f'+{disp}'
                 state['eip'] += 1
                 return f'{get_ptr(op[1])} [{get_regs("v")[rm]}{disp}]'
             else:
@@ -67,6 +69,8 @@ def modrm_op(raw, op, state):
         elif mod == 0b10:
             if rm != 0b100:
                 disp = hex(int.from_bytes(raw[1:5], 'little'))
+                if disp.startswith('0x'):
+                    disp = f'+{disp}'
                 state['eip'] += 4
                 return f'{get_ptr(op[1])} [{get_regs(op[1])[rm]}{disp}]'
             else:
@@ -448,6 +452,10 @@ def disassemble_2b(raw, state):
         elif lo == 0xd:
             inst = disassemble_ev_gv(raw, 'SHRD', state)
             return f'{inst}, cl'
+        elif lo == 0xf:
+            ops = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
+            state['eip'] += 1
+            return f'IMUL {ops}'
     elif hi == 0xb:
         if lo == 0:
             pass
