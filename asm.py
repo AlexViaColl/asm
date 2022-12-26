@@ -46,7 +46,9 @@ def sib_str(scale, index, base):
     else:
         return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
-def get_regs(s):
+def get_regs(s, state):
+    if 'op_size' in state and state['op_size'] == 1:
+        return REGISTERS16
     return {'v': REGISTERS, 'w': REGISTERS16, 'b': REGISTERS8}[s]
 
 def get_ptr(s):
@@ -57,16 +59,23 @@ def modrm_op(raw, op, state):
     if op[0] == 'E':
         if mod == 0b00:
             if rm != 0b100 and rm != 0b101:
-                return f'{get_ptr(op[1])} [{REGISTERS[rm]}]'
-            assert False, 'Not implemented yet'
+                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}]'
+            elif rm == 0b100:
+                scale, idx, base = sib(raw[1])
+                state['eip'] += 1
+                if base == 0b101:
+                    assert False, 'Not implemented yet'
+                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}]'
+            elif rm == 0b101:
+                assert False, 'Not implemented yet'
         elif mod == 0b01:
             if rm != 0b100:
                 disp = hex(sign_extend(raw[1], 8, unsigned=False))
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 1
-                return f'{get_ptr(op[1])} [{get_regs("v")[rm]}{disp}]'
-            else:
+                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}{disp}]'
+            elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
                 if base == 0b101:
@@ -82,13 +91,13 @@ def modrm_op(raw, op, state):
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 4
-                return f'{get_ptr(op[1])} [{get_regs(op[1])[rm]}{disp}]'
+                return f'{get_ptr(op[1])} [{get_regs(op[1], state)[rm]}{disp}]'
             else:
                 assert False, 'Not implemented yet'
         elif mod == 0b11:
-            return get_regs(op[1])[rm]
+            return get_regs(op[1], state)[rm]
     elif op[0] == 'G':
-        return get_regs(op[1])[reg]
+        return get_regs(op[1], state)[reg]
 
 def modrm_dst_src(raw, dst, src, state):
     mod, reg_op, rm = modrm(raw[0])
@@ -324,7 +333,6 @@ def disassemble_ex_ix(raw, op, ptr_size, reg_size, state):
             return f'{prefix}{op} {dst}, {src}'
     elif mod == 0b11:
         dst = f'{reg_size[rm]}'
-        src = f'{reg_size[reg_op]}'
         src = f'{hex(raw[2])}'
         state['eip'] += 3
         return f'{prefix}{op} {dst}, {src}'
@@ -775,14 +783,19 @@ def disassemble(raw, state=None):
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
             return disassemble_eb_ib(raw, op, state) # TODO: Test
         elif lo == 1:
+            prev_eip = state['eip']
             mod, reg_op, rm = modrm(raw[1])
+            state['eip'] += 2 # 1-byte opcode + ModRM
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
-            # TODO: No dirty hacks!
-            inst = disassemble_ev_iv(raw, op, state) # TODO: Test
-            inst = inst.split(',')[0]
-            iz = int.from_bytes(raw[state['eip']-1:state['eip']+3], 'little')
-            state['eip'] += 3
-            return f'{inst}, {hex(iz)}'
+            dst = modrm_op(raw[1:], 'Ev', state)
+            start = state['eip'] - prev_eip
+            if 'op_size' in state and state['op_size'] == 1:
+                iz = hex(int.from_bytes(raw[start:start+2], 'little'))
+                state['eip'] += 2
+            else:
+                iz = hex(int.from_bytes(raw[start:start+4], 'little'))
+                state['eip'] += 4
+            return f'{op} {dst}, {iz}'
         elif lo == 2:
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
@@ -1247,6 +1260,8 @@ if __name__ == '__main__':
         code = raw[start:]
         state['seg'] = ''
         state['prefix'] = ''
+        state['op_size'] = ''
+        state['addr_size'] = ''
         #print(code[:8])
         inst = disassemble(code, state)
         end = state['eip']

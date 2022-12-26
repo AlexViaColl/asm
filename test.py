@@ -258,7 +258,6 @@ if __name__ == '__main__':
         'CMP eax, eax':                     b'\x39\xc0',
         'CMP al, al':                       b'\x3a\xc0',
         'CMP eax, eax':                     b'\x3b\xc0',
-        #'CMP si,ecx':                       b'\x66\x3b\xf1',
         'CMP al, 0x0':                      b'\x3c\x00',
         'CMP al, 0x7f':                     b'\x3c\x7f',
         'CMP al, 0x80':                     b'\x3c\x80',
@@ -327,6 +326,8 @@ if __name__ == '__main__':
 
         'ADD BYTE PTR fs:[eax+0x0], al':    b'\x64\x00\x40\x00',
         'ADD BYTE PTR gs:[eax+0x0], al':    b'\x65\x00\x40\x00',
+        #'CMP si, ecx':                      b'\x66\x3b\xf1',
+        'AND cx, 0xf000':                   b'\x66\x81\xe1\x00\xf0',
         'PUSH 0x0':                         b'\x68\x00\x00\x00\x00',
         'PUSH 0x7fffffff':                  b'\x68\xff\xff\xff\x7f',
         'PUSH 0x80000000':                  b'\x68\x00\x00\x00\x80',
@@ -381,7 +382,8 @@ if __name__ == '__main__':
         'SUB DWORD PTR [eax+eax*1], 0x0':   b'\x81\x2c\x00\x00\x00\x00\x00',
         'XOR DWORD PTR [eax+eax*1], 0x0':   b'\x81\x34\x00\x00\x00\x00\x00',
         'CMP DWORD PTR [eax+eax*1], 0x0':   b'\x81\x3c\x00\x00\x00\x00\x00',
-        'AND ecx, 0xff':                    b'\x81\xe1\xff\x00\x00\x00',
+        'CMP DWORD PTR [ebp-0x18], 0x7ff00000': b'\x81\x7d\xe8\x00\x00\xf0\x7f',
+        'AND ecx, 0xff00ffff':              b'\x81\xe1\xff\xff\x00\xff',
 
         'ADD BYTE PTR [eax+eax*1], 0x0':    b'\x82\x04\x00\x00',
         'OR BYTE PTR [eax+eax*1], 0x0':     b'\x82\x0c\x00\x00',
@@ -719,7 +721,9 @@ if __name__ == '__main__':
                 print(f'  Expected: {len(raw)} ({inst})')
                 print(f'  But got:  {state["eip"]} ({actual})')
                 sys.exit(1)
-        except:
+        except Exception as e:
             print(f'[ERROR] Exception thrown on disassembly for bytes: {raw.hex(" ")}')
             print(f'  Expected: {inst}')
+            import traceback
+            print(traceback.format_exc())
             sys.exit(1)
