@@ -733,6 +733,7 @@ if __name__ == '__main__':
         'PUSH fs':                          b'\x0f\xa0',
         'POP fs':                           b'\x0f\xa1',
         'CPUID':                            b'\x0f\xa2',
+        'BT DWORD PTR [esp], eax':          b'\x0f\xa3\x04\x24',
         'SHLD eax, ecx, 0xb':               b'\x0f\xa4\xc8\x0b',
         'PUSH gs':                          b'\x0f\xa8',
         'POP gs':                           b'\x0f\xa9',

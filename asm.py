@@ -476,7 +476,9 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'CPUID'
         elif lo == 3:
-            pass
+            state['eip'] += 1
+            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
+            return f'BT {addr}'
         elif lo == 4:
             state['eip'] += 1
             addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
