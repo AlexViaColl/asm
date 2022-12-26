@@ -1182,7 +1182,29 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FSTP st({raw[1] - 0xd8})'
         elif lo == 0xe:
-            pass
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    pass
+                elif nnn == 0b001:
+                    pass
+                elif nnn == 0b010:
+                    pass
+                elif nnn == 0b011:
+                    pass
+                elif nnn == 0b100:
+                    pass
+                elif nnn == 0b101:
+                    pass
+                elif nnn == 0b110:
+                    pass
+                elif nnn == 0b111:
+                    pass
+            else:
+                if raw[1] >= 0xf0 and raw[1] <= 0xf7:
+                    state['eip'] += 2
+                    return f'FDIVRP st({raw[1] - 0xf0}), st'
+                pass
         elif lo == 0xf:
             _, nnn, _ = modrm(raw[1])
             if raw[1] >= 0xc0:
