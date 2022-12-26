@@ -924,9 +924,15 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'{prefix}TEST al, {hex(ib)}'
         elif lo == 9:
-            iz = int.from_bytes(raw[1:5], 'little')
-            state['eip'] += 5
-            return f'{prefix}TEST eax, {hex(iz)}'
+            state['eip'] += 1
+            dst = get_regs('v', state)[0]
+            if 'op_size' in state and state['op_size'] == 1:
+                iz = hex(int.from_bytes(raw[1:3], 'little'))
+                state['eip'] += 2
+            else:
+                iz = hex(int.from_bytes(raw[1:5], 'little'))
+                state['eip'] += 4
+            return f'{prefix}TEST {dst}, {iz}'
         elif lo == 0xa:
             state['eip'] += 1
             return f'STOS BYTE PTR es:[edi], al'
