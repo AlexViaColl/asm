@@ -1070,6 +1070,9 @@ def disassemble(raw, state=None):
             op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
             inst = disassemble_ev_gv(raw, op, state).split(',')[0]
             return f'{inst}, cl'
+        elif lo == 7:
+            state['eip'] += 1
+            return f'XLAT BYTE PTR ds:[ebx]'
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
