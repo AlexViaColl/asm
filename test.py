@@ -581,6 +581,7 @@ if __name__ == '__main__':
         'FLDZ':                             b'\xd9\xee',
         'FPREM':                            b'\xd9\xf8',
         'FRNDINT':                          b'\xd9\xfc',
+        'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FNCLEX':                           b'\xdb\xe2',
         'FNINIT':                           b'\xdb\xe3',
