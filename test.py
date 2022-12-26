@@ -370,6 +370,7 @@ if __name__ == '__main__':
         'SUB BYTE PTR [eax+eax*1], 0x0':    b'\x80\x2c\x00\x00',
         'XOR BYTE PTR [eax+eax*1], 0x0':    b'\x80\x34\x00\x00',
         'CMP BYTE PTR [eax+eax*1], 0x0':    b'\x80\x3c\x00\x00',
+        'AND BYTE PTR [ebp+edi*1-0x88], 0x0': b'\x80\xa4\x3d\x78\xff\xff\xff\x00',
 
         'ADD DWORD PTR [eax+eax*1], 0x0':   b'\x81\x04\x00\x00\x00\x00\x00',
         'ADD DWORD PTR [eax+eax*1], 0xffffffff': b'\x81\x04\x00\xff\xff\xff\xff',
@@ -405,6 +406,7 @@ if __name__ == '__main__':
         'MOV WORD PTR [eax], gs':           b'\x8c\x28',
         'LEA eax, [eax]':                   b'\x8d\x00',
         'LEA edi, [eax]':                   b'\x8d\x38',
+        'LEA ebx, [edi*4+0xb626c8]':        b'\x8d\x1c\xbd\xc8\x26\xb6\x00',
         'MOV es, WORD PTR [eax]':           b'\x8e\x00',
         'MOV gs, WORD PTR [eax]':           b'\x8e\x28',
         'POP DWORD PTR [eax]':              b'\x8f\x00',
@@ -690,6 +692,8 @@ if __name__ == '__main__':
         'RSM':                              b'\x0f\xaa',
         'SHRD eax, edx, cl':                b'\x0f\xad\xd0',
 
+        'MOVZX ecx, al':                    b'\x0f\xb6\xc8',
+        'MOVZX eax, BYTE PTR [ebp-0x4]':    b'\x0f\xb6\x45\xfc',
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
     }
     for inst in instructions:

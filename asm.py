@@ -46,6 +46,58 @@ def sib_str(scale, index, base):
     else:
         return f'{REGISTERS[base]}+{REGISTERS[index]}*{2**scale}'
 
+def get_regs(s):
+    return {'v': REGISTERS, 'w': REGISTERS16, 'b': REGISTERS8}[s]
+
+def get_ptr(s):
+    return {'v': 'DWORD PTR', 'w': 'WORD PTR', 'b': 'BYTE PTR'}[s]
+
+def modrm_op(raw, op, state):
+    mod, reg, rm = modrm(raw[0])
+    if op[0] == 'E':
+        if mod == 0b00:
+            assert False, 'Not implemented yet'
+        elif mod == 0b01:
+            if rm != 0b100:
+                disp = hex(sign_extend(raw[1], 8, unsigned=False))
+                state['eip'] += 1
+                return f'{get_ptr(op[1])} [{get_regs("v")[rm]}{disp}]'
+            else:
+                assert False, 'Not implemented yet'
+        elif mod == 0b10:
+            if rm != 0b100:
+                disp = hex(int.from_bytes(raw[1:5], 'little'))
+                state['eip'] += 4
+                return f'{get_ptr(op[1])} [{get_regs(op[1])[rm]}{disp}]'
+            else:
+                assert False, 'Not implemented yet'
+        elif mod == 0b11:
+            return get_regs(op[1])[rm]
+    elif op[0] == 'G':
+        return get_regs(op[1])[reg]
+
+def modrm_dst_src(raw, dst, src, state):
+    mod, reg_op, rm = modrm(raw[0])
+    state['eip'] += 1
+
+    dst = modrm_op(raw, dst, state) # eax
+    src = modrm_op(raw, src, state) # BYTE PTR [ebp-0x4]
+    return f'{dst}, {src}'
+
+    if mod == 0b00:
+        assert False, 'Not implemented yet!'
+    elif mod == 0b01:
+        dst = modrm_dst(raw, dst, state) # eax
+        src = modrm_src(raw, src, state) # BYTE PTR [ebp-0x4]
+        return f'{dst}, {src}'
+    elif mod == 0b10:
+        assert False, 'Not implemented yet!'
+    elif mod == 0b11:
+        if dst.startswith('E'):
+            return f'{dst_regs[rm]}, {src_regs[reg_op]}'
+        elif dst.startswith('G'):
+            return f'{dst_regs[reg_op]}, {src_regs[rm]}'
+
 def modrm_addressing(m, rest, state, reg_size=32):
     mod, reg_op, rm = modrm(m)
     if mod == 0b00:
@@ -53,10 +105,14 @@ def modrm_addressing(m, rest, state, reg_size=32):
             return f'[{REGISTERS[rm]}]'
         elif rm == 0b100:
             scale, idx, base = sib(rest[0])
+            disp = ''
             if base == 0b101:
-                assert False, 'Invalid SIB'
+                disp32 = int.from_bytes(rest[1:4], 'little')
+                disp = f'+{hex(disp32)}'
+                base = None
+                state['eip'] += 4
             state['eip'] += 1
-            return f'[{sib_str(scale, idx, base)}]'
+            return f'[{sib_str(scale, idx, base)}{disp}]'
         elif rm == 0b101:
             disp32 = int.from_bytes(rest[0:4], 'little')
             state['eip'] += 4
@@ -79,7 +135,7 @@ def modrm_addressing(m, rest, state, reg_size=32):
         if rm <= 0b011 or rm >= 0b101:
             disp32 = hex(sign_extend(int.from_bytes(rest[0:4], 'little'), 32, unsigned=False))
             if disp32.startswith('0x'):
-                disp32 = f'+{disp8}'
+                disp32 = f'+{disp32}'
             state['eip'] += 4
             return f'[{REGISTERS[rm]}{disp32}]'
         elif rm == 0b100:
@@ -243,8 +299,7 @@ def disassemble_ex_ix(raw, op, ptr_size, reg_size, state):
             return f'{prefix}{op} {dst}, {src}'
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
-            if base == 0b101:
-                assert False, 'Invalid SIB'
+            disp = ''
             disp32 = hex(sign_extend(int.from_bytes(raw[3:7], 'little'), 32, unsigned=False))
             if disp32.startswith('0x'):
                 disp32 = f'+{disp32}'
@@ -273,6 +328,9 @@ def disassemble_gb_eb(raw, op, state):
 
 def disassemble_gw_ew(raw, op, state):
     return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS16, state, swap=True)
+
+def disassemble_gv_eb(raw, op, state):
+    return disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS8, state, swap=True)
 
 def disassemble_gv_ew(raw, op, state):
     return disassemble_ex_gx(raw, op, 'WORD PTR', REGISTERS, state, swap=True)
@@ -393,10 +451,13 @@ def disassemble_2b(raw, state):
     elif hi == 0xb:
         if lo == 0:
             pass
+        elif lo == 6:
+            ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
+            state['eip'] += 1
+            return f'MOVZX {ops}'
         elif lo == 7:
             inst = disassemble_gv_ew(raw, 'MOVZX', state)
             return inst
-            return f'MOVZX'
     elif hi == 0xc:
         pass
     elif hi == 0xd:
