@@ -577,6 +577,7 @@ if __name__ == '__main__':
         'SHL bl, cl':                       b'\xd2\xe3',
         'SHR edx, cl':                      b'\xd3\xea',
         'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
+        'FSUB st, st(1)':                   b'\xd8\xe1',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
         'FXCH st(1)':                       b'\xd9\xc9',

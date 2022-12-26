@@ -1080,6 +1080,17 @@ def disassemble(raw, state=None):
         elif lo == 7:
             state['eip'] += 1
             return f'XLAT BYTE PTR ds:[ebx]'
+        elif lo == 8:
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    pass
+            else:
+                if raw[1] >= 0xc0 and raw[1] <= 0xc7:
+                    pass
+                elif raw[1] >= 0xe0 and raw[1] <= 0xe8:
+                    state['eip'] += 2
+                    return f'FSUB st, st({raw[1] - 0xe0})'
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
