@@ -1243,7 +1243,9 @@ def disassemble(raw, state=None):
                 elif nnn == 0b101:
                     pass
                 elif nnn == 0b110:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FNSAVE {addr}'
                 elif nnn == 0b111:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2

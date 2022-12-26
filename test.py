@@ -610,6 +610,7 @@ if __name__ == '__main__':
         'FST QWORD PTR [esp]':              b'\xdd\x14\x24',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
+        'FNSAVE [esi+0x8]':                 b'\xdd\x76\x08',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
         'FSTP st(1)':                       b'\xdd\xd9',
         'FADDP st(1), st':                  b'\xde\xc1',
