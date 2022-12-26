@@ -1117,6 +1117,9 @@ def disassemble(raw, state=None):
                 elif raw[1] == 0xfc:
                     state['eip'] += 2
                     return f'FRNDINT'
+                elif raw[1] == 0xfd:
+                    state['eip'] += 2
+                    return f'FSCALE'
         elif lo == 0xb:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
