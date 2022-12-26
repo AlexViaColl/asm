@@ -56,6 +56,8 @@ def modrm_op(raw, op, state):
     mod, reg, rm = modrm(raw[0])
     if op[0] == 'E':
         if mod == 0b00:
+            if rm != 0b100 and rm != 0b101:
+                return f'{get_ptr(op[1])} [{REGISTERS[rm]}]'
             assert False, 'Not implemented yet'
         elif mod == 0b01:
             if rm != 0b100:
@@ -1013,9 +1015,18 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FNSTCW WORD PTR {addr}'
             else:
-                if raw[1] == 0xe0:
+                if raw[1] >= 0xc0 and raw[1] <= 0xc7:
+                    state['eip'] += 2
+                    return f'FLD st({raw[1]-0xc0})'
+                elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
+                    state['eip'] += 2
+                    return f'FXCH st({raw[1]-0xc8})'
+                elif raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FCHS'
+                elif raw[1] == 0xf8:
+                    state['eip'] += 2
+                    return f'FPREM'
         elif lo == 0xb:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:

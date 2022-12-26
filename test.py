@@ -568,6 +568,8 @@ if __name__ == '__main__':
         'SHR edx, cl':                      b'\xd3\xea',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
+        'FXCH st(1)':                       b'\xd9\xc9',
+        'FPREM':                            b'\xd9\xf8',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FNCLEX':                           b'\xdb\xe2',
         'FNINIT':                           b'\xdb\xe3',
@@ -575,6 +577,7 @@ if __name__ == '__main__':
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
+        'FSTP st(1)':                       b'\xdd\xd9',
 
         'CALL 0x23d1':                      b'\xe8\xcc\x23\x00\x00',
         'JMP 0xffe8:0x45f76175':            b'\xea\x75\x61\xf7\x45\xe8\xff',
@@ -694,6 +697,7 @@ if __name__ == '__main__':
         'SHRD eax, edx, cl':                b'\x0f\xad\xd0',
 
         'IMUL esi, DWORD PTR [ebp+0x10]':   b'\x0f\xaf\x75\x10',
+        'MOVZX ecx, BYTE PTR [esi]':        b'\x0f\xb6\x0e',
         'MOVZX ecx, al':                    b'\x0f\xb6\xc8',
         'MOVZX eax, BYTE PTR [ebp-0x4]':    b'\x0f\xb6\x45\xfc',
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
