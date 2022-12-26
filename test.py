@@ -578,6 +578,7 @@ if __name__ == '__main__':
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
         'FXCH st(1)':                       b'\xd9\xc9',
+        'FLD1':                             b'\xd9\xe8',
         'FLDZ':                             b'\xd9\xee',
         'FPREM':                            b'\xd9\xf8',
         'FRNDINT':                          b'\xd9\xfc',
