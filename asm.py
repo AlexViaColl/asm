@@ -12,7 +12,7 @@ Usage: asm [OPTION]...
 REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
 REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
-SEGMENTS = ['es', 'cs', 'ss', 'ds', 'fs', 'gs']
+SEGMENTS = ['es', 'cs', 'ss', 'ds', 'fs', 'gs', '?', '?']
 
 def fail(*s):
     print(*s, file=sys.stderr)
@@ -93,7 +93,7 @@ def modrm_op(raw, op, state):
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 4
-                return f'{get_ptr(op[1])} [{get_regs(op[1], state)[rm]}{disp}]'
+                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}{disp}]'
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
@@ -1040,7 +1040,12 @@ def disassemble(raw, state=None):
             return f'{prefix}IRET'
     elif hi == 0xd:
         if lo == 0:
-            pass
+            mod, reg_op, rm = modrm(raw[1])
+            state['eip'] += 2
+            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            inst = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            op = modrm_op(raw[1:], 'Eb', state)
+            return f'{inst} {op}, 1'
         elif lo == 1:
             op = modrm_op(raw[1:], 'Ev', state)
             state['eip'] += 2

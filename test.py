@@ -571,6 +571,7 @@ if __name__ == '__main__':
         'INTO':                             b'\xce',
         'IRET':                             b'\xcf',
 
+        'ROR BYTE PTR [ebp+0x468a007c], 1': b'\xd0\x8d\x7c\x00\x8a\x46',
         'SHR eax, 1':                       b'\xd1\xe8',
         'SHR edx, cl':                      b'\xd3\xea',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
