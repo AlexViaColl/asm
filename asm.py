@@ -80,8 +80,6 @@ def modrm_op(raw, op, state):
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
-                if base == 0b101:
-                    assert False, 'Not implemented yet'
                 disp = hex(sign_extend(raw[2], 8, unsigned=False))
                 state['eip'] += 1
                 if disp.startswith('0x'):
