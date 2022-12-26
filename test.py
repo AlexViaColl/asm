@@ -577,6 +577,7 @@ if __name__ == '__main__':
         'FNINIT':                           b'\xdb\xe3',
         'FADD QWORD PTR ds:0x895528':       b'\xdc\x05\x28\x55\x89\x00',
         'FMUL QWORD PTR [ebp-0x8]':         b'\xdc\x4d\xf8',
+        'FSUBR QWORD PTR [ebp-0x10]':       b'\xdc\x6d\xf0',
         'FDIV QWORD PTR [ebp-0x8]':         b'\xdc\x75\xf8',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
