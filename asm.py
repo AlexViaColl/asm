@@ -1093,7 +1093,8 @@ def disassemble(raw, state=None):
                     pass
             else:
                 if raw[1] >= 0xc0 and raw[1] <= 0xc7:
-                    pass
+                    state['eip'] += 2
+                    return f'FADD st, st({raw[1] - 0xc0})'
                 elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
                     return f'FCOMP st({raw[1] - 0xd8})'
