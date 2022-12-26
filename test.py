@@ -564,6 +564,7 @@ if __name__ == '__main__':
         'INTO':                             b'\xce',
         'IRET':                             b'\xcf',
 
+        'SHR eax, 1':                       b'\xd1\xe8',
         'SHR edx, cl':                      b'\xd3\xea',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
