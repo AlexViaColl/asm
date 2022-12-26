@@ -483,8 +483,13 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'MOVZX {ops}'
         elif lo == 7:
-            inst = disassemble_gv_ew(raw, 'MOVZX', state)
-            return inst
+            ops = modrm_dst_src(raw[1:], 'Gv', 'Ew', state)
+            state['eip'] += 1
+            return f'MOVZX {ops}'
+        elif lo == 0xe:
+            ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
+            state['eip'] += 1
+            return f'MOVSX {ops}'
     elif hi == 0xc:
         pass
     elif hi == 0xd:
