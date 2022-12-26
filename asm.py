@@ -1050,6 +1050,13 @@ def disassemble(raw, state=None):
             op = modrm_op(raw[1:], 'Ev', state)
             state['eip'] += 2
             return f'SHR {op}, 1'
+        elif lo == 2:
+            mod, reg_op, rm = modrm(raw[1])
+            state['eip'] += 2
+            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            inst = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            op = modrm_op(raw[1:], 'Eb', state)
+            return f'{inst} {op}, cl'
         elif lo == 3:
             mod, reg_op, rm = modrm(raw[1])
             assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
