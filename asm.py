@@ -1105,7 +1105,9 @@ def disassemble(raw, state=None):
                 elif nnn == 0b010:
                     pass
                 elif nnn == 0b011:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FISTP DWORD PTR {addr}'
                 elif nnn == 0b101:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2

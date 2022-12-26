@@ -583,6 +583,7 @@ if __name__ == '__main__':
         'FRNDINT':                          b'\xd9\xfc',
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
+        'FISTP DWORD PTR [ebp+0x8]':        b'\xdb\x5d\x08',
         'FNCLEX':                           b'\xdb\xe2',
         'FNINIT':                           b'\xdb\xe3',
         'FADD QWORD PTR ds:0x895528':       b'\xdc\x05\x28\x55\x89\x00',
