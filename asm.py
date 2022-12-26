@@ -1266,6 +1266,9 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
                     state['eip'] += 2
                     return f'FMULP st({raw[1] - 0xc8}), st'
+                elif raw[1] == 0xd9:
+                    state['eip'] += 2
+                    return f'FCOMPP'
                 elif raw[1] >= 0xf0 and raw[1] <= 0xf7:
                     state['eip'] += 2
                     return f'FDIVRP st({raw[1] - 0xf0}), st'
