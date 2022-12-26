@@ -54,6 +54,14 @@ def get_regs(s, state):
 def get_ptr(s):
     return {'v': 'DWORD PTR', 'w': 'WORD PTR', 'b': 'BYTE PTR'}[s]
 
+def get_imm(raw, i, state):
+    if 'op_size' in state and state['op_size'] == 1:
+        state['eip'] += 2
+        return hex(int.from_bytes(raw[:2], 'little'))
+    end = {'v': 4, 'z': 4, 'w': 2, 'b': 1}[i]
+    state['eip'] += end
+    return hex(int.from_bytes(raw[:end], 'little'))
+
 def modrm_op(raw, op, state):
     mod, reg, rm = modrm(raw[0])
     if op[0] == 'E':
@@ -969,9 +977,10 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'{prefix}MOV {REGISTERS8[lo]}, {hex(raw[1])}'
         elif lo <= 0xf:
-            iv = int.from_bytes(raw[1:5], 'little')
-            state['eip'] += 5
-            return f'{prefix}MOV {REGISTERS[lo-8]}, {hex(iv)}'
+            state['eip'] += 1
+            imm = get_imm(raw[1:], 'v', state)
+            regs = get_regs('v', state)
+            return f'{prefix}MOV {regs[lo-8]}, {imm}'
     elif hi == 0xc:
         if lo == 0:
             mod, reg_op, rm = modrm(raw[1])

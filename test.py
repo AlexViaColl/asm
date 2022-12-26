@@ -329,6 +329,7 @@ if __name__ == '__main__':
         #'CMP si, ecx':                      b'\x66\x3b\xf1',
         'AND cx, 0xf000':                   b'\x66\x81\xe1\x00\xf0',
         'TEST ax, 0x10c':                   b'\x66\xa9\x0c\x01',
+        'MOV bx, 0x133f':                   b'\x66\xbb\x3f\x13',
         'PUSH 0x0':                         b'\x68\x00\x00\x00\x00',
         'PUSH 0x7fffffff':                  b'\x68\xff\xff\xff\x7f',
         'PUSH 0x80000000':                  b'\x68\x00\x00\x00\x80',
