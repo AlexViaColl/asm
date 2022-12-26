@@ -599,6 +599,7 @@ if __name__ == '__main__':
         'FSUBR QWORD PTR [ebp-0x10]':       b'\xdc\x6d\xf0',
         'FDIV QWORD PTR [ebp-0x8]':         b'\xdc\x75\xf8',
         'FSUBR st(1), st':                  b'\xdc\xe1',
+        'FST QWORD PTR [esp]':              b'\xdd\x14\x24',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
