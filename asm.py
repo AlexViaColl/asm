@@ -475,6 +475,13 @@ def disassemble_2b(raw, state):
         elif lo == 2:
             state['eip'] += 1
             return f'CPUID'
+        elif lo == 3:
+            pass
+        elif lo == 4:
+            state['eip'] += 1
+            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
+            imm8 = get_imm(raw[2:], 'b', state)
+            return f'SHLD {addr}, {imm8}'
         elif lo == 8:
             state['eip'] += 1
             return f'PUSH gs'
