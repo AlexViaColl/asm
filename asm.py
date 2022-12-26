@@ -1093,6 +1093,9 @@ def disassemble(raw, state=None):
                 elif raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FCHS'
+                elif raw[1] == 0xe5:
+                    state['eip'] += 2
+                    return f'FXAM'
                 elif raw[1] == 0xe8:
                     state['eip'] += 2
                     return f'FLD1'
