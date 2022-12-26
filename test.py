@@ -580,6 +580,7 @@ if __name__ == '__main__':
         'FXCH st(1)':                       b'\xd9\xc9',
         'FLDZ':                             b'\xd9\xee',
         'FPREM':                            b'\xd9\xf8',
+        'FRNDINT':                          b'\xd9\xfc',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FNCLEX':                           b'\xdb\xe2',
         'FNINIT':                           b'\xdb\xe3',
