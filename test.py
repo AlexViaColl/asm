@@ -581,6 +581,7 @@ if __name__ == '__main__':
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
         'FXCH st(1)':                       b'\xd9\xc9',
         'FABS':                             b'\xd9\xe1',
+        'FTST':                             b'\xd9\xe4',
         'FXAM':                             b'\xd9\xe5',
         'FLD1':                             b'\xd9\xe8',
         'FLD12E':                           b'\xd9\xea',
