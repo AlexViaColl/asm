@@ -600,6 +600,7 @@ if __name__ == '__main__':
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
         'FSTP st(1)':                       b'\xdd\xd9',
+        'FADDP st(1), st':                  b'\xde\xc1',
         'FDIVRP st(1), st':                 b'\xde\xf1',
 
         'CALL 0x23d1':                      b'\xe8\xcc\x23\x00\x00',

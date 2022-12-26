@@ -1198,7 +1198,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FNSTSW WORD PTR {addr}'
             else:
-                if raw[1] >= 0xd8 and raw[1] <= 0xdf:
+                if raw[1] >= 0xc0 and raw[1] <= 0xc7:
+                    pass
+                elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
                     return f'FSTP st({raw[1] - 0xd8})'
         elif lo == 0xe:
@@ -1221,7 +1223,10 @@ def disassemble(raw, state=None):
                 elif nnn == 0b111:
                     pass
             else:
-                if raw[1] >= 0xf0 and raw[1] <= 0xf7:
+                if raw[1] >= 0xc0 and raw[1] <= 0xc7:
+                    state['eip'] += 2
+                    return f'FADDP st({raw[1] - 0xc0}), st'
+                elif raw[1] >= 0xf0 and raw[1] <= 0xf7:
                     state['eip'] += 2
                     return f'FDIVRP st({raw[1] - 0xf0}), st'
                 pass
