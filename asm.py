@@ -67,7 +67,9 @@ def modrm_op(raw, op, state):
                     assert False, 'Not implemented yet'
                 return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}]'
             elif rm == 0b101:
-                assert False, 'Not implemented yet'
+                disp32 = int.from_bytes(raw[1:5], 'little')
+                state['eip'] += 4
+                return f'{get_ptr(op[1])} ds:{hex(disp32)}'
         elif mod == 0b01:
             if rm != 0b100:
                 disp = hex(sign_extend(raw[1], 8, unsigned=False))

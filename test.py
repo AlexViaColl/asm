@@ -707,6 +707,7 @@ if __name__ == '__main__':
         'MOVZX ecx, al':                    b'\x0f\xb6\xc8',
         'MOVZX eax, BYTE PTR [ebp-0x4]':    b'\x0f\xb6\x45\xfc',
         'MOVZX esi, BYTE PTR [ecx+ebx*1+0x8]': b'\x0f\xb6\x74\x19\x08',
+        'MOVZX eax, WORD PTR ds:0xb62608':  b'\x0f\xb7\x05\x08\x26\xb6\x00',
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
         'MOVSX eax, BYTE PTR [esi]':        b'\x0f\xbe\x06',
     }
