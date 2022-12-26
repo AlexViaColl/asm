@@ -232,7 +232,8 @@ def disassemble_ex_gx(raw, op, ptr_size, reg_size, state, swap=False):
         elif rm == 0b100:
             scale, idx, base = sib(raw[2])
             if base == 0b101:
-                assert False, 'Invalid SIB'
+                disp32 = int.from_bytes(raw[3:7], 'little')
+                disp = f'+{hex(disp32)}'
             disp32 = hex(sign_extend(int.from_bytes(raw[3:7], 'little'), 32, unsigned=False))
             if disp32.startswith('0x'):
                 disp32 = f'+{disp32}'

@@ -669,6 +669,7 @@ if __name__ == '__main__':
         'DEC DWORD PTR [eax+eax*1]':        b'\xff\x0c\x00',
         # TODO: CALL, far CALL, JMP, far JMP
         'PUSH DWORD PTR [eax]':             b'\xff\x30',
+        'INC DWORD PTR [ebp+eax*4-0x13c]':  b'\xff\x84\x85\xc4\xfe\xff\xff',
 
 
         # 2-byte Opcodes
