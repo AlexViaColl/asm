@@ -707,14 +707,19 @@ if __name__ == '__main__':
     for inst in instructions:
         raw = instructions[inst]
         state = {}
-        actual = disassemble(raw, state)
-        if actual != inst:
-            print(f'[ERROR] Unexpected disassembly for bytes: {raw.hex(" ")}')
+        try:
+            actual = disassemble(raw, state)
+            if actual != inst:
+                print(f'[ERROR] Unexpected disassembly for bytes: {raw.hex(" ")}')
+                print(f'  Expected: {inst}')
+                print(f'  But got:  {actual}')
+                sys.exit(1)
+            if state['eip'] != len(raw):
+                print(f'[ERROR] Unexpected eip after disassembly of bytes: {raw.hex(" ")}')
+                print(f'  Expected: {len(raw)} ({inst})')
+                print(f'  But got:  {state["eip"]} ({actual})')
+                sys.exit(1)
+        except:
+            print(f'[ERROR] Exception thrown on disassembly for bytes: {raw.hex(" ")}')
             print(f'  Expected: {inst}')
-            print(f'  But got:  {actual}')
-            sys.exit(1)
-        if state['eip'] != len(raw):
-            print(f'[ERROR] Unexpected eip after disassembly of bytes: {raw.hex(" ")}')
-            print(f'  Expected: {len(raw)} ({inst})')
-            print(f'  But got:  {state["eip"]} ({actual})')
             sys.exit(1)
