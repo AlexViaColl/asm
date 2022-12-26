@@ -500,6 +500,10 @@ def disassemble_2b(raw, state):
             ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
             state['eip'] += 1
             return f'MOVSX {ops}'
+        elif lo == 0xf:
+            ops = modrm_dst_src(raw[1:], 'Gv', 'Ew', state)
+            state['eip'] += 1
+            return f'MOVSX {ops}'
     elif hi == 0xc:
         pass
     elif hi == 0xd:

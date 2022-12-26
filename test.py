@@ -716,6 +716,7 @@ if __name__ == '__main__':
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
         'MOVSX eax, BYTE PTR [esi]':        b'\x0f\xbe\x06',
         'MOVSX eax, BYTE PTR [esi+eax*8+0x895688]': b'\x0f\xbe\x84\xc6\x88\x56\x89\x00',
+        'MOVSX eax, WORD PTR [eax]':        b'\x0f\xbf\x00',
     }
     for inst in instructions:
         raw = instructions[inst]
