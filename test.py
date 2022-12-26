@@ -583,6 +583,7 @@ if __name__ == '__main__':
         'FABS':                             b'\xd9\xe1',
         'FXAM':                             b'\xd9\xe5',
         'FLD1':                             b'\xd9\xe8',
+        'FLD12E':                           b'\xd9\xea',
         'FLDPI':                            b'\xd9\xeb',
         'FLDZ':                             b'\xd9\xee',
         'F2XM1':                            b'\xd9\xf0',
