@@ -1066,18 +1066,25 @@ def disassemble(raw, state=None):
                 pass
         elif lo == 0xc:
             _, nnn, _ = modrm(raw[1])
-            if nnn == 0b000:
-                addr = modrm_addressing(raw[1], raw[2:], state)
-                state['eip'] += 2
-                return f'FADD QWORD PTR {addr}'
-            elif nnn == 0b001:
+            if raw[1] < 0xbf:
+                if nnn == 0b000:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FADD QWORD PTR {addr}'
+                elif nnn == 0b001:
+                    pass
+                elif nnn == 0b010:
+                    pass
+                elif nnn == 0b011:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FCOMP QWORD PTR {addr}'
+                elif nnn == 0b110:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FDIV QWORD PTR {addr}'
+            else:
                 pass
-            elif nnn == 0b010:
-                pass
-            elif nnn == 0b011:
-                addr = modrm_addressing(raw[1], raw[2:], state)
-                state['eip'] += 2
-                return f'FCOMP QWORD PTR {addr}'
         elif lo == 0xd:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
