@@ -586,6 +586,7 @@ if __name__ == '__main__':
         'FLDPI':                            b'\xd9\xeb',
         'FLDZ':                             b'\xd9\xee',
         'F2XM1':                            b'\xd9\xf0',
+        'FY12X':                            b'\xd9\xf1',
         'FPREM':                            b'\xd9\xf8',
         'FRNDINT':                          b'\xd9\xfc',
         'FSCALE':                           b'\xd9\xfd',
