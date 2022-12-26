@@ -1182,6 +1182,9 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             addr = state['eip'] + rel8
             return f'JMP {hex(addr)}'
+        elif lo == 0xc:
+            state['eip'] += 1
+            return f'IN al, dx'
     elif hi == 0xf:
         if lo == 0:
             state['prefix'] = 'lock '
