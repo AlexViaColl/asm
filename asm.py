@@ -67,7 +67,15 @@ def modrm_op(raw, op, state):
                 state['eip'] += 1
                 return f'{get_ptr(op[1])} [{get_regs("v")[rm]}{disp}]'
             else:
-                assert False, 'Not implemented yet'
+                scale, idx, base = sib(raw[1])
+                state['eip'] += 1
+                if base == 0b101:
+                    assert False, 'Not implemented yet'
+                disp = hex(sign_extend(raw[2], 8, unsigned=False))
+                state['eip'] += 1
+                if disp.startswith('0x'):
+                    disp = f'+{disp}'
+                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}{disp}]'
         elif mod == 0b10:
             if rm != 0b100:
                 disp = hex(int.from_bytes(raw[1:5], 'little'))
