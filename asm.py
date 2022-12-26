@@ -1171,7 +1171,11 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FDIV QWORD PTR {addr}'
             else:
-                pass
+                if raw[0] >= 0xc0 and raw[1] <= 0xc7:
+                    pass
+                elif raw[1] >= 0xe0 and raw[1] <= 0xe7:
+                    state['eip'] += 2
+                    return f'FSUBR st({raw[1] - 0xe0}), st'
         elif lo == 0xd:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
