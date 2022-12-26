@@ -737,6 +737,7 @@ if __name__ == '__main__':
         'PUSH gs':                          b'\x0f\xa8',
         'POP gs':                           b'\x0f\xa9',
         'RSM':                              b'\x0f\xaa',
+        'BTS DWORD PTR [esp], eax':         b'\x0f\xab\x04\x24',
         'SHRD eax, edx, cl':                b'\x0f\xad\xd0',
 
         'IMUL esi, DWORD PTR [ebp+0x10]':   b'\x0f\xaf\x75\x10',

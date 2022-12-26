@@ -491,6 +491,10 @@ def disassemble_2b(raw, state):
         elif lo == 0xa:
             state['eip'] += 1
             return f'RSM'
+        elif lo == 0xb:
+            state['eip'] += 1
+            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
+            return f'BTS {addr}'
         elif lo == 0xd:
             inst = disassemble_ev_gv(raw, 'SHRD', state)
             return f'{inst}, cl'
