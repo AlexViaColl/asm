@@ -419,6 +419,10 @@ if __name__ == '__main__':
         'POP DWORD PTR [eax+eax*1]':        b'\x8f\x04\x00',
         'POP DWORD PTR ds:0x0':             b'\x8f\x05\x00\x00\x00\x00',
         'POP DWORD PTR [eax+0x0]':          b'\x8f\x40\x00',
+        '(bad)':                            b'\x8f\x20',
+        '(bad)':                            b'\x8f\x30',
+        '(bad)':                            b'\x8f\x38',
+        '(bad)':                            b'\x8f\x78',
         'POP eax':                          b'\x8f\xc0',
         'POP edi':                          b'\x8f\xc7',
         'NOP':                              b'\x90',
@@ -723,7 +727,9 @@ if __name__ == '__main__':
                 print(f'  Expected: {inst}')
                 print(f'  But got:  {actual}')
                 sys.exit(1)
-            if state['eip'] != len(raw):
+            if inst == '(bad)':
+                pass
+            elif state['eip'] != len(raw):
                 print(f'[ERROR] Unexpected eip after disassembly of bytes: {raw.hex(" ")}')
                 print(f'  Expected: {len(raw)} ({inst})')
                 print(f'  But got:  {state["eip"]} ({actual})')

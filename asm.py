@@ -858,9 +858,12 @@ def disassemble(raw, state=None):
             return f'MOV {SEGMENTS[reg_op]},{inst.split(",")[1]}'
         elif lo == 0xf:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op == 0b000
-            xxx = disassemble_ex_gx(raw, 'POP', 'DWORD PTR', REGISTERS, state)
-            return xxx.split(',')[0]
+            if reg_op == 0b000:
+                inst = disassemble_ex_gx(raw, 'POP', 'DWORD PTR', REGISTERS, state)
+                return inst.split(',')[0]
+            else:
+                state['eip'] += 1
+                return f'(bad)'
     elif hi == 9:
         if lo == 0:
             state['eip'] += 1
