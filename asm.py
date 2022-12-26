@@ -1072,7 +1072,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FADD QWORD PTR {addr}'
                 elif nnn == 0b001:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FMUL QWORD PTR {addr}'
                 elif nnn == 0b010:
                     pass
                 elif nnn == 0b011:
