@@ -1101,8 +1101,11 @@ def disassemble(raw, state=None):
             return f'{inst} {op}, cl'
         elif lo == 3:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
-            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            #assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            inst = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', 'SHL', 'SAR'][reg_op]
+            op = modrm_op(raw[1:], 'Ev', state)
+            state['eip'] += 2
+            return f'{inst} {op}, cl'
             inst = disassemble_ev_gv(raw, op, state).split(',')[0]
             return f'{inst}, cl'
         elif lo == 4:
@@ -1358,7 +1361,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FILD QWORD PTR {addr}'
                 elif nnn == 0b001:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FISTTP DWORD PTR {addr}'
                 elif nnn == 0b010:
                     pass
                 elif nnn == 0b011:
@@ -1578,6 +1583,9 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xf0 and raw[1] <= 0xf7:
                     state['eip'] += 2
                     return f'FCOMIP st, st({raw[1] - 0xf0})'
+                else:
+                    state['eip'] += 2
+                    return '(bad)'
             pass
     elif hi == 0xe:
         if lo == 0:
@@ -1668,8 +1676,8 @@ def disassemble(raw, state=None):
             return f'{prefix}CMC'
         elif lo == 6:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
-            op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
+            #assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
+            op = ['TEST', 'TEST', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
             # TODO: No dirty hacks!
             inst = disassemble_eb_gb(raw, op, state)
             inst = inst.split(',')[0]
@@ -1681,8 +1689,8 @@ def disassemble(raw, state=None):
                 return inst
         elif lo == 7:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
-            op = ['TEST', '???', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
+            #assert reg_op != 0b001, 'Invalid Unary Grp 3 Eb op!'
+            op = ['TEST', 'TEST', 'NOT', 'NEG', 'MUL', 'IMUL', 'DIV', 'IDIV'][reg_op]
             # TODO: No dirty hacks!
             inst = disassemble_ev_gv(raw, op, state)
             inst = inst.split(',')[0]

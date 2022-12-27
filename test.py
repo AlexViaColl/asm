@@ -587,6 +587,7 @@ if __name__ == '__main__':
         'SHR eax, 1':                       b'\xd1\xe8',
         'SHL bl, cl':                       b'\xd2\xe3',
         'SHR edx, cl':                      b'\xd3\xea',
+        'SHL ebp, cl':                      b'\xd3\xf5', # RegOp: 110 which is reserved...
         'AAM 0x6d':                         b'\xd4\x6d',
         'AAD 0x6d':                         b'\xd5\x6d',
         'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
@@ -657,6 +658,7 @@ if __name__ == '__main__':
 
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
+        'FISTTP DWORD PTR [edx+0x0]':       b'\xdb\x4a\x00',
         'FISTP DWORD PTR [ebp+0x8]':        b'\xdb\x5d\x08',
         'FSTP TBYTE PTR [ebp-0x9e]':        b'\xdb\xbd\x62\xff\xff\xff',
         'FNCLEX':                           b'\xdb\xe2',
@@ -745,6 +747,7 @@ if __name__ == '__main__':
         'IDIV BYTE PTR [eax]':              b'\xf6\x38',
         'TEST BYTE PTR [eax+0x0], 0x0':     b'\xf6\x40\x00\x00',
         'TEST BYTE PTR [ebp-0x30], 0x1':    b'\xf6\x45\xd0\x01',
+        'TEST BYTE PTR [ecx+0x0], 0x33':    b'\xf6\x49\x00\x33', # TODO: Undefined!!!
         'NOT BYTE PTR [eax+0x0]':           b'\xf6\x50\x00',
         'NEG BYTE PTR [eax+0x0]':           b'\xf6\x58\x00',
         'MUL BYTE PTR [eax+0x0]':           b'\xf6\x60\x00',
@@ -774,6 +777,7 @@ if __name__ == '__main__':
         'DIV DWORD PTR [eax]':              b'\xf7\x30',
         'IDIV DWORD PTR [eax]':             b'\xf7\x38',
         'TEST DWORD PTR [eax+0x0], 0x0':    b'\xf7\x40\x00\x00\x00\x00\x00',
+        'TEST DWORD PTR [ecx+0x0], 0x49f733': b'\xf7\x49\x00\x33\xf7\x49\x00', # TODO: Unedinfed!!
         'NOT DWORD PTR [eax+0x0]':          b'\xf7\x50\x00',
         'NEG DWORD PTR [eax+0x0]':          b'\xf7\x58\x00',
         'MUL DWORD PTR [eax+0x0]':          b'\xf7\x60\x00',
