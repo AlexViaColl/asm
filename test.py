@@ -583,6 +583,7 @@ if __name__ == '__main__':
         'FADD st, st(1)':                   b'\xd8\xc1',
         'FCOMP st(1)':                      b'\xd8\xd9',
         'FSUB st, st(1)':                   b'\xd8\xe1',
+        'FDIV st, st(0)':                   b'\xd8\xf0',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
         'FXCH st(1)':                       b'\xd9\xc9',

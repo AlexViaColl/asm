@@ -1105,6 +1105,9 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xe0 and raw[1] <= 0xe8:
                     state['eip'] += 2
                     return f'FSUB st, st({raw[1] - 0xe0})'
+                elif raw[1] >= 0xf0 and raw[1] <= 0xf8:
+                    state['eip'] += 2
+                    return f'FDIV st, st({raw[1] - 0xf0})'
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
