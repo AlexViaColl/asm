@@ -698,6 +698,7 @@ if __name__ == '__main__':
         'LOOPE 0xffffffcd':                 b'\xe1\xcb',
         'LOOP 0xffffffcd':                  b'\xe2\xcb',
         'JECXZ 0xffffffd1':                 b'\xe3\xcf',
+        'IN al, 0x7f':                      b'\xe4\x7f',
         'OUT 0x8b, al':                     b'\xe6\x8b',
         'OUT 0x8b, eax':                    b'\xe7\x8b',
         'CALL 0x23d1':                      b'\xe8\xcc\x23\x00\x00',

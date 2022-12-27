@@ -1548,6 +1548,10 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             addr = sign_extend(raw[1], 8) + state['eip']
             return f'JECXZ {hex(addr)}'
+        elif lo == 4:
+            state['eip'] += 1
+            ib = get_imm(raw[1:], 'b', state)
+            return f'IN {get_regs("b", state)[0]}, {ib}'
         elif lo == 6:
             state['eip'] += 1
             ib = get_imm(raw[1:], 'b', state)
