@@ -326,8 +326,10 @@ if __name__ == '__main__':
 
         'ADD BYTE PTR fs:[eax+0x0], al':    b'\x64\x00\x40\x00',
         'ADD BYTE PTR gs:[eax+0x0], al':    b'\x65\x00\x40\x00',
+        'AND ax, 0x7ff0':                   b'\x66\x25\xf0\x7f',
         #'CMP si, ecx':                      b'\x66\x3b\xf1',
         'AND cx, 0xf000':                   b'\x66\x81\xe1\x00\xf0',
+        #'mov ax, WORD PTR [ebp-0x2ca]':     b'\x66\x8b\x85\x36\xfd\xff\xff',
         'TEST ax, 0x10c':                   b'\x66\xa9\x0c\x01',
         'MOV bx, 0x133f':                   b'\x66\xbb\x3f\x13',
         'PUSH 0x0':                         b'\x68\x00\x00\x00\x00',

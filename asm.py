@@ -651,9 +651,9 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'{prefix}AND al, {hex(raw[1])}'
         elif lo == 5:
-            state['eip'] += 5
-            iz = int.from_bytes(raw[1:5], 'little')
-            return f'{prefix}AND eax, {hex(iz)}'
+            state['eip'] += 1
+            iz = get_imm(raw[1:], 'z', state)
+            return f'{prefix}AND {get_regs("v", state)[0]}, {iz}'
         elif lo == 6:
             state['seg'] = 'es:'
             state['eip'] += 1
