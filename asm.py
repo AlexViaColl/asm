@@ -882,7 +882,9 @@ def disassemble(raw, state=None):
         elif lo == 0xa:
             return disassemble_gb_eb(raw, 'MOV', state) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'MOV', state) # TODO: Test
+            state['eip'] += 1
+            addr = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
+            return f'MOV {addr}'
         elif lo == 0xc:
             _, reg_op, _ = modrm(raw[1])
             inst = disassemble_ew_gw(raw, 'MOV', state) # TODO: Test
