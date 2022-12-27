@@ -1108,7 +1108,9 @@ def disassemble(raw, state=None):
             ib = hex(raw[1])
             return f'AAM {ib}'
         elif lo == 5:
-            pass
+            state['eip'] += 2
+            ib = hex(raw[1])
+            return f'AAD {ib}'
         elif lo == 6:
             state['eip'] += 1
             return f'{prefix}(bad)'
