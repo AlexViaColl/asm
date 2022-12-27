@@ -92,7 +92,7 @@ def modrm_op(raw, op, state):
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 1
-                return f'{get_ptr(op[1], state)} [{get_regs("v", state)[rm]}{disp}]'
+                return f'{get_ptr(op[1], state)} {state["seg"]}[{get_regs("v", state)[rm]}{disp}]'
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
@@ -103,7 +103,7 @@ def modrm_op(raw, op, state):
                 return f'{get_ptr(op[1], state)} [{sib_str(scale, idx, base)}{disp}]'
         elif mod == 0b10:
             if rm != 0b100:
-                disp = hex(int.from_bytes(raw[1:5], 'little'))
+                disp = hex(sign_extend(int.from_bytes(raw[1:5], 'little'), 32, unsigned=False))
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 4
@@ -124,24 +124,9 @@ def modrm_op(raw, op, state):
 def modrm_dst_src(raw, dst, src, state):
     mod, reg_op, rm = modrm(raw[0])
     state['eip'] += 1
-
     dst = modrm_op(raw, dst, state) # eax
     src = modrm_op(raw, src, state) # BYTE PTR [ebp-0x4]
     return f'{dst}, {src}'
-
-    if mod == 0b00:
-        assert False, 'Not implemented yet!'
-    elif mod == 0b01:
-        dst = modrm_dst(raw, dst, state) # eax
-        src = modrm_src(raw, src, state) # BYTE PTR [ebp-0x4]
-        return f'{dst}, {src}'
-    elif mod == 0b10:
-        assert False, 'Not implemented yet!'
-    elif mod == 0b11:
-        if dst.startswith('E'):
-            return f'{dst_regs[rm]}, {src_regs[reg_op]}'
-        elif dst.startswith('G'):
-            return f'{dst_regs[reg_op]}, {src_regs[rm]}'
 
 def dis_modrm_dst_src(raw, op, dst, src, state):
     state['eip'] += 1
@@ -567,6 +552,7 @@ def disassemble(raw, state=None):
 
     if hi == 0:
         if lo == 0:
+            return dis_modrm_dst_src(raw, 'ADD', 'Eb', 'Gb', state)
             return disassemble_eb_gb(raw, 'ADD', state) # TODO
         elif lo == 1:
             return dis_modrm_dst_src(raw, 'ADD', 'Ev', 'Gv', state)

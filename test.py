@@ -135,6 +135,7 @@ if __name__ == '__main__':
         'ADD BYTE PTR [eax+0x0], dl':       b'\x00\x50\x00',
         'ADD BYTE PTR [edi-0x1], dl':       b'\x00\x57\xff',
         'ADD BYTE PTR [eax+0x0], bl':       b'\x00\x58\x00',
+        'ADD BYTE PTR [ebp+ebp*4+0x57], bl':b'\x00\x5c\xad\x57',
 
         'ADD BYTE PTR [edi-0x1], bh':       b'\x00\x7f\xff',
 
