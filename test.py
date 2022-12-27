@@ -593,6 +593,7 @@ if __name__ == '__main__':
         'FLDENV [esp]':                     b'\xd9\x24\x24',
         'FNSTENV [esp]':                    b'\xd9\x34\x24',
         'FLD DWORD PTR [esp+0x8]':          b'\xd9\x44\x24\x08',
+        'FSTP DWORD PTR [eax+0x78]':        b'\xd9\x58\x78',
         'FLDCW WORD PTR [ebp+0xc]':         b'\xd9\x6d\x0c',
         'FNSTCW WORD PTR [ebp-0x4]':        b'\xd9\x7d\xfc',
         'FXCH st(1)':                       b'\xd9\xc9',
