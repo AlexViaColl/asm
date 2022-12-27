@@ -1047,6 +1047,8 @@ def disassemble(raw, state=None):
             return f'{op} {REGISTERS[reg_op]}, FWORD PTR {m}'
         elif lo == 6:
             mod, reg_op, rm = modrm(raw[1])
+            if reg_op != 0b000:
+                return '(bad)'
             assert reg_op == 0b000, 'Invalid Grp 11 MOV'
             return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
         elif lo == 7:
