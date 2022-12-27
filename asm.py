@@ -1048,6 +1048,7 @@ def disassemble(raw, state=None):
         elif lo == 6:
             mod, reg_op, rm = modrm(raw[1])
             if reg_op != 0b000:
+                state['eip'] += 1
                 return '(bad)'
             assert reg_op == 0b000, 'Invalid Grp 11 MOV'
             return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
@@ -1335,7 +1336,19 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FIDIVR DWORD PTR {addr}'
             else:
-                pass
+                if raw[1] >= 0xc0 and raw[1] <= 0xc7:
+                    pass
+                elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
+                    pass
+                elif raw[1] >= 0xd0 and raw[1] <= 0xd7:
+                    pass
+                elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
+                    pass
+                elif raw[1] == 0xe9:
+                    pass
+                else:
+                    state['eip'] += 2
+                    return '(bad)'
         elif lo == 0xb:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:

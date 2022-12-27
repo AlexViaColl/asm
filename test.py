@@ -645,6 +645,7 @@ if __name__ == '__main__':
         'FISUBR DWORD PTR [esp+0x14]':      b'\xda\x6c\x24\x14',
         'FIDIV DWORD PTR [esp+0x14]':       b'\xda\x74\x24\x14',
         'FIDIVR DWORD PTR [esp+0x14]':      b'\xda\x7c\x24\x14',
+        '(bad)':                            b'\xda\xec',
 
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
