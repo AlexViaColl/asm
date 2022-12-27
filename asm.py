@@ -1483,10 +1483,12 @@ def disassemble(raw, state=None):
             return f'{prefix}STD'
         elif lo == 0xe:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op <= 0b001
+            state['eip'] += 2
+            if reg_op > 0b001:
+                return f'(bad)'
             op = ['INC', 'DEC'][reg_op]
-            xxx = disassemble_ex_gx(raw, op, 'BYTE PTR', REGISTERS, state)
-            return xxx.split(',')[0]
+            addr = modrm_op(raw[1:], 'Eb', state)
+            return f'{op} {addr}'
         elif lo == 0xf:
             mod, reg_op, rm = modrm(raw[1])
             assert reg_op != 0b111
