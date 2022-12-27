@@ -661,6 +661,7 @@ if __name__ == '__main__':
         'FDIVR QWORD PTR [esp+0x8]':        b'\xdc\x7c\x24\x08',
         'FADD st(1), st':                   b'\xdc\xc1',
         'FSUBR st(1), st':                  b'\xdc\xe1',
+        'FSUB st(5), st':                   b'\xdc\xed',
 
         'FST QWORD PTR [esp]':              b'\xdd\x14\x24',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
