@@ -605,6 +605,7 @@ if __name__ == '__main__':
         'F2XM1':                            b'\xd9\xf0',
         'FY12X':                            b'\xd9\xf1',
         'FPTAN':                            b'\xd9\xf2',
+        'FPATAN':                           b'\xd9\xf3',
         'FPREM1':                           b'\xd9\xf5',
         'FPREM':                            b'\xd9\xf8',
         'FRNDINT':                          b'\xd9\xfc',
