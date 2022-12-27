@@ -659,6 +659,7 @@ if __name__ == '__main__':
         'FBLD TBYTE PTR [esp+0x8]':         b'\xdf\x64\x24\x08',
         'FILD QWORD PTR [esp+0x0]':         b'\xdf\x6c\x24\x00',
         'FBSTP TBYTE PTR [esp+0x8]':        b'\xdf\x74\x24\x08',
+        'FISTP QWORD PTR [esp+0x8]':        b'\xdf\x7c\x24\x08',
 
         'OUT 0x8b, al':                     b'\xe6\x8b',
         'OUT 0x8b, eax':                    b'\xe7\x8b',
