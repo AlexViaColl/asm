@@ -693,6 +693,7 @@ if __name__ == '__main__':
         'JMP 0x5':                          b'\xeb\x03',
         'IN al, dx':                        b'\xec',
         'OUT dx, al':                       b'\xee',
+        'OUT dx, eax':                      b'\xef',
 
         'INT1':                             b'\xf1',
         'repe (bad)':                       b'\xf3\xd6',

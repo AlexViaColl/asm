@@ -1103,6 +1103,7 @@ def disassemble(raw, state=None):
             inst = disassemble_ev_gv(raw, op, state).split(',')[0]
             return f'{inst}, cl'
         elif lo == 6:
+            state['eip'] += 1
             return f'{prefix}(bad)'
         elif lo == 7:
             state['eip'] += 1
@@ -1567,6 +1568,9 @@ def disassemble(raw, state=None):
         elif lo == 0xe:
             state['eip'] += 1
             return f'OUT dx, al'
+        elif lo == 0xf:
+            state['eip'] += 1
+            return f'OUT dx, eax'
     elif hi == 0xf:
         if lo == 0:
             state['prefix'] = 'lock '
