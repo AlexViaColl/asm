@@ -713,6 +713,7 @@ if __name__ == '__main__':
         'FISTP QWORD PTR [esp+0x8]':        b'\xdf\x7c\x24\x08',
         '(bad)':                            b'\xdf\xd2',
         'FUCOMIP st, st(0)':                b'\xdf\xe8',
+        'FCOMIP st, st(0)':                 b'\xdf\xf0',
 
         'LOOPNE 0xffffffcd':                b'\xe0\xcb',
         'LOOPE 0xffffffcd':                 b'\xe1\xcb',
