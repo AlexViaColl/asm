@@ -655,6 +655,7 @@ if __name__ == '__main__':
         'FILD WORD PTR [esp+0x8]':          b'\xdf\x44\x24\x08',
         'FISTTP WORD PTR [esp+0x8]':        b'\xdf\x4c\x24\x08',
         'FIST WORD PTR [esp+0x8]':          b'\xdf\x54\x24\x08',
+        'FISTP WORD PTR [esp+0x8]':         b'\xdf\x5c\x24\x08',
         'FILD QWORD PTR [esp+0x0]':         b'\xdf\x6c\x24\x00',
 
         'OUT 0x8b, al':                     b'\xe6\x8b',
