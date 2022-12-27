@@ -1457,7 +1457,9 @@ def disassemble(raw, state=None):
                 elif nnn == 0b110:
                     pass
                 elif nnn == 0b111:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FIDIVR WORD PTR {addr}'
             else:
                 if raw[1] >= 0xc0 and raw[1] <= 0xc7:
                     state['eip'] += 2

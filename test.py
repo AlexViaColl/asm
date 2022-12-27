@@ -650,6 +650,7 @@ if __name__ == '__main__':
         'FSTP TBYTE PTR [ebp-0x9e]':        b'\xdb\xbd\x62\xff\xff\xff',
         'FNCLEX':                           b'\xdb\xe2',
         'FNINIT':                           b'\xdb\xe3',
+
         'FADD QWORD PTR ds:0x895528':       b'\xdc\x05\x28\x55\x89\x00',
         'FMUL QWORD PTR [ebp-0x8]':         b'\xdc\x4d\xf8',
         'FCOM QWORD PTR [esi+0x20]':        b'\xdc\x56\x20',
@@ -659,6 +660,7 @@ if __name__ == '__main__':
         'FDIVR QWORD PTR [esp+0x8]':        b'\xdc\x7c\x24\x08',
         'FADD st(1), st':                   b'\xdc\xc1',
         'FSUBR st(1), st':                  b'\xdc\xe1',
+
         'FST QWORD PTR [esp]':              b'\xdd\x14\x24',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
         'FLD QWORD PTR [ebp-0x8]':          b'\xdd\x45\xf8',
@@ -666,7 +668,9 @@ if __name__ == '__main__':
         'FNSAVE [esi+0x8]':                 b'\xdd\x76\x08',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
         'FSTP st(1)':                       b'\xdd\xd9',
+
         'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
+        'FIDIVR WORD PTR [edi+0x0]':        b'\xde\x7f\x00',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
         'FCOMPP':                           b'\xde\xd9',
