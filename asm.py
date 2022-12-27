@@ -1743,6 +1743,7 @@ if __name__ == '__main__':
     show_version = False
     show_usage = False
     base = 0
+    skip = 0
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for i, arg in enumerate(args):
@@ -1758,6 +1759,14 @@ if __name__ == '__main__':
                     base = int(base, base=2)
                 else:
                     base = int(base)
+            elif (arg == '-s' or arg == '--skip') and len(args) > i:
+                skip = args[i+1]
+                if skip.startswith('0x'):
+                    skip = int(skip, base=16)
+                elif skip.startswith('0b'):
+                    skip = int(skip, base=2)
+                else:
+                    skip = int(skip)
 
     if show_version:
         print(f'asm version {VERSION}')
@@ -1767,7 +1776,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     raw = sys.stdin.buffer.read()
-    state = {'eip': 0}
+    state = {'eip': skip}
     while state['eip'] != len(raw):
         start = state['eip']
         code = raw[start:]
