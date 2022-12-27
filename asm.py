@@ -1522,6 +1522,14 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             addr = sign_extend(raw[1], 8) + state['eip']
             return f'LOOPE {hex(addr)}'
+        elif lo == 2:
+            state['eip'] += 2
+            addr = sign_extend(raw[1], 8) + state['eip']
+            return f'LOOP {hex(addr)}'
+        elif lo == 3:
+            state['eip'] += 2
+            addr = sign_extend(raw[1], 8) + state['eip']
+            return f'JECXZ {hex(addr)}'
         elif lo == 6:
             state['eip'] += 1
             ib = get_imm(raw[1:], 'b', state)
