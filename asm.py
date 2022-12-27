@@ -71,9 +71,14 @@ def modrm_op(raw, op, state):
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
+                disp = ''
                 if base == 0b101:
-                    assert False, 'Not implemented yet'
-                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}]'
+                    base = None
+                    disp = hex(int.from_bytes(raw[2:6], 'little'))
+                    if disp.startswith('0x'):
+                        disp = f'+{disp}'
+                    state['eip'] += 4
+                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}{disp}]'
             elif rm == 0b101:
                 disp32 = int.from_bytes(raw[1:5], 'little')
                 state['eip'] += 4
