@@ -111,9 +111,7 @@ def modrm_op(raw, op, state):
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
-                if base == 0b101:
-                    assert False, 'Not implemented yet'
-                disp = hex(int.from_bytes(raw[2:6], 'little'))
+                disp = hex(sign_extend(int.from_bytes(raw[2:6], 'little'), 32, unsigned=False))
                 state['eip'] += 4
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
