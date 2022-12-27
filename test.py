@@ -850,6 +850,7 @@ if __name__ == '__main__':
         'INVD':                             b'\x0f\x08',
         'WBINVD':                           b'\x0f\x09',
         'MOVUPS xmm2, XMMWORD PTR [ecx]':   b'\x0f\x10\x11',
+        'MOVLPS xmm1, QWORD PTR [eax]':     b'\x0f\x12\x08',
         'MOVAPS xmm1, XMMWORD PTR [esp+0x0]': b'\x0f\x28\x4c\x24\x00',
         'WRMSR':                            b'\x0f\x30',
         'RDTSC':                            b'\x0f\x31',

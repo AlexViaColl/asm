@@ -416,6 +416,9 @@ def disassemble_2b(raw, state):
             return f'MOVUPS xmm2, XMMWORD PTR [ecx]'
         elif lo == 1:
             pass
+        elif lo == 2:
+            state['eip'] += 2
+            return f'MOVLPS xmm1, QWORD PTR [eax]'
     elif hi == 2:
         if lo == 0:
             pass
