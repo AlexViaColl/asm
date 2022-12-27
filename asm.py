@@ -1485,6 +1485,9 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
                     return f'FSTP st({raw[1] - 0xd8})'
+                elif raw[1] >= 0xe0 and raw[1] <= 0xe7:
+                    state['eip'] += 2
+                    return f'FUCOM st({raw[1] - 0xe0})'
         elif lo == 0xe:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:
