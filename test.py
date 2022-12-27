@@ -672,6 +672,7 @@ if __name__ == '__main__':
         'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
         'FIADD WORD PTR [edi+0x0]':         b'\xde\x47\x00',
         'FIMUL WORD PTR [edi+0x0]':         b'\xde\x4f\x00',
+        'FICOM WORD PTR [edi+0x0]':         b'\xde\x57\x00',
         'FIDIVR WORD PTR [edi+0x0]':        b'\xde\x7f\x00',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
@@ -679,6 +680,7 @@ if __name__ == '__main__':
         'FSUBP st(1), st':                  b'\xde\xe9',
         'FDIVRP st(1), st':                 b'\xde\xf1',
         'FDIVP st(1), st':                  b'\xde\xf9',
+
         'FILD WORD PTR [esp+0x8]':          b'\xdf\x44\x24\x08',
         'FISTTP WORD PTR [esp+0x8]':        b'\xdf\x4c\x24\x08',
         'FIST WORD PTR [esp+0x8]':          b'\xdf\x54\x24\x08',
