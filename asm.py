@@ -1266,6 +1266,29 @@ def disassemble(raw, state=None):
                 elif raw[1] == 0xff:
                     state['eip'] += 2
                     return f'FCOS'
+        elif lo == 0xa:
+            _, nnn, _ = modrm(raw[1])
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    pass
+                elif nnn == 0b001:
+                    pass
+                elif nnn == 0b010:
+                    pass
+                elif nnn == 0b011:
+                    pass
+                elif nnn == 0b100:
+                    pass
+                elif nnn == 0b101:
+                    pass
+                elif nnn == 0b110:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FIDIV DWORD PTR {addr}'
+                elif nnn == 0b111:
+                    pass
+            else:
+                pass
         elif lo == 0xb:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:

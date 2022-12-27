@@ -629,6 +629,7 @@ if __name__ == '__main__':
         'FSCALE':                           b'\xd9\xfd',
         'FSIN':                             b'\xd9\xfe',
         'FCOS':                             b'\xd9\xff',
+        'FIDIV DWORD PTR [esp+0x14]':       b'\xda\x74\x24\x14',
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FISTP DWORD PTR [ebp+0x8]':        b'\xdb\x5d\x08',
