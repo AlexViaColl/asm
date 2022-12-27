@@ -580,6 +580,7 @@ if __name__ == '__main__':
         'SHR edx, cl':                      b'\xd3\xea',
         'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
         'FMUL DWORD PTR ds:0x8f8de0':       b'\xd8\x0d\xe0\x8d\x8f\x00',
+        'FCOMP DWORD PTR ds:0x86e75c':      b'\xd8\x1d\x5c\xe7\x86\x00',
         'FDIV DWORD PTR [esp+0x8]':         b'\xd8\x74\x24\x08',
         'FDIVR DWORD PTR [esp+0x8]':        b'\xd8\x7c\x24\x08',
         'FADD st, st(1)':                   b'\xd8\xc1',
