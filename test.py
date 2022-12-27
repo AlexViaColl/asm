@@ -693,6 +693,7 @@ if __name__ == '__main__':
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
         'FCOMPP':                           b'\xde\xd9',
+        'FSUBRP st(1), st':                 b'\xde\xe1',
         'FSUBP st(1), st':                  b'\xde\xe9',
         'FDIVRP st(1), st':                 b'\xde\xf1',
         'FDIVP st(1), st':                  b'\xde\xf9',
