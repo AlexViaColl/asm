@@ -1117,7 +1117,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FSUB DWORD PTR {addr}'
                 elif nnn == 0b101:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FSUBR DWORD PTR {addr}'
                 elif nnn == 0b110:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
