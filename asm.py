@@ -1519,7 +1519,9 @@ def disassemble(raw, state=None):
             addr = sign_extend(raw[1], 8) + state['eip']
             return f'LOOPNE {hex(addr)}'
         elif lo == 1:
-            pass
+            state['eip'] += 2
+            addr = sign_extend(raw[1], 8) + state['eip']
+            return f'LOOPE {hex(addr)}'
         elif lo == 6:
             state['eip'] += 1
             ib = get_imm(raw[1:], 'b', state)

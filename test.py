@@ -683,6 +683,7 @@ if __name__ == '__main__':
         'FISTP QWORD PTR [esp+0x8]':        b'\xdf\x7c\x24\x08',
 
         'LOOPNE 0xffffffcd':                b'\xe0\xcb',
+        'LOOPE 0xffffffcd':                 b'\xe1\xcb',
         'OUT 0x8b, al':                     b'\xe6\x8b',
         'OUT 0x8b, eax':                    b'\xe7\x8b',
         'CALL 0x23d1':                      b'\xe8\xcc\x23\x00\x00',
