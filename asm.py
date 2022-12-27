@@ -1515,7 +1515,9 @@ def disassemble(raw, state=None):
             pass
     elif hi == 0xe:
         if lo == 0:
-            pass
+            state['eip'] += 2
+            addr = sign_extend(raw[1], 8) + state['eip']
+            return f'LOOPNE {hex(addr)}'
         elif lo == 1:
             pass
         elif lo == 6:
