@@ -554,6 +554,7 @@ if __name__ == '__main__':
         'MOV edi, 0xffffffff':              b'\xbf\xff\xff\xff\xff',
         'ROL BYTE PTR [eax], 0x0':          b'\xc0\x00\x00',
         'ROL DWORD PTR [eax], 0x0':         b'\xc1\x00\x00',
+        'SHL DWORD PTR [esi], 0x63':        b'\xc1\x36\x63', # TODO: Reserved
         'RET 0x0':                          b'\xc2\x00\x00',
         'RET 0x7fff':                       b'\xc2\xff\x7f',
         'RET 0x8000':                       b'\xc2\x00\x80',

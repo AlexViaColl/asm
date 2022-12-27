@@ -997,13 +997,13 @@ def disassemble(raw, state=None):
     elif hi == 0xc:
         if lo == 0:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
-            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            #assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', 'SHL', 'SAR'][reg_op]
             return disassemble_eb_ib(raw, op, state) # TODO: Test
         elif lo == 1:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
-            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
+            #assert reg_op != 0b110, 'Invalid Shift Grp 2 op!'
+            op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', 'SHL', 'SAR'][reg_op]
             return disassemble_eb_ib(raw, op, state).replace('BYTE', 'DWORD') # TODO: Test
         elif lo == 2:
             iw = int.from_bytes(raw[1:3], 'little')
