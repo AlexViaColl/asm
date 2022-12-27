@@ -145,6 +145,11 @@ def modrm_dst_src(raw, dst, src, state):
         elif dst.startswith('G'):
             return f'{dst_regs[reg_op]}, {src_regs[rm]}'
 
+def dis_modrm_dst_src(raw, op, dst, src, state):
+    state['eip'] += 1
+    addr = modrm_dst_src(raw[1:], dst, src, state)
+    return f'{op} {addr}'
+
 def modrm_addressing(m, rest, state, reg_size=32):
     mod, reg_op, rm = modrm(m)
     if mod == 0b00:
@@ -488,9 +493,7 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'CPUID'
         elif lo == 3:
-            state['eip'] += 1
-            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
-            return f'BT {addr}'
+            return dis_modrm_dst_src(raw, 'BT', 'Ev', 'Gv', state)
         elif lo == 4:
             state['eip'] += 1
             addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
@@ -506,27 +509,19 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'RSM'
         elif lo == 0xb:
-            state['eip'] += 1
-            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
-            return f'BTS {addr}'
+            return dis_modrm_dst_src(raw, 'BTS', 'Ev', 'Gv', state)
         elif lo == 0xd:
             inst = disassemble_ev_gv(raw, 'SHRD', state)
             return f'{inst}, cl'
         elif lo == 0xf:
-            ops = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
-            state['eip'] += 1
-            return f'IMUL {ops}'
+            return dis_modrm_dst_src(raw, 'IMUL', 'Gv', 'Ev', state)
     elif hi == 0xb:
         if lo == 0:
             pass
         elif lo == 6:
-            ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
-            state['eip'] += 1
-            return f'MOVZX {ops}'
+            return dis_modrm_dst_src(raw, 'MOVZX', 'Gv', 'Eb', state)
         elif lo == 7:
-            ops = modrm_dst_src(raw[1:], 'Gv', 'Ew', state)
-            state['eip'] += 1
-            return f'MOVZX {ops}'
+            return dis_modrm_dst_src(raw, 'MOVZX', 'Gv', 'Ew', state)
         elif lo == 0xa:
             state['eip'] += 1 # Opcode
             mod, reg_op, rm = modrm(raw[1])
@@ -539,13 +534,9 @@ def disassemble_2b(raw, state):
             ib = get_imm(raw[1+op_sz:], 'b', state)
             return f'{inst} {op}, {ib}'
         elif lo == 0xe:
-            ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
-            state['eip'] += 1
-            return f'MOVSX {ops}'
+            return dis_modrm_dst_src(raw, 'MOVSX', 'Gv', 'Eb', state)
         elif lo == 0xf:
-            ops = modrm_dst_src(raw[1:], 'Gv', 'Ew', state)
-            state['eip'] += 1
-            return f'MOVSX {ops}'
+            return dis_modrm_dst_src(raw, 'MOVSX', 'Gv', 'Ew', state)
     elif hi == 0xc:
         pass
     elif hi == 0xd:
@@ -578,13 +569,13 @@ def disassemble(raw, state=None):
 
     if hi == 0:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'ADD', state)
+            return disassemble_eb_gb(raw, 'ADD', state) # TODO
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'ADD', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADD', 'Ev', 'Gv', state)
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'ADD', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADD', 'Gb', 'Eb', state)
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'ADD', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADD', 'Gv', 'Ev', state)
         elif lo == 4:
             state['eip'] += 2
             return f'{prefix}ADD al, {hex(raw[1])}'
@@ -599,13 +590,13 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}POP es'
         if lo == 8:
-            return disassemble_eb_gb(raw, 'OR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'OR', 'Eb', 'Gb', state)
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'OR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'OR', 'Ev', 'Gv', state)
         if lo == 0xa:
-            return disassemble_gb_eb(raw, 'OR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'OR', 'Gb', 'Eb', state)
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'OR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'OR', 'Gv', 'Ev', state)
         elif lo == 0xc:
             state['eip'] += 2
             return f'{prefix}OR al, {hex(raw[1])}'
@@ -621,13 +612,13 @@ def disassemble(raw, state=None):
             return disassemble_2b(raw[1:], state)
     elif hi == 1:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'ADC', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADC', 'Eb', 'Gb', state)
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'ADC', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADC', 'Ev', 'Gv', state)
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'ADC', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADC', 'Gb', 'Eb', state)
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'ADC', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'ADC', 'Gv', 'Ev', state)
         elif lo == 4:
             state['eip'] += 2
             return f'{prefix}ADC al, {hex(raw[1])}'
@@ -642,13 +633,13 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}POP ss'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'SBB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SBB', 'Eb', 'Gb', state)
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'SBB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SBB', 'Ev', 'Gv', state)
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'SBB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SBB', 'Gb', 'Eb', state)
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'SBB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SBB', 'Gv', 'Ev', state)
         elif lo == 0xc:
             state['eip'] += 2
             return f'{prefix}SBB al, {hex(raw[1])}'
@@ -664,13 +655,13 @@ def disassemble(raw, state=None):
             return f'{prefix}POP ds'
     elif hi == 2:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'AND', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'AND', 'Eb', 'Gb', state)
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'AND', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'AND', 'Ev', 'Gv', state)
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'AND', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'AND', 'Gb', 'Eb', state)
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'AND', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'AND', 'Gv', 'Ev', state)
         elif lo == 4:
             state['eip'] += 2
             return f'{prefix}AND al, {hex(raw[1])}'
@@ -686,13 +677,13 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}DAA'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'SUB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SUB', 'Eb', 'Gb', state)
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'SUB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SUB', 'Ev', 'Gv', state)
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'SUB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SUB', 'Gb', 'Eb', state)
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'SUB', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'SUB', 'Gv', 'Ev', state)
         elif lo == 0xc:
             state['eip'] += 2
             return f'{prefix}SUB al, {hex(raw[1])}'
@@ -709,13 +700,13 @@ def disassemble(raw, state=None):
             return f'{prefix}DAS'
     elif hi == 3:
         if lo == 0:
-            return disassemble_eb_gb(raw, 'XOR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XOR', 'Eb', 'Gb', state)
         elif lo == 1:
-            return disassemble_ev_gv(raw, 'XOR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XOR', 'Ev', 'Gv', state)
         elif lo == 2:
-            return disassemble_gb_eb(raw, 'XOR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XOR', 'Gb', 'Eb', state)
         elif lo == 3:
-            return disassemble_gv_ev(raw, 'XOR', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XOR', 'Gv', 'Ev', state)
         elif lo == 4:
             state['eip'] += 2
             return f'{prefix}XOR al, {hex(raw[1])}'
@@ -731,15 +722,13 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}AAA'
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'CMP', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'CMP', 'Eb', 'Gb', state)
         elif lo == 9:
-            return disassemble_ev_gv(raw, 'CMP', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'CMP', 'Ev', 'Gv', state)
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'CMP', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'CMP', 'Gb', 'Eb', state)
         elif lo == 0xb:
-            state['eip'] += 1
-            addr = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
-            return f'CMP {addr}'
+            return dis_modrm_dst_src(raw, 'CMP', 'Gv', 'Ev', state)
         elif lo == 0xc:
             state['eip'] += 2
             return f'{prefix}CMP al, {hex(raw[1])}'
@@ -781,8 +770,7 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'BOUND {REGISTERS[reg_op]}, QWORD PTR {m}'
         elif lo == 3:
-            # TODO: More tests
-            return disassemble_ew_gw(raw, 'ARPL', state)
+            return dis_modrm_dst_src(raw, 'ARPL', 'Ew', 'Gw', state)
         elif lo == 4:
             state['seg'] = 'fs:'
             state['eip'] += 1
@@ -875,25 +863,21 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{inst}, {hex(ib)}'
         elif lo == 4:
-            return disassemble_eb_gb(raw, 'TEST', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'TEST', 'Eb', 'Gb', state)
         elif lo == 5:
-            return disassemble_ev_gv(raw, 'TEST', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'TEST', 'Ev', 'Gv', state)
         elif lo == 6:
-            return disassemble_eb_gb(raw, 'XCHG', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XCHG', 'Eb', 'Gb', state)
         elif lo == 7:
-            return disassemble_ev_gv(raw, 'XCHG', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'XCHG', 'Ev', 'Gv', state)
         elif lo == 8:
-            return disassemble_eb_gb(raw, 'MOV', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'MOV', 'Eb', 'Gb', state)
         elif lo == 9:
-            state['eip'] += 1
-            addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
-            return f'MOV {addr}'
+            return dis_modrm_dst_src(raw, 'MOV', 'Ev', 'Gv', state)
         elif lo == 0xa:
-            return disassemble_gb_eb(raw, 'MOV', state) # TODO: Test
+            return dis_modrm_dst_src(raw, 'MOV', 'Gb', 'Eb', state)
         elif lo == 0xb:
-            state['eip'] += 1
-            addr = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
-            return f'MOV {addr}'
+            return dis_modrm_dst_src(raw, 'MOV', 'Gv', 'Ev', state)
         elif lo == 0xc:
             _, reg_op, _ = modrm(raw[1])
             inst = disassemble_ew_gw(raw, 'MOV', state) # TODO: Test
