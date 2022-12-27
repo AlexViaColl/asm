@@ -1141,15 +1141,18 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
                     return f'FCOMP st({raw[1] - 0xd8})'
-                elif raw[1] >= 0xe0 and raw[1] <= 0xe8:
+                elif raw[1] >= 0xe0 and raw[1] <= 0xe7:
                     state['eip'] += 2
                     return f'FSUB st, st({raw[1] - 0xe0})'
                 elif raw[1] >= 0xe8 and raw[1] <= 0xef:
                     state['eip'] += 2
                     return f'FSUBR st, st({raw[1] - 0xe8})'
-                elif raw[1] >= 0xf0 and raw[1] <= 0xf8:
+                elif raw[1] >= 0xf0 and raw[1] <= 0xf7:
                     state['eip'] += 2
                     return f'FDIV st, st({raw[1] - 0xf0})'
+                elif raw[1] >= 0xf8 and raw[1] <= 0xff:
+                    state['eip'] += 2
+                    return f'FDIVR st, st({raw[1] - 0xf8})'
         elif lo == 9:
             _, nnn, _ = modrm(raw[1])
             if raw[1] <= 0xbf:

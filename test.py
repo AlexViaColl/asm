@@ -596,6 +596,7 @@ if __name__ == '__main__':
         'FSUB st, st(1)':                   b'\xd8\xe1',
         'FSUBR st, st(1)':                  b'\xd8\xe9',
         'FDIV st, st(0)':                   b'\xd8\xf0',
+        'FDIVR st, st(0)':                  b'\xd8\xf8',
 
         'FST DWORD PTR ds:0xb62f6c':        b'\xd9\x15\x6c\x2f\xb6\x00',
         'FLDENV [esp]':                     b'\xd9\x24\x24',
