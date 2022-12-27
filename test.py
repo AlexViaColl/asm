@@ -659,6 +659,7 @@ if __name__ == '__main__':
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FISTTP DWORD PTR [edx+0x0]':       b'\xdb\x4a\x00',
+        'FIST DWORD PTR [edx+0x0]':         b'\xdb\x52\x00',
         'FISTP DWORD PTR [ebp+0x8]':        b'\xdb\x5d\x08',
         'FSTP TBYTE PTR [ebp-0x9e]':        b'\xdb\xbd\x62\xff\xff\xff',
         'FNCLEX':                           b'\xdb\xe2',
