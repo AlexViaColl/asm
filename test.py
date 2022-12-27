@@ -608,6 +608,7 @@ if __name__ == '__main__':
         'FPATAN':                           b'\xd9\xf3',
         'FXTRACT':                          b'\xd9\xf4',
         'FPREM1':                           b'\xd9\xf5',
+        'FDECSTP':                          b'\xd9\xf6',
         'FPREM':                            b'\xd9\xf8',
         'FRNDINT':                          b'\xd9\xfc',
         'FSCALE':                           b'\xd9\xfd',
