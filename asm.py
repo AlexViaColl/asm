@@ -1553,6 +1553,9 @@ def disassemble(raw, state=None):
         elif lo == 0xc:
             state['eip'] += 1
             return f'IN al, dx'
+        elif lo == 0xe:
+            state['eip'] += 1
+            return f'OUT dx, al'
     elif hi == 0xf:
         if lo == 0:
             state['prefix'] = 'lock '
