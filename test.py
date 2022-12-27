@@ -612,6 +612,7 @@ if __name__ == '__main__':
         'FINCSTP':                          b'\xd9\xf7',
         'FPREM':                            b'\xd9\xf8',
         'FYL2XP1':                          b'\xd9\xf9',
+        'FSQRT':                            b'\xd9\xfa',
         'FRNDINT':                          b'\xd9\xfc',
         'FSCALE':                           b'\xd9\xfd',
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',

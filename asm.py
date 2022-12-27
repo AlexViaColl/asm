@@ -1209,6 +1209,9 @@ def disassemble(raw, state=None):
                 elif raw[1] == 0xf9:
                     state['eip'] += 2
                     return f'FYL2XP1'
+                elif raw[1] == 0xfa:
+                    state['eip'] += 2
+                    return f'FSQRT'
                 elif raw[1] == 0xfc:
                     state['eip'] += 2
                     return f'FRNDINT'
