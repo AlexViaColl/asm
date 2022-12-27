@@ -1103,6 +1103,12 @@ def disassemble(raw, state=None):
             op = ['ROL', 'ROR', 'RCL', 'RCR', 'SHL', 'SHR', '???', 'SAR'][reg_op]
             inst = disassemble_ev_gv(raw, op, state).split(',')[0]
             return f'{inst}, cl'
+        elif lo == 4:
+            state['eip'] += 2
+            ib = hex(raw[1])
+            return f'AAM {ib}'
+        elif lo == 5:
+            pass
         elif lo == 6:
             state['eip'] += 1
             return f'{prefix}(bad)'

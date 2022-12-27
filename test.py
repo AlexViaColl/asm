@@ -586,6 +586,7 @@ if __name__ == '__main__':
         'SHR eax, 1':                       b'\xd1\xe8',
         'SHL bl, cl':                       b'\xd2\xe3',
         'SHR edx, cl':                      b'\xd3\xea',
+        'AAM 0x6d':                         b'\xd4\x6d',
         'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
 
         'FMUL DWORD PTR ds:0x8f8de0':       b'\xd8\x0d\xe0\x8d\x8f\x00',
