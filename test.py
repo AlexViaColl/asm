@@ -673,6 +673,7 @@ if __name__ == '__main__':
         'FIADD WORD PTR [edi+0x0]':         b'\xde\x47\x00',
         'FIMUL WORD PTR [edi+0x0]':         b'\xde\x4f\x00',
         'FICOM WORD PTR [edi+0x0]':         b'\xde\x57\x00',
+        'FICOMP WORD PTR [edi+0x0]':        b'\xde\x5f\x00',
         'FIDIVR WORD PTR [edi+0x0]':        b'\xde\x7f\x00',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
