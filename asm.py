@@ -1572,6 +1572,9 @@ def disassemble(raw, state=None):
                 if raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FNSTSW ax'
+                elif raw[1] >= 0xe8 and raw[1] <= 0xef:
+                    state['eip'] += 2
+                    return f'FUCOMIP st, st({raw[1] - 0xe8})'
             pass
     elif hi == 0xe:
         if lo == 0:

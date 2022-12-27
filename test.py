@@ -711,6 +711,8 @@ if __name__ == '__main__':
         'FILD QWORD PTR [esp+0x0]':         b'\xdf\x6c\x24\x00',
         'FBSTP TBYTE PTR [esp+0x8]':        b'\xdf\x74\x24\x08',
         'FISTP QWORD PTR [esp+0x8]':        b'\xdf\x7c\x24\x08',
+        '(bad)':                            b'\xdf\xd2',
+        'FUCOMIP st, st(0)':                b'\xdf\xe8',
 
         'LOOPNE 0xffffffcd':                b'\xe0\xcb',
         'LOOPE 0xffffffcd':                 b'\xe1\xcb',
