@@ -417,7 +417,11 @@ def disassemble_2b(raw, state):
         elif lo == 1:
             pass
     elif hi == 2:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 8:
+            state['eip'] += 4
+            return f'MOVAPS xmm1, XMMWORD PTR [esp+0x0]'
     elif hi == 3:
         if lo == 0:
             state['eip'] += 1
@@ -787,12 +791,13 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'{prefix}PUSH {hex(ib)}'
         elif lo == 0xb:
-            # TODO: More tests
-            inst = disassemble_gv_ev(raw, 'IMUL', state)
-            ib = raw[state['eip']]
-            ib = sign_extend(ib, 8)
+            start = state['eip']
+            inst = dis_modrm_dst_src(raw, 'IMUL', 'Gv', 'Ev', state)
+            end = state['eip'] - start
+            ib = raw[end]
+            ib = hex(sign_extend(ib, 8))
             state['eip'] += 1
-            return f'{inst}, {hex(ib)}'
+            return f'{inst}, {ib}'
         elif lo == 0xc:
             state['eip'] += 1
             return f'INS BYTE PTR es:[edi], dx'
@@ -816,9 +821,16 @@ def disassemble(raw, state=None):
         return f'{prefix}{jmp_type} {hex(addr)}'
     elif hi == 8:
         if lo == 0:
+            start = state['eip']
+            state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
-            return disassemble_eb_ib(raw, op, state) # TODO: Test
+            addr = modrm_op(raw[1:], 'Eb', state)
+            state['eip'] += 1
+            end = state['eip'] - start
+            ib = hex(raw[end])
+            state['eip'] += 1
+            return f'{op} {addr}, {ib}'
         elif lo == 1:
             prev_eip = state['eip']
             mod, reg_op, rm = modrm(raw[1])
@@ -1020,12 +1032,19 @@ def disassemble(raw, state=None):
             state['eip'] += 2 # FIXME: Properly compute depending on addressing mode!
             return f'{op} {REGISTERS[reg_op]}, FWORD PTR {m}'
         elif lo == 6:
+            start = state['eip']
+            state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
             if reg_op != 0b000:
                 state['eip'] += 1
                 return '(bad)'
             assert reg_op == 0b000, 'Invalid Grp 11 MOV'
-            return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
+            addr = modrm_op(raw[1:], 'Eb', state)
+            state['eip'] += 1
+            end = state['eip'] - start
+            ib = hex(raw[end])
+            state['eip'] += 1
+            return f'MOV {addr}, {ib}'
         elif lo == 7:
             state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
