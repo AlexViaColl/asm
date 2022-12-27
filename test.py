@@ -583,6 +583,7 @@ if __name__ == '__main__':
         'FDIV DWORD PTR [esp+0x8]':         b'\xd8\x74\x24\x08',
         'FDIVR DWORD PTR [esp+0x8]':        b'\xd8\x7c\x24\x08',
         'FADD st, st(1)':                   b'\xd8\xc1',
+        'FCOM st(1)':                       b'\xd8\xd1',
         'FCOMP st(1)':                      b'\xd8\xd9',
         'FSUB st, st(1)':                   b'\xd8\xe1',
         'FDIV st, st(0)':                   b'\xd8\xf0',
