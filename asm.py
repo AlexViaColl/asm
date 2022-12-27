@@ -542,7 +542,8 @@ def disassemble_2b(raw, state):
     elif hi == 0xc:
         pass
     elif hi == 0xd:
-        pass
+        if lo == 0 and state['prefix'] == '':
+            return '(bad)'
     elif hi == 0xe:
         pass
     elif hi == 0xf:

@@ -825,6 +825,7 @@ if __name__ == '__main__':
         'MOVSX ecx, BYTE PTR [ebp+ecx*1-0x64]': b'\x0f\xbe\x4c\x0d\x9c',
         'MOVSX eax, BYTE PTR [esi+eax*8+0x895688]': b'\x0f\xbe\x84\xc6\x88\x56\x89\x00',
         'MOVSX eax, WORD PTR [eax]':        b'\x0f\xbf\x00',
+        '(bad)':                            b'\x0f\xd0\x7f',
     }
     for inst in instructions:
         raw = instructions[inst]
