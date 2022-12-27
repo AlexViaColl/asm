@@ -1477,7 +1477,8 @@ def disassemble(raw, state=None):
                     return f'FNSTSW WORD PTR {addr}'
             else:
                 if raw[1] >= 0xc0 and raw[1] <= 0xc7:
-                    pass
+                    state['eip'] += 2
+                    return f'FFREE st({raw[1] - 0xc0})'
                 elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
                     state['eip'] += 2
                     return f'FSTP st({raw[1] - 0xd8})'

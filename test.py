@@ -696,6 +696,7 @@ if __name__ == '__main__':
         'FRSTOR [esi+0x8]':                 b'\xdd\x66\x08',
         'FNSAVE [esi+0x8]':                 b'\xdd\x76\x08',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
+        'FFREE st(0)':                      b'\xdd\xc0',
         'FSTP st(1)':                       b'\xdd\xd9',
 
         'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
