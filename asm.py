@@ -855,9 +855,11 @@ def disassemble(raw, state=None):
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
             # TODO: More tests
+            start = state['eip']
             inst = disassemble_ev_gv(raw, op, state)
+            end = state['eip'] - start
             inst = inst.split(',')[0]
-            ib = raw[state['eip']]
+            ib = raw[end]
             ib = sign_extend(ib, 8)
             state['eip'] += 1
             return f'{inst}, {hex(ib)}'
@@ -1441,7 +1443,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FLD QWORD PTR {addr}'
                 elif nnn == 0b001:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FISTTP QWORD PTR {addr}'
                 elif nnn == 0b010:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
