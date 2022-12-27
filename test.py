@@ -815,6 +815,7 @@ if __name__ == '__main__':
         'MOVZX eax, WORD PTR [eax*2+0x8f7eaa]': b'\x0f\xb7\x04\x45\xaa\x7e\x8f\x00',
         'MOVZX eax, WORD PTR ds:0xb62608':  b'\x0f\xb7\x05\x08\x26\xb6\x00',
         'MOVZX eax, WORD PTR [ebp-0x2c]':   b'\x0f\xb7\x45\xd4',
+        'BTC DWORD PTR [edi+0x0], 0xf3':    b'\x0f\xba\x7f\x00\xf3',
         'MOVSX eax, BYTE PTR [esi]':        b'\x0f\xbe\x06',
         'MOVSX ecx, BYTE PTR [ebp+ecx*1-0x64]': b'\x0f\xbe\x4c\x0d\x9c',
         'MOVSX eax, BYTE PTR [esi+eax*8+0x895688]': b'\x0f\xbe\x84\xc6\x88\x56\x89\x00',

@@ -520,6 +520,17 @@ def disassemble_2b(raw, state):
             ops = modrm_dst_src(raw[1:], 'Gv', 'Ew', state)
             state['eip'] += 1
             return f'MOVZX {ops}'
+        elif lo == 0xa:
+            state['eip'] += 1 # Opcode
+            mod, reg_op, rm = modrm(raw[1])
+            assert reg_op >= 0b100, 'Invalid encoding'
+            inst = ['?', '?', '?', '?', 'BT', 'BTS', 'BTR', 'BTC'][reg_op]
+            start = state['eip']
+            op = modrm_op(raw[1:], 'Ev', state)
+            state['eip'] += 1 # ModRM
+            op_sz = state['eip'] - start
+            ib = get_imm(raw[1+op_sz:], 'b', state)
+            return f'{inst} {op}, {ib}'
         elif lo == 0xe:
             ops = modrm_dst_src(raw[1:], 'Gv', 'Eb', state)
             state['eip'] += 1
