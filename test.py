@@ -658,6 +658,7 @@ if __name__ == '__main__':
         'FCMOVB st, st(0)':                 b'\xda\xc0',
         'FCMOVE st, st(0)':                 b'\xda\xc8',
         'FCMOVBE st, st(4)':                b'\xda\xd4',
+        'FCMOVU st, st(0)':                 b'\xda\xd8',
         '(bad)':                            b'\xda\xec',
 
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',

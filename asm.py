@@ -1336,7 +1336,8 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FCMOVBE st, st({raw[1] - 0xd0})'
                 elif raw[1] >= 0xd8 and raw[1] <= 0xdf:
-                    pass
+                    state['eip'] += 2
+                    return f'FCMOVU st, st({raw[1] - 0xd8})'
                 elif raw[1] == 0xe9:
                     pass
                 else:
