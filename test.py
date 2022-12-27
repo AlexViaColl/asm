@@ -695,6 +695,7 @@ if __name__ == '__main__':
         'OUT dx, al':                       b'\xee',
 
         'INT1':                             b'\xf1',
+        'repe (bad)':                       b'\xf3\xd6',
         'HLT':                              b'\xf4',
         'CMC':                              b'\xf5',
 
@@ -837,7 +838,7 @@ if __name__ == '__main__':
                 print(f'  Expected: {inst}')
                 print(f'  But got:  {actual}')
                 sys.exit(1)
-            if inst == '(bad)':
+            if '(bad)' in inst:
                 pass
             elif state['eip'] != len(raw):
                 print(f'[ERROR] Unexpected eip after disassembly of bytes: {raw.hex(" ")}')
