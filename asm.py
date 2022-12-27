@@ -1054,7 +1054,9 @@ def disassemble(raw, state=None):
             return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
         elif lo == 7:
             mod, reg_op, rm = modrm(raw[1])
-            assert reg_op == 0b000, 'Invalid Grp 11 MOV'
+            if reg_op != 0b000:
+                state['eip'] += 1
+                return '(bad)'
             inst = disassemble_ev_iv(raw, 'MOV', state) # TODO: Test
             iz = int.from_bytes(raw[state['eip']-1:state['eip']+3], 'little')
             state['eip'] += 3
