@@ -1457,7 +1457,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FICOMP WORD PTR {addr}'
                 elif nnn == 0b100:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FISUB WORD PTR {addr}'
                 elif nnn == 0b101:
                     pass
                 elif nnn == 0b110:
