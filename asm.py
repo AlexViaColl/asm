@@ -1282,7 +1282,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FICOM DWORD PTR {addr}'
                 elif nnn == 0b011:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FICOMP DWORD PTR {addr}'
                 elif nnn == 0b100:
                     pass
                 elif nnn == 0b101:
