@@ -838,17 +838,16 @@ def disassemble(raw, state=None):
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
             return disassemble_eb_ib(raw, op, state) # TODO: Test
         elif lo == 3:
+            state['eip'] += 1 # Opcode
             mod, reg_op, rm = modrm(raw[1])
             op = ['ADD', 'OR', 'ADC', 'SBB', 'AND', 'SUB', 'XOR', 'CMP'][reg_op]
-            # TODO: More tests
             start = state['eip']
-            inst = disassemble_ev_gv(raw, op, state)
+            addr = modrm_op(raw[1:], 'Ev', state)
+            state['eip'] += 1 # ModRM
             end = state['eip'] - start
-            inst = inst.split(',')[0]
-            ib = raw[end]
-            ib = sign_extend(ib, 8)
-            state['eip'] += 1
-            return f'{inst}, {hex(ib)}'
+            ib = hex(raw[end+1])
+            state['eip'] += 1 # Ib
+            return f'{op} {addr}, {ib}'
         elif lo == 4:
             return dis_modrm_dst_src(raw, 'TEST', 'Eb', 'Gb', state)
         elif lo == 5:
@@ -1363,10 +1362,18 @@ def disassemble(raw, state=None):
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
                     return f'FISTP DWORD PTR {addr}'
+                elif nnn == 0b100:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'(bad)'
                 elif nnn == 0b101:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
                     return f'FLD TBYTE PTR {addr}'
+                elif nnn == 0b110:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'(bad)'
                 elif nnn == 0b111:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2

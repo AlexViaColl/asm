@@ -402,6 +402,7 @@ if __name__ == '__main__':
         'SUB BYTE PTR [eax+eax*1], 0x0':    b'\x82\x2c\x00\x00',
         'XOR BYTE PTR [eax+eax*1], 0x0':    b'\x82\x34\x00\x00',
         'CMP BYTE PTR [eax+eax*1], 0x0':    b'\x82\x3c\x00\x00',
+        'CMP DWORD PTR [ebp+esi*1+0x24], 0x0': b'\x83\x7c\x35\x24\x00',
         'SUB esp, 0x58':                    b'\x83\xec\x58',
         'ADD esp, 0x8':                     b'\x83\xc4\x08',
         'TEST al, al':                      b'\x84\xc0',
@@ -663,6 +664,7 @@ if __name__ == '__main__':
         '(bad)':                            b'\xda\xec',
 
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
+        '(bad)':                            b'\xdb\x30',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FISTTP DWORD PTR [edx+0x0]':       b'\xdb\x4a\x00',
         'FIST DWORD PTR [edx+0x0]':         b'\xdb\x52\x00',
