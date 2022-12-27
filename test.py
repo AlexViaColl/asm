@@ -670,6 +670,7 @@ if __name__ == '__main__':
         'FSTP st(1)':                       b'\xdd\xd9',
 
         'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
+        'FIADD WORD PTR [edi+0x0]':         b'\xde\x47\x00',
         'FIDIVR WORD PTR [edi+0x0]':        b'\xde\x7f\x00',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
