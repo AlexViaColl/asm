@@ -52,7 +52,9 @@ def get_regs(s, state):
         return REGISTERS16
     return {'v': REGISTERS, 'w': REGISTERS16, 'b': REGISTERS8}[s]
 
-def get_ptr(s):
+def get_ptr(s, state):
+    if 'op_size' in state and state['op_size'] == 1:
+        return 'WORD PTR'
     return {'v': 'DWORD PTR', 'w': 'WORD PTR', 'b': 'BYTE PTR'}[s]
 
 def get_imm(raw, i, state):
@@ -68,7 +70,7 @@ def modrm_op(raw, op, state):
     if op[0] == 'E':
         if mod == 0b00:
             if rm != 0b100 and rm != 0b101:
-                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}]'
+                return f'{get_ptr(op[1], state)} [{get_regs("v", state)[rm]}]'
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
@@ -79,18 +81,18 @@ def modrm_op(raw, op, state):
                     if disp.startswith('0x'):
                         disp = f'+{disp}'
                     state['eip'] += 4
-                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}{disp}]'
+                return f'{get_ptr(op[1], state)} [{sib_str(scale, idx, base)}{disp}]'
             elif rm == 0b101:
                 disp32 = int.from_bytes(raw[1:5], 'little')
                 state['eip'] += 4
-                return f'{get_ptr(op[1])} ds:{hex(disp32)}'
+                return f'{get_ptr(op[1], state)} ds:{hex(disp32)}'
         elif mod == 0b01:
             if rm != 0b100:
                 disp = hex(sign_extend(raw[1], 8, unsigned=False))
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 1
-                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}{disp}]'
+                return f'{get_ptr(op[1], state)} [{get_regs("v", state)[rm]}{disp}]'
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
@@ -98,14 +100,14 @@ def modrm_op(raw, op, state):
                 state['eip'] += 1
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
-                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}{disp}]'
+                return f'{get_ptr(op[1], state)} [{sib_str(scale, idx, base)}{disp}]'
         elif mod == 0b10:
             if rm != 0b100:
                 disp = hex(int.from_bytes(raw[1:5], 'little'))
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
                 state['eip'] += 4
-                return f'{get_ptr(op[1])} [{get_regs("v", state)[rm]}{disp}]'
+                return f'{get_ptr(op[1], state)} [{get_regs("v", state)[rm]}{disp}]'
             elif rm == 0b100:
                 scale, idx, base = sib(raw[1])
                 state['eip'] += 1
@@ -115,7 +117,7 @@ def modrm_op(raw, op, state):
                 state['eip'] += 4
                 if disp.startswith('0x'):
                     disp = f'+{disp}'
-                return f'{get_ptr(op[1])} [{sib_str(scale, idx, base)}{disp}]'
+                return f'{get_ptr(op[1], state)} [{sib_str(scale, idx, base)}{disp}]'
         elif mod == 0b11:
             return get_regs(op[1], state)[rm]
     elif op[0] == 'G':
@@ -735,7 +737,9 @@ def disassemble(raw, state=None):
         elif lo == 0xa:
             return disassemble_gb_eb(raw, 'CMP', state) # TODO: Test
         elif lo == 0xb:
-            return disassemble_gv_ev(raw, 'CMP', state) # TODO: Test
+            state['eip'] += 1
+            addr = modrm_dst_src(raw[1:], 'Gv', 'Ev', state)
+            return f'CMP {addr}'
         elif lo == 0xc:
             state['eip'] += 2
             return f'{prefix}CMP al, {hex(raw[1])}'
@@ -1053,15 +1057,17 @@ def disassemble(raw, state=None):
             assert reg_op == 0b000, 'Invalid Grp 11 MOV'
             return disassemble_eb_ib(raw, 'MOV', state) # TODO: Test
         elif lo == 7:
+            state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
             if reg_op != 0b000:
                 state['eip'] += 1
                 return '(bad)'
-            inst = disassemble_ev_iv(raw, 'MOV', state) # TODO: Test
-            iz = int.from_bytes(raw[state['eip']-1:state['eip']+3], 'little')
-            state['eip'] += 3
-            # TODO: No dirty hacks!
-            return f'{inst.split(",")[0]}, {hex(iz)}'
+            start = state['eip']
+            addr = modrm_op(raw[1:], 'Ev', state)
+            state['eip'] += 1
+            op_sz = state['eip'] - start
+            iz = get_imm(raw[1+op_sz:], 'z', state)
+            return f'MOV {addr}, {iz}'
         elif lo == 8:
             iw = int.from_bytes(raw[1:3], 'little')
             ib = raw[3]
