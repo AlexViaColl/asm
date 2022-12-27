@@ -1424,7 +1424,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FILD QWORD PTR {addr}'
                 elif nnn == 0b110:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FBSTP TBYTE PTR {addr}'
                 elif nnn == 0b111:
                     pass
             else:
