@@ -1399,6 +1399,10 @@ def disassemble(raw, state=None):
             pass
         elif lo == 1:
             pass
+        elif lo == 7:
+            state['eip'] += 1
+            ib = get_imm(raw[1:], 'b', state)
+            return f'OUT {ib}, {get_regs("v", state)[0]}'
         elif lo == 8:
             rel32 = int.from_bytes(raw[1:5], 'little')
             state['eip'] += 5
