@@ -598,6 +598,7 @@ if __name__ == '__main__':
         'FTST':                             b'\xd9\xe4',
         'FXAM':                             b'\xd9\xe5',
         'FLD1':                             b'\xd9\xe8',
+        'FLDL2T':                           b'\xd9\xe9',
         'FLD12E':                           b'\xd9\xea',
         'FLDPI':                            b'\xd9\xeb',
         'FLDLG2':                           b'\xd9\xec',
