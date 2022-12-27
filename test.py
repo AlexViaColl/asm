@@ -700,6 +700,7 @@ if __name__ == '__main__':
         'FST st(0)':                        b'\xdd\xd0',
         'FSTP st(1)':                       b'\xdd\xd9',
         'FUCOM st(0)':                      b'\xdd\xe0',
+        'FUCOMP st(0)':                     b'\xdd\xe8',
 
         'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
         'FIADD WORD PTR [edi+0x0]':         b'\xde\x47\x00',
