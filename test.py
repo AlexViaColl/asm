@@ -711,6 +711,7 @@ if __name__ == '__main__':
         'JMP 0xffe8:0x45f76175':            b'\xea\x75\x61\xf7\x45\xe8\xff',
         'JMP 0x5':                          b'\xeb\x03',
         'IN al, dx':                        b'\xec',
+        'IN eax, dx':                       b'\xed',
         'OUT dx, al':                       b'\xee',
         'OUT dx, eax':                      b'\xef',
 
@@ -811,6 +812,7 @@ if __name__ == '__main__':
         'SYSRET':                           b'\x0f\x07',
         'INVD':                             b'\x0f\x08',
         'WBINVD':                           b'\x0f\x09',
+        'MOVUPS xmm2, XMMWORD PTR [ecx]':   b'\x0f\x10\x11',
         'WRMSR':                            b'\x0f\x30',
         'RDTSC':                            b'\x0f\x31',
         'RDMSR':                            b'\x0f\x32',

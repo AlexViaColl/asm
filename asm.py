@@ -1606,6 +1606,9 @@ def disassemble(raw, state=None):
         elif lo == 0xc:
             state['eip'] += 1
             return f'IN al, dx'
+        elif lo == 0xd:
+            state['eip'] += 1
+            return f'IN eax, dx'
         elif lo == 0xe:
             state['eip'] += 1
             return f'OUT dx, al'
