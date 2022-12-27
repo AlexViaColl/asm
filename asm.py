@@ -146,7 +146,7 @@ def modrm_addressing(m, rest, state, reg_size=32):
             scale, idx, base = sib(rest[0])
             disp = ''
             if base == 0b101:
-                disp32 = int.from_bytes(rest[1:4], 'little')
+                disp32 = int.from_bytes(rest[1:5], 'little')
                 disp = f'+{hex(disp32)}'
                 base = None
                 state['eip'] += 4
@@ -1345,7 +1345,9 @@ def disassemble(raw, state=None):
                 elif nnn == 0b001:
                     pass
                 elif nnn == 0b010:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FICOM WORD PTR {addr}'
                 elif nnn == 0b011:
                     pass
                 elif nnn == 0b100:

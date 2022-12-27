@@ -641,6 +641,7 @@ if __name__ == '__main__':
         'FNSAVE [esi+0x8]':                 b'\xdd\x76\x08',
         'FNSTSW WORD PTR [ebp-0x4]':        b'\xdd\x7d\xfc',
         'FSTP st(1)':                       b'\xdd\xd9',
+        'FICOM WORD PTR [edi*2+0x7d14c800]':b'\xde\x14\x7d\x00\xc8\x14\x7d',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
         'FCOMPP':                           b'\xde\xd9',
