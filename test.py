@@ -653,6 +653,7 @@ if __name__ == '__main__':
         'FDIVRP st(1), st':                 b'\xde\xf1',
         'FDIVP st(1), st':                  b'\xde\xf9',
         'FILD WORD PTR [esp+0x8]':          b'\xdf\x44\x24\x08',
+        'FILD QWORD PTR [esp+0x0]':         b'\xdf\x6c\x24\x00',
 
         'OUT 0x8b, al':                     b'\xe6\x8b',
         'OUT 0x8b, eax':                    b'\xe7\x8b',
