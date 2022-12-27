@@ -594,6 +594,7 @@ if __name__ == '__main__':
         'FCOM st(1)':                       b'\xd8\xd1',
         'FCOMP st(1)':                      b'\xd8\xd9',
         'FSUB st, st(1)':                   b'\xd8\xe1',
+        'FSUBR st, st(1)':                  b'\xd8\xe9',
         'FDIV st, st(0)':                   b'\xd8\xf0',
 
         'FST DWORD PTR ds:0xb62f6c':        b'\xd9\x15\x6c\x2f\xb6\x00',
