@@ -1149,6 +1149,9 @@ def disassemble(raw, state=None):
                 elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
                     state['eip'] += 2
                     return f'FXCH st({raw[1]-0xc8})'
+                elif raw[1] == 0xd0:
+                    state['eip'] += 2
+                    return f'FNOP'
                 elif raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FCHS'
