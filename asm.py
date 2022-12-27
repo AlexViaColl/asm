@@ -1327,7 +1327,8 @@ def disassemble(raw, state=None):
                     return f'FIDIVR DWORD PTR {addr}'
             else:
                 if raw[1] >= 0xc0 and raw[1] <= 0xc7:
-                    pass
+                    state['eip'] += 2
+                    return f'FCMOVB st, st({raw[1] - 0xc0})'
                 elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
                     pass
                 elif raw[1] >= 0xd0 and raw[1] <= 0xd7:
