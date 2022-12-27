@@ -1319,7 +1319,12 @@ def disassemble(raw, state=None):
                     return f'FDIVP st({raw[1] - 0xf8}), st'
         elif lo == 0xf:
             _, nnn, _ = modrm(raw[1])
-            if raw[1] >= 0xc0:
+            if raw[1] <= 0xbf:
+                if nnn == 0b000:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FILD WORD PTR {addr}'
+            else:
                 if raw[1] == 0xe0:
                     state['eip'] += 2
                     return f'FNSTSW ax'

@@ -628,6 +628,7 @@ if __name__ == '__main__':
         'FSUBP st(1), st':                  b'\xde\xe9',
         'FDIVRP st(1), st':                 b'\xde\xf1',
         'FDIVP st(1), st':                  b'\xde\xf9',
+        'FILD WORD PTR [esp+0x8]':          b'\xdf\x44\x24\x08',
 
         'CALL 0x23d1':                      b'\xe8\xcc\x23\x00\x00',
         'JMP 0xffe8:0x45f76175':            b'\xea\x75\x61\xf7\x45\xe8\xff',
