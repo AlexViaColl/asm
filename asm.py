@@ -13,6 +13,7 @@ REGISTERS = ['eax', 'ecx', 'edx', 'ebx', 'esp', 'ebp', 'esi', 'edi']
 REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
 SEGMENTS = ['es', 'cs', 'ss', 'ds', 'fs', 'gs', '?', '?']
+REGISTERSXMM = ['xmm0', 'xmm1', 'xmm2', 'xmm3', 'xmm4', 'xmm5', 'xmm6', 'xmm7']
 
 def fail(*s):
     print(*s, file=sys.stderr)
@@ -420,7 +421,11 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'WBINVD'
     elif hi == 1:
-        pass
+        if lo == 0:
+            state['eip'] += 2
+            return f'MOVUPS xmm2, XMMWORD PTR [ecx]'
+        elif lo == 1:
+            pass
     elif hi == 2:
         pass
     elif hi == 3:
