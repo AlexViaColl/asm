@@ -580,6 +580,7 @@ if __name__ == '__main__':
         'SHL bl, cl':                       b'\xd2\xe3',
         'SHR edx, cl':                      b'\xd3\xea',
         'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
+
         'FMUL DWORD PTR ds:0x8f8de0':       b'\xd8\x0d\xe0\x8d\x8f\x00',
         'FCOMP DWORD PTR ds:0x86e75c':      b'\xd8\x1d\x5c\xe7\x86\x00',
         'FADD DWORD PTR [eax+0x78]':        b'\xd8\x40\x78',
@@ -589,10 +590,12 @@ if __name__ == '__main__':
         'FDIV DWORD PTR [esp+0x8]':         b'\xd8\x74\x24\x08',
         'FDIVR DWORD PTR [esp+0x8]':        b'\xd8\x7c\x24\x08',
         'FADD st, st(1)':                   b'\xd8\xc1',
+        'FMUL st, st(1)':                   b'\xd8\xc9',
         'FCOM st(1)':                       b'\xd8\xd1',
         'FCOMP st(1)':                      b'\xd8\xd9',
         'FSUB st, st(1)':                   b'\xd8\xe1',
         'FDIV st, st(0)':                   b'\xd8\xf0',
+
         'FST DWORD PTR ds:0xb62f6c':        b'\xd9\x15\x6c\x2f\xb6\x00',
         'FLDENV [esp]':                     b'\xd9\x24\x24',
         'FNSTENV [esp]':                    b'\xd9\x34\x24',
