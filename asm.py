@@ -1408,7 +1408,9 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FISTTP WORD PTR {addr}'
                 elif nnn == 0b010:
-                    pass
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'FIST WORD PTR {addr}'
                 elif nnn == 0b011:
                     pass
                 elif nnn == 0b100:
