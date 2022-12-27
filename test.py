@@ -664,6 +664,7 @@ if __name__ == '__main__':
         'FSUBR st(1), st':                  b'\xdc\xe1',
         'FSUB st(5), st':                   b'\xdc\xed',
         'FDIVR st(1), st':                  b'\xdc\xf1',
+        'FDIV st(1), st':                   b'\xdc\xf9',
 
         'FST QWORD PTR [esp]':              b'\xdd\x14\x24',
         'FSTP QWORD PTR [esp]':             b'\xdd\x1c\x24',
