@@ -656,6 +656,7 @@ if __name__ == '__main__':
         'FIDIV DWORD PTR [esp+0x14]':       b'\xda\x74\x24\x14',
         'FIDIVR DWORD PTR [esp+0x14]':      b'\xda\x7c\x24\x14',
         'FCMOVB st, st(0)':                 b'\xda\xc0',
+        'FCMOVE st, st(0)':                 b'\xda\xc8',
         'FCMOVBE st, st(4)':                b'\xda\xd4',
         '(bad)':                            b'\xda\xec',
 

@@ -1330,7 +1330,8 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FCMOVB st, st({raw[1] - 0xc0})'
                 elif raw[1] >= 0xc8 and raw[1] <= 0xcf:
-                    pass
+                    state['eip'] += 2
+                    return f'FCMOVE st, st({raw[1] - 0xc8})'
                 elif raw[1] >= 0xd0 and raw[1] <= 0xd7:
                     state['eip'] += 2
                     return f'FCMOVBE st, st({raw[1] - 0xd0})'
