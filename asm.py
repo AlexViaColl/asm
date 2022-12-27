@@ -731,9 +731,10 @@ def disassemble(raw, state=None):
             state['eip'] += 2
             return f'{prefix}CMP al, {hex(raw[1])}'
         elif lo == 0xd:
-            iz = int.from_bytes(raw[1:5], 'little')
-            state['eip'] += 5
-            return f'{prefix}CMP eax, {hex(iz)}'
+            state['eip'] += 1
+            r = get_regs('v', state)[0]
+            iz = get_imm(raw[1:], 'z', state)
+            return f'{prefix}CMP {r}, {iz}'
         elif lo == 0xe:
             state['seg'] = 'ds:'
             state['eip'] += 1
