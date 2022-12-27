@@ -405,6 +405,7 @@ if __name__ == '__main__':
         'MOV al, al':                       b'\x88\xc0',
         'MOV eax, eax':                     b'\x89\xc0',
         'MOV DWORD PTR [ebp-0x4], esi':     b'\x89\x75\xfc',
+        'MOV DWORD PTR [ebp+esi*4+0x18], edi': b'\x89\x7c\xb5\x18',
         'MOV al, al':                       b'\x8a\xc0',
         'MOV eax, eax':                     b'\x8b\xc0',
         'MOV esi, DWORD PTR [eax*4+0x8f5a54]': b'\x8b\x34\x85\x54\x5a\x8f\x00',
