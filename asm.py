@@ -1552,6 +1552,10 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             ib = get_imm(raw[1:], 'b', state)
             return f'IN {get_regs("b", state)[0]}, {ib}'
+        elif lo == 5:
+            state['eip'] += 1
+            ib = get_imm(raw[1:], 'b', state)
+            return f'IN {get_regs("v", state)[0]}, {ib}'
         elif lo == 6:
             state['eip'] += 1
             ib = get_imm(raw[1:], 'b', state)
