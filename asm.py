@@ -1339,7 +1339,8 @@ def disassemble(raw, state=None):
                     state['eip'] += 2
                     return f'FCMOVU st, st({raw[1] - 0xd8})'
                 elif raw[1] == 0xe9:
-                    pass
+                    state['eip'] += 2
+                    return f'FUCOMPP'
                 else:
                     state['eip'] += 2
                     return '(bad)'
