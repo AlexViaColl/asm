@@ -616,6 +616,7 @@ if __name__ == '__main__':
         'FSINCOS':                          b'\xd9\xfb',
         'FRNDINT':                          b'\xd9\xfc',
         'FSCALE':                           b'\xd9\xfd',
+        'FSIN':                             b'\xd9\xfe',
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
         'FILD QWORD PTR [ebp+0xc]':         b'\xdb\x45\x0c',
         'FISTP DWORD PTR [ebp+0x8]':        b'\xdb\x5d\x08',
