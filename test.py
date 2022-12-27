@@ -632,6 +632,7 @@ if __name__ == '__main__':
 
         'FIADD DWORD PTR [esp+0x14]':       b'\xda\x44\x24\x14',
         'FIMUL DWORD PTR [esp+0x14]':       b'\xda\x4c\x24\x14',
+        'FICOM DWORD PTR [esp+0x14]':       b'\xda\x54\x24\x14',
         'FIDIV DWORD PTR [esp+0x14]':       b'\xda\x74\x24\x14',
 
         'FLD TBYTE PTR ds:0x8f81c8':        b'\xdb\x2d\xc8\x81\x8f\x00',
