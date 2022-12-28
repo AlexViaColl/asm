@@ -752,7 +752,34 @@ def disassemble_2b(raw, state):
         elif lo == 0xf:
             return dis_modrm_dst_src(raw, 'PANDN', 'Pq', 'Wq', state)
     elif hi == 0xe:
-        pass
+        if lo == 0:
+            return dis_modrm_dst_src(raw, 'PAVGB', 'Pq', 'Wq', state)
+        elif lo == 1:
+            return dis_modrm_dst_src(raw, 'PSRAW', 'Pq', 'Wq', state)
+        elif lo == 2:
+            return dis_modrm_dst_src(raw, 'PSRAD', 'Pq', 'Wq', state)
+        elif lo == 3:
+            return dis_modrm_dst_src(raw, 'PAVGW', 'Pq', 'Wq', state)
+        elif lo == 4:
+            return dis_modrm_dst_src(raw, 'PMULHUW', 'Pq', 'Wq', state)
+        elif lo == 5:
+            return dis_modrm_dst_src(raw, 'PMULHW', 'Pq', 'Wq', state)
+        elif lo == 8:
+            return dis_modrm_dst_src(raw, 'PSUBSB', 'Pq', 'Wq', state)
+        elif lo == 9:
+            return dis_modrm_dst_src(raw, 'PSUBSW', 'Pq', 'Wq', state)
+        elif lo == 0xa:
+            return dis_modrm_dst_src(raw, 'PMINSW', 'Pq', 'Wq', state)
+        elif lo == 0xb:
+            return dis_modrm_dst_src(raw, 'POR', 'Pq', 'Wq', state)
+        elif lo == 0xc:
+            return dis_modrm_dst_src(raw, 'PADDSB', 'Pq', 'Wq', state)
+        elif lo == 0xd:
+            return dis_modrm_dst_src(raw, 'PADDSW', 'Pq', 'Wq', state)
+        elif lo == 0xe:
+            return dis_modrm_dst_src(raw, 'PMAXSW', 'Pq', 'Wq', state)
+        elif lo == 0xf:
+            return dis_modrm_dst_src(raw, 'PXOR', 'Pq', 'Wq', state)
     elif hi == 0xf:
         pass
 
