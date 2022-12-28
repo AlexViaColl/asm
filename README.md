@@ -331,3 +331,5 @@ $ time $(cat $BINARY | ./asm.py -b 0x401000 >/dev/null) # 2m25.271s
 - [Flat Assembler (FASM)](https://flatassembler.net/)
 - [Microsoft Macro Assembler (MASM)](https://learn.microsoft.com/en-us/cpp/assembler/masm/microsoft-macro-assembler-reference)
 - [x64dbg](https://x64dbg.com/)
+- [AMD 3DNow!](https://www.amd.com/system/files/TechDocs/21928.pdf)
+- [AMD64 Architecture Programmer's Manual](https://www.amd.com/system/files/TechDocs/26569.pdf)
