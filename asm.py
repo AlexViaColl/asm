@@ -488,6 +488,9 @@ def disassemble_2b(raw, state):
             return f'MOVHPS xmm1, QWORD PTR [ecx]'
         elif lo == 7:
             return dis_modrm_dst_src(raw, 'MOVHPS', 'Mq', 'Vq', state)
+        elif lo == 8:
+            state['eip'] += 3
+            return f'reserved NOP'
     elif hi == 2:
         if lo == 0:
             pass
