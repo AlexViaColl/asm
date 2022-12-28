@@ -80,7 +80,7 @@ def get_imm(raw, i, state):
 
 def modrm_op(raw, op, state):
     mod, reg, rm = modrm(raw[0])
-    if op[0] == 'E':
+    if op[0] == 'E' or op[0] == 'W' or op[0] == 'Q' or op[0] == 'M':
         if mod == 0b00:
             if rm != 0b100 and rm != 0b101:
                 return f'{get_ptr(op[1], state)} [{get_regs("v", state)[rm]}]'
@@ -131,8 +131,10 @@ def modrm_op(raw, op, state):
                 return f'{get_ptr(op[1], state)} [{sib_str(scale, idx, base)}{disp}]'
         elif mod == 0b11:
             return get_regs(op[1], state)[rm]
-    elif op[0] == 'G':
+    elif op[0] == 'G' or op[0] == 'P':
         return get_regs(op[1], state)[reg]
+    elif op[0] == 'V':
+        return REGISTERSXMM[reg]
 
 def modrm_dst_src(raw, dst, src, state):
     mod, reg_op, rm = modrm(raw[0])
