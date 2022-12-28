@@ -14,6 +14,7 @@ REGISTERS16 = ['ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di']
 REGISTERS8 = ['al', 'cl', 'dl', 'bl', 'ah', 'ch', 'dh', 'bh']
 SEGMENTS = ['es', 'cs', 'ss', 'ds', 'fs', 'gs', '?', '?']
 REGISTERSXMM = ['xmm0', 'xmm1', 'xmm2', 'xmm3', 'xmm4', 'xmm5', 'xmm6', 'xmm7']
+REGISTERSMM = ['mm0', 'mm1', 'mm2', 'mm3', 'mm4', 'mm5', 'mm6', 'mm7']
 
 def fail(*s):
     print(*s, file=sys.stderr)
@@ -50,12 +51,24 @@ def sib_str(scale, index, base):
 def get_regs(s, state):
     if 'op_size' in state and state['op_size'] == 1:
         return REGISTERS16
-    return {'v': REGISTERS, 'w': REGISTERS16, 'b': REGISTERS8}[s]
+    return {
+        'b': REGISTERS8,
+        'w': REGISTERS16,
+        'v': REGISTERS,
+        'q': REGISTERSMM,
+        'p': REGISTERSXMM,
+    }[s]
 
 def get_ptr(s, state):
     if 'op_size' in state and state['op_size'] == 1:
         return 'WORD PTR'
-    return {'v': 'DWORD PTR', 'w': 'WORD PTR', 'b': 'BYTE PTR'}[s]
+    return {
+        'b': 'BYTE PTR',
+        'w': 'WORD PTR',
+        'v': 'DWORD PTR',
+        'q': 'QWORD PTR',
+        'p': 'XMMWORD PTR',
+    }[s]
 
 def get_imm(raw, i, state):
     if 'op_size' in state and state['op_size'] == 1:
