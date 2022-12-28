@@ -401,7 +401,8 @@ def disassemble_2b(raw, state):
         if lo == 0:
             pass
         elif lo == 1:
-            pass
+            state['eip'] += 2
+            return f'SGDTD [ecx]'
         elif lo == 2:
             pass
         elif lo == 3:
