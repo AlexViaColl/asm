@@ -824,6 +824,8 @@ def disassemble(raw, state=None):
         state['prefix'] = ''
     if 'eip' not in state:
         state['eip'] = 0
+    if 'base' not in state:
+        state['base'] = 0
 
     prefix = state['prefix']
 
