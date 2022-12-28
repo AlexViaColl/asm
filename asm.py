@@ -148,6 +148,13 @@ def dis_modrm_dst_src(raw, op, dst, src, state):
     addr = modrm_dst_src(raw[1:], dst, src, state)
     return f'{op} {addr}'
 
+def dis_modrm_dst_ib(raw, op, dst, state):
+    state['eip'] += 1
+    addr = modrm_op(raw[1:], dst, state)
+    imm8 = get_imm(raw[2:], 'b', state)
+    state['eip'] += 1
+    return f'{op} {addr}, {imm8}'
+
 def dis_con_modrm_dst_src(raw, op, dst, src, state):
     start = state['eip']
     inst = dis_modrm_dst_src(raw, op, dst, src, state)
@@ -603,7 +610,30 @@ def disassemble_2b(raw, state):
         elif lo == 0xf:
             return dis_modrm_dst_src(raw, 'MOVQ', 'Pq', 'Qq', state)
     elif hi == 7:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 1:
+            return dis_modrm_dst_ib(raw, 'PSRLW', 'Wq', state)
+        elif lo == 2:
+            return dis_modrm_dst_ib(raw, 'PSLLD', 'Wq', state)
+        elif lo == 3:
+            return dis_modrm_dst_ib(raw, 'PSLLQ', 'Wq', state)
+        elif lo == 4:
+            return dis_modrm_dst_src(raw, 'PCMPEQB', 'Pq', 'Qq', state)
+        elif lo == 5:
+            return dis_modrm_dst_src(raw, 'PCMPEQW', 'Pq', 'Qq', state)
+        elif lo == 6:
+            return dis_modrm_dst_src(raw, 'PCMPEQD', 'Pq', 'Qq', state)
+        elif lo == 7:
+            state['eip'] += 1
+            return 'EMMS'
+        elif lo == 0xb:
+            state['eip'] += 1
+            return '(bad)'
+        elif lo == 0xe:
+            return dis_modrm_dst_src(raw, 'MOVD', 'Ev', 'Pq', state)
+        elif lo == 0xf:
+            return dis_modrm_dst_src(raw, 'MOVQ', 'Qq', 'Pq', state)
     elif hi == 8:
         jmp_type = [
             'JO', 'JNO', 'JB', 'JNB', 'JE', 'JNE', 'JBE', 'JNBE',
