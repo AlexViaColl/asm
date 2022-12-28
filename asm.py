@@ -668,6 +668,9 @@ def disassemble_2b(raw, state):
             addr = modrm_dst_src(raw[1:], 'Ev', 'Gv', state)
             imm8 = get_imm(raw[2:], 'b', state)
             return f'SHLD {addr}, {imm8}'
+        elif lo == 5:
+            inst = dis_modrm_dst_src(raw, 'SHLD', 'Ev', 'Gv', state)
+            return f'{inst}, cl'
         elif lo == 8:
             state['eip'] += 1
             return f'PUSH gs'
