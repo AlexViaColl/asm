@@ -473,7 +473,7 @@ def disassemble_2b(raw, state):
             state['eip'] += 2
             return f'MOVUPS xmm2, XMMWORD PTR [ecx]'
         elif lo == 1:
-            pass
+            return dis_modrm_dst_src(raw, 'MOVUPS', 'Wps', 'Vps', state)
         elif lo == 2:
             state['eip'] += 2
             return f'MOVLPS xmm1, QWORD PTR [eax]'
