@@ -146,6 +146,11 @@ def dis_modrm_dst_src(raw, op, dst, src, state):
     addr = modrm_dst_src(raw[1:], dst, src, state)
     return f'{op} {addr}'
 
+def dis_con_modrm_dst_src(raw, op, dst, src, state):
+    start = state['eip']
+    inst = dis_modrm_dst_src(raw, op, dst, src, state)
+    return inst, state['eip'] - start
+
 def modrm_addressing(m, rest, state, reg_size=32):
     mod, reg_op, rm = modrm(m)
     if mod == 0b00:
