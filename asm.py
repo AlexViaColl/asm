@@ -682,6 +682,11 @@ def disassemble_2b(raw, state):
             return f'RSM'
         elif lo == 0xb:
             return dis_modrm_dst_src(raw, 'BTS', 'Ev', 'Gv', state)
+        elif lo == 0xc:
+            inst, c = dis_con_modrm_dst_src(raw, 'SHRD', 'Ev', 'Gv', state)
+            ib = hex(raw[c])
+            state['eip'] += 1
+            return f'{inst}, {ib}'
         elif lo == 0xd:
             inst = disassemble_ev_gv(raw, 'SHRD', state)
             return f'{inst}, cl'
