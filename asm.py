@@ -729,6 +729,28 @@ def disassemble_2b(raw, state):
     elif hi == 0xd:
         if lo == 0 and state['prefix'] == '':
             return '(bad)'
+        elif lo == 1:
+            return dis_modrm_dst_src(raw, 'PSRLW', 'Pq', 'Wq', state)
+        elif lo == 2:
+            return dis_modrm_dst_src(raw, 'PSRLD', 'Pq', 'Wq', state)
+        elif lo == 3:
+            return dis_modrm_dst_src(raw, 'PSRLQ', 'Pq', 'Wq', state)
+        elif lo == 4:
+            return dis_modrm_dst_src(raw, 'PADDQ', 'Pq', 'Wq', state)
+        elif lo == 5:
+            return dis_modrm_dst_src(raw, 'PMULLW', 'Pq', 'Wq', state)
+        elif lo == 7:
+            return dis_modrm_dst_src(raw, 'PMOVMSKB', 'Gv', 'Wq', state) # TODO: Gd, Nq
+        elif lo == 0xb:
+            return dis_modrm_dst_src(raw, 'PAND', 'Pq', 'Wq', state)
+        elif lo == 0xc:
+            return dis_modrm_dst_src(raw, 'PADDUSB', 'Pq', 'Wq', state)
+        elif lo == 0xd:
+            return dis_modrm_dst_src(raw, 'PADDUSW', 'Pq', 'Wq', state)
+        elif lo == 0xe:
+            return dis_modrm_dst_src(raw, 'PMAXUB', 'Pq', 'Wq', state)
+        elif lo == 0xf:
+            return dis_modrm_dst_src(raw, 'PANDN', 'Pq', 'Wq', state)
     elif hi == 0xe:
         pass
     elif hi == 0xf:
