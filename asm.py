@@ -483,6 +483,9 @@ def disassemble_2b(raw, state):
             return dis_modrm_dst_src(raw, 'UNPCKLPS', 'Vps', 'Wps', state)
         elif lo == 5:
             return dis_modrm_dst_src(raw, 'UNPCKHPS', 'Vps', 'Wps', state)
+        elif lo == 6:
+            state['eip'] += 2
+            return f'MOVHPS xmm1, QWORD PTR [ecx]'
     elif hi == 2:
         if lo == 0:
             pass
