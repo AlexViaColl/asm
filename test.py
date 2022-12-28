@@ -849,6 +849,39 @@ if __name__ == '__main__':
         'SYSRET':                           b'\x0f\x07',
         'INVD':                             b'\x0f\x08',
         'WBINVD':                           b'\x0f\x09',
+
+        # AMD's 3DNow!
+        'FEMMS':                            b'\x0f\x0e', # 3DNow!
+
+        'PI2FD mm0, mm0':                   b'\x0f\x0f\xc0\x0d',
+        'PF2ID mm0, mm0':                   b'\x0f\x0f\xc0\x1d',
+        'PFNACC mm0, mm0':                  b'\x0f\x0f\xc0\x8a',
+        'PFPNACC mm0, mm0':                 b'\x0f\x0f\xc0\x8e',
+        'PFCMPGE mm0, mm0':                 b'\x0f\x0f\xc0\x90',
+        'PFMIN mm0, mm0':                   b'\x0f\x0f\xc0\x94',
+        'PFRCP mm0, mm0':                   b'\x0f\x0f\xc0\x96',
+        'PFRSQRT mm0, mm0':                 b'\x0f\x0f\xc0\x97',
+        'PFSUB mm4, mm5':                   b'\x0f\x0f\xe5\x9a',
+        'PFADD mm0, mm2':                   b'\x0f\x0f\xc2\x9e',
+        'PFCMPGT mm0, mm0':                 b'\x0f\x0f\xc0\xa0',
+        'PFMAX mm0, mm0':                   b'\x0f\x0f\xc0\xa4',
+        'PFRCPIT1 mm0, mm0':                b'\x0f\x0f\xc0\xa6',
+        'PFRSQIT1 mm0, mm0':                b'\x0f\x0f\xc0\xa7',
+        'PFSUBR mm0, mm0':                  b'\x0f\x0f\xc0\xaa',
+        'PFACC mm0, mm0':                   b'\x0f\x0f\xc0\xae',
+
+        'PFCMPEQ mm0, mm0':                 b'\x0f\x0f\xc0\xb0',
+        'PFMUL mm1, QWORD PTR [ebx]':       b'\x0f\x0f\x0b\xb4',
+        'PFMUL mm1, QWORD PTR [ebx+0xa]':   b'\x0f\x0f\x4b\x0a\xb4',
+        'PFMUL mm1, QWORD PTR [ebx+eax*4+0xa]': b'\x0f\x0f\x4c\x83\x0a\xb4',
+        'PFMUL mm0, mm0':                   b'\x0f\x0f\xc0\xb4',
+        'PFMUL mm6, mm6':                   b'\x0f\x0f\xf6\xb4',
+
+        'PFRCPIT2 mm0, mm0':                b'\x0f\x0f\xc0\xb6',
+        'PMULHRW mm0, mm0':                 b'\x0f\x0f\xc0\xb7',
+        'PSWAPD mm0, mm0':                  b'\x0f\x0f\xc0\xbb',
+        'PAVGUSB mm0, mm0':                 b'\x0f\x0f\xc0\xbf',
+
         'MOVUPS xmm2, XMMWORD PTR [ecx]':   b'\x0f\x10\x11',
         'MOVLPS xmm1, QWORD PTR [eax]':     b'\x0f\x12\x08',
         'MOVAPS xmm1, XMMWORD PTR [esp+0x0]': b'\x0f\x28\x4c\x24\x00',
