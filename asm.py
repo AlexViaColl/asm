@@ -411,7 +411,7 @@ def disassemble_2b(raw, state):
         elif lo == 2:
             return dis_modrm_dst_src(raw, 'LAR', 'Gv', 'Ew', state)
         elif lo == 3:
-            pass
+            return dis_modrm_dst_src(raw, 'LSL', 'Gv', 'Ew', state)
         elif lo == 4:
             pass
         elif lo == 5:
