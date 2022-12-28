@@ -1316,7 +1316,6 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
             if reg_op != 0b000:
-                state['eip'] += 1
                 return '(bad)'
             assert reg_op == 0b000, 'Invalid Grp 11 MOV'
             addr = modrm_op(raw[1:], 'Eb', state)
@@ -1473,6 +1472,10 @@ def disassemble(raw, state=None):
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
                     return f'FLD DWORD PTR {addr}'
+                elif nnn == 0b001:
+                    addr = modrm_addressing(raw[1], raw[2:], state)
+                    state['eip'] += 2
+                    return f'(bad)'
                 elif nnn == 0b010:
                     addr = modrm_addressing(raw[1], raw[2:], state)
                     state['eip'] += 2
@@ -1838,6 +1841,9 @@ def disassemble(raw, state=None):
                 elif raw[1] == 0xd9:
                     state['eip'] += 2
                     return f'FCOMPP'
+                elif (raw[1] >= 0xd0 and raw[1] <= 0xd8) or (raw[1] >= 0xda and raw[1] <= 0xdf):
+                    state['eip'] += 2
+                    return f'(bad)'
                 elif raw[1] >= 0xe0 and raw[1] <= 0xe7:
                     state['eip'] += 2
                     return f'FSUBRP st({raw[1] - 0xe0}), st'
@@ -2031,10 +2037,12 @@ def disassemble(raw, state=None):
             state['eip'] += 1
             return f'{prefix}STD'
         elif lo == 0xe:
+            state['eip'] += 1
             mod, reg_op, rm = modrm(raw[1])
-            state['eip'] += 2
             if reg_op > 0b001:
                 return f'(bad)'
+            state['eip'] += 1
+            mod, reg_op, rm = modrm(raw[1])
             op = ['INC', 'DEC'][reg_op]
             addr = modrm_op(raw[1:], 'Eb', state)
             return f'{op} {addr}'
