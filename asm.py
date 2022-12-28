@@ -2097,7 +2097,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     raw = sys.stdin.buffer.read()
-    state = {'eip': skip}
+    state = {'eip': skip, 'base': skip}
     while state['eip'] != len(raw):
         start = state['eip']
         code = raw[start:]
