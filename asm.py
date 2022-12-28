@@ -837,7 +837,6 @@ def disassemble(raw, state=None):
     if hi == 0:
         if lo == 0:
             return dis_modrm_dst_src(raw, 'ADD', 'Eb', 'Gb', state)
-            return disassemble_eb_gb(raw, 'ADD', state) # TODO
         elif lo == 1:
             return dis_modrm_dst_src(raw, 'ADD', 'Ev', 'Gv', state)
         elif lo == 2:
