@@ -2048,10 +2048,11 @@ def disassemble(raw, state=None):
             return f'{op} {addr}'
         elif lo == 0xf:
             mod, reg_op, rm = modrm(raw[1])
+            state['eip'] += 2
             assert reg_op != 0b111
             op = ['INC', 'DEC', 'CALL', 'CALL', 'JMP', 'JMP', 'PUSH'][reg_op]
-            xxx = disassemble_ex_gx(raw, op, 'DWORD PTR', REGISTERS, state)
-            return xxx.split(',')[0]
+            addr = modrm_op(raw[1:], 'Ev', state)
+            return f'{op} {addr}'
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 
