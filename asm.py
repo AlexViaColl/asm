@@ -715,7 +715,11 @@ def disassemble_2b(raw, state):
         elif lo == 0xf:
             return dis_modrm_dst_src(raw, 'MOVSX', 'Gv', 'Ew', state)
     elif hi == 0xc:
-        pass
+        if lo == 0:
+            pass
+        elif lo == 2:
+            state['eip'] += 1
+            return dis_modrm_dst_src(raw, 'CMPLTPS', 'Vps', 'Wps', state)
     elif hi == 0xd:
         if lo == 0 and state['prefix'] == '':
             return '(bad)'
