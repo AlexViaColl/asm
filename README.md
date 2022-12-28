@@ -309,6 +309,13 @@ $ ndisasm -b32 <(echo -ne '\x90') | tr -s ' ' | cut -d ' ' -f3-
 nop
 ```
 
+## Performance (on a 4.5M binary ~ 1.6M asm lines)
+`console
+$ time $(ndisasm -b 32 <(cat $BINARY) >/dev/null)       # 0m0.783s
+$ time $(objdump -d -M i386,intel $BINARY >/dev/null)   # 0m1.375s
+$ time $(cat $BINARY | ./asm.py -b 0x401000 >/dev/null) # 2m25.271s
+`
+
 ## References
 - [Intel Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
     - One-byte Opcode Map: 2661, 2662
