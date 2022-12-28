@@ -566,6 +566,7 @@ if __name__ == '__main__':
         'LDS eax, FWORD PTR [eax]':         b'\xc5\x00',
         'MOV BYTE PTR [eax], 0x0':          b'\xc6\x00\x00',
         'MOV BYTE PTR [ebp+eax*1-0x18], 0x1': b'\xc6\x44\x05\xe8\x01',
+        '(bad)':                            b'\xc6\xdb',
         '(bad)':                            b'\xc6\xec',
         'MOV DWORD PTR [eax], 0x0':         b'\xc7\x00\x00\x00\x00\x00',
         'MOV DWORD PTR [eax], 0xffffffff':  b'\xc7\x00\xff\xff\xff\xff',
@@ -615,6 +616,7 @@ if __name__ == '__main__':
         'FDIV st, st(0)':                   b'\xd8\xf0',
         'FDIVR st, st(0)':                  b'\xd8\xf8',
 
+        '(bad)':                            b'\xd9\x0f',
         'FST DWORD PTR ds:0xb62f6c':        b'\xd9\x15\x6c\x2f\xb6\x00',
         'FLDENV [esp]':                     b'\xd9\x24\x24',
         'FNSTENV [esp]':                    b'\xd9\x34\x24',
@@ -716,6 +718,7 @@ if __name__ == '__main__':
         'FIDIVR WORD PTR [edi+0x0]':        b'\xde\x7f\x00',
         'FADDP st(1), st':                  b'\xde\xc1',
         'FMULP st(1), st':                  b'\xde\xc9',
+        '(bad)':                            b'\xde\xd0',
         'FCOMPP':                           b'\xde\xd9',
         'FSUBRP st(1), st':                 b'\xde\xe1',
         'FSUBP st(1), st':                  b'\xde\xe9',
@@ -822,6 +825,7 @@ if __name__ == '__main__':
         'STI':                              b'\xfb',
         'CLD':                              b'\xfc',
         'STD':                              b'\xfd',
+        '(bad)':                            b'\xfe\x22',
         'INC BYTE PTR [eax]':               b'\xfe\x00',
         'INC BYTE PTR [ecx]':               b'\xfe\x01',
         'INC BYTE PTR [edx]':               b'\xfe\x02',
@@ -893,6 +897,7 @@ if __name__ == '__main__':
         'SYSEXIT':                          b'\x0f\x35',
         'GETSEC':                           b'\x0f\x37',
 
+        '(bad)':                            b'\x0f\x7b',
         'JE 0x1dc':                         b'\x0f\x84\xd6\x01\x00\x00',
         'SETNE cl':                         b'\x0f\x95\xc1',
 
