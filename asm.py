@@ -720,6 +720,9 @@ def disassemble_2b(raw, state):
         elif lo == 2:
             state['eip'] += 1
             return dis_modrm_dst_src(raw, 'CMPLTPS', 'Vps', 'Wps', state)
+        elif lo == 6:
+            state['eip'] += 3
+            return f'SHUFPS xmm2, xmm0, 0x55'
     elif hi == 0xd:
         if lo == 0 and state['prefix'] == '':
             return '(bad)'
