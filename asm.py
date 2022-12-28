@@ -723,6 +723,9 @@ def disassemble_2b(raw, state):
         elif lo == 6:
             state['eip'] += 3
             return f'SHUFPS xmm2, xmm0, 0x55'
+        elif lo >= 8 and lo <= 0xf:
+            state['eip'] += 1
+            return f'BSWAP {REGISTERS[lo-8]}'
     elif hi == 0xd:
         if lo == 0 and state['prefix'] == '':
             return '(bad)'
