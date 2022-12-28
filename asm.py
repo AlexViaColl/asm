@@ -423,6 +423,45 @@ def disassemble_2b(raw, state):
         elif lo == 9:
             state['eip'] += 1
             return f'WBINVD'
+        elif lo == 0xd:
+            state['eip'] += 2
+            op = modrm_op(raw[1:], 'Ev', state)
+            return f'PREFETCHW {op}'.replace('DWORD', 'BYTE')
+        elif lo == 0xe:
+            state['eip'] += 1
+            return f'FEMMS'
+        elif lo == 0xf:
+            mod, reg_op, rm = modrm(raw[1])
+            inst, c = dis_con_modrm_dst_src(raw, 'XXX', 'Pq', 'Wq', state)
+            suffix = {
+                0x0d: 'PI2FD',
+                0x1d: 'PF2ID',
+                0x8a: 'PFNACC',
+                0x8e: 'PFPNACC',
+                0x90: 'PFCMPGE',
+                0x94: 'PFMIN',
+                0x96: 'PFRCP',
+                0x97: 'PFRSQRT',
+                0x9a: 'PFSUB',
+                0x9e: 'PFADD',
+                0xa0: 'PFCMPGT',
+                0xa4: 'PFMAX',
+                0xa6: 'PFRCPIT1',
+                0xa7: 'PFRSQIT1',
+                0xaa: 'PFSUBR',
+                0xae: 'PFACC',
+                0xb0: 'PFCMPEQ',
+                0xb4: 'PFMUL',
+                0xb6: 'PFRCPIT2',
+                0xb7: 'PMULHRW',
+                0xbb: 'PSWAPD',
+                0xbf: 'PAVGUSB',
+            }
+            if len(raw) <= c or raw[c] not in suffix:
+                state['eip'] -= 2
+                return '(bad)'
+            state['eip'] += 1
+            return inst.replace('XXX', suffix[raw[c]])
     elif hi == 1:
         if lo == 0:
             state['eip'] += 2
