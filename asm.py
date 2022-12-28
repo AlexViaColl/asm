@@ -541,7 +541,38 @@ def disassemble_2b(raw, state):
         ][lo]
         return dis_modrm_dst_src(raw, inst, 'Gv', 'Ev', state)
     elif hi == 5:
-        pass
+        if lo == 0:
+            return dis_modrm_dst_src(raw, 'MOVMSKPS', 'Gv', 'Wps', state)
+        elif lo == 1:
+            return dis_modrm_dst_src(raw, 'SQRTPS', 'Vps', 'Wps', state)
+        elif lo == 2:
+            return dis_modrm_dst_src(raw, 'RSQRTPS', 'Vps', 'Wps', state)
+        elif lo == 3:
+            return dis_modrm_dst_src(raw, 'RCPPS', 'Vps', 'Wps', state)
+        elif lo == 4:
+            return dis_modrm_dst_src(raw, 'ANDPS', 'Vps', 'Wps', state)
+        elif lo == 5:
+            return dis_modrm_dst_src(raw, 'ANDNPS', 'Vps', 'Wps', state)
+        elif lo == 6:
+            return dis_modrm_dst_src(raw, 'ORPS', 'Vps', 'Wps', state)
+        elif lo == 7:
+            return dis_modrm_dst_src(raw, 'XORPS', 'Vps', 'Wps', state)
+        elif lo == 8:
+            return dis_modrm_dst_src(raw, 'ADDPS', 'Vps', 'Wps', state)
+        elif lo == 9:
+            return dis_modrm_dst_src(raw, 'MULPS', 'Vps', 'Wps', state)
+        elif lo == 0xa:
+            return dis_modrm_dst_src(raw, 'CVTPS2PD', 'Vps', 'Wps', state)
+        elif lo == 0xb:
+            return dis_modrm_dst_src(raw, 'CVTDQ2PS', 'Vps', 'Wps', state)
+        elif lo == 0xc:
+            return dis_modrm_dst_src(raw, 'SUBPS', 'Vps', 'Wps', state)
+        elif lo == 0xd:
+            return dis_modrm_dst_src(raw, 'MINPS', 'Vps', 'Wps', state)
+        elif lo == 0xe:
+            return dis_modrm_dst_src(raw, 'DIVPS', 'Vps', 'Wps', state)
+        elif lo == 0xf:
+            return dis_modrm_dst_src(raw, 'MAXPS', 'Vps', 'Wps', state)
     elif hi == 6:
         pass
     elif hi == 7:
