@@ -1,0 +1,206 @@
+## 1-byte Opcodes
+- [x] 00 ADD Eb, Gb
+- [x] 01 ADD Ev, Gv
+- [x] 02 ADD Gb, Eb
+- [x] 03 ADD Gv, Ev
+- [x] 04 ADD AL, Ib
+- [x] 05 ADD rAX, Iz
+- [x] 06 PUSH ES
+- [x] 07 POP ES
+- [x] 08 OR Eb, Gb
+- [x] 09 OR Ev, Gv
+- [x] 0a OR Gb, Eb
+- [x] 0b OR Gv, Ev
+- [x] 0c OR AL, Ib
+- [x] 0d OR rAX, Iz
+- [x] 0e PUSH CS
+- [x] 0f 2-byte opcode escape
+- [x] 10 ADC Eb, Gb
+- [x] 11 ADC Ev, Gv
+- [x] 12 ADC Gb, Eb
+- [x] 13 ADC Gv, Ev
+- [x] 14 ADC AL, Ib
+- [x] 15 ADC rAX, Iz
+- [x] 16 PUSH SS
+- [x] 17 POP SS
+- [x] 18 SBB Eb, Gb
+- [x] 19 SBB Ev, Gv
+- [x] 1a SBB Gb, Eb
+- [x] 1b SBB Gv, Ev
+- [x] 1c SBB AL, Ib
+- [x] 1d SBB rAX, Iz
+- [x] 1e PUSH DS
+- [x] 1f POP DS
+- [x] 20 AND Eb, Gb
+- [x] 21 AND Ev, Gv
+- [x] 22 AND Gb, Eb
+- [x] 23 AND Gv, Ev
+- [x] 24 AND AL, Ib
+- [x] 25 AND rAX, Iz
+- [x] 26 SEG=ES (Prefix)
+- [x] 27 DAA
+- [x] 28 SUB Eb, Gb
+- [x] 29 SUB Ev, Gv
+- [x] 2a SUB Gb, Eb
+- [x] 2b SUB Gv, Ev
+- [x] 2c SUB AL, Ib
+- [x] 2d SUB rAX, Iz
+- [x] 2e SEG=CS (Prefix)
+- [x] 2f DAS
+- [x] 30 XOR Eb, Gb
+- [x] 31 XOR Ev, Gv
+- [x] 32 XOR Gb, Eb
+- [x] 33 XOR Gv, Ev
+- [x] 34 XOR AL, Ib
+- [x] 35 XOR rAX, Iz
+- [x] 36 SEG=SS (Prefix)
+- [x] 37 AAA
+- [x] 38 CMP Eb, Gb
+- [x] 39 CMP Ev, Gv
+- [x] 3a CMP Gb, Eb
+- [x] 3b CMP Gv, Ev
+- [x] 3c CMP AL, Ib
+- [x] 3d CMP rAX, Iz
+- [x] 3e SEG=DS (Prefix)
+- [x] 3f AAS
+- [x] 40-47 INC general register
+- [x] 48-4f DEC general register
+- [x] 50-57 PUSH general register
+- [x] 58-5f POP general register
+- [x] 60 PUSHA
+- [x] 61 POPA
+- [x] 62 BOUND Gv, Ma
+- [x] 63 ARPL Ew, Gw
+- [x] 64 SEG=FS (Prefix)
+- [x] 65 SEG=GS (Prefix)
+- [x] 66 Operand Size (Prefix)
+- [x] 67 Address Size (Prefix)
+- [x] 68 PUSH Iz
+- [x] 69 IMUL Gv, Ev, Iz
+- [x] 6a PUSH Ib
+- [x] 6b IMUL Gv, Ev, Ib
+- [x] 6c INS/INSB Yb, DX
+- [x] 6d INS/INSW/INSD Yz, DX
+- [x] 6e OUTS/OUTSB DX, Xb
+- [x] 6f OUTS/OUTSW/OUTSD DX, Xz
+- [x] 70-7f JCC
+- [x] 80 Immediate Grp 1 Eb, Ib
+- [x] 81 Immediate Grp 1 Ev, Iz
+- [x] 82 Immediate Grp 1 Eb, Ib
+- [x] 83 Immediate Grp 1 Ev, Ib
+- [x] 84 TEST Eb, Gb
+- [x] 85 TEST Eb, Gb
+- [x] 86 XCHG Eb, Gb
+- [x] 87 XCHG Ev, Gv
+- [x] 88 MOV Eb, Gb
+- [x] 89 MOV Ev, Gv
+- [x] 8a MOV Gb, Eb
+- [x] 8b MOV Gv, Ev
+- [x] 8c MOV Ev, Sw
+- [x] 8d LEA Gv, M
+- [x] 8e MOV Sw, Ew
+- [x] 8f Grp 1A POP Ev
+- [x] 90 NOP / XCHG r8, rAX
+- [x] 91 XCHG rCX/r9
+- [x] 92 XCHG rDX/r10
+- [x] 93 XCHG rBX/r11
+- [x] 94 XCHG rSP/r12
+- [x] 95 XCHG rBP/r13
+- [x] 96 XCHG rSI/r14
+- [x] 97 XCHG rDI/r15
+- [x] 98 CBW/CWDE/CDQE
+- [x] 99 CWD/CDQ/CQO
+- [x] 9a far CALL Ap
+- [x] 9b FWAIT/WAIT
+- [x] 9c PUSHF/D/Q/Fv
+- [x] 9d POPF/D/Q/Fv
+- [x] 9e SAHF
+- [x] 9f LAHF
+- [x] a0 MOV AL, Ob
+- [x] a1 MOV rAX, Ov
+- [x] a2 MOV Ob, AL
+- [x] a3 MOV Ov, rAX
+- [x] a4 MOVS/B Yb, Xb
+- [x] a5 MOVS/W/D/Q Yv, Xv
+- [x] a6 CMPS/B Xb, Yb
+- [x] a7 CMPS/W/D Xv, Yv
+- [x] a8 TEST AL, Ib
+- [x] a9 TEST rAX, Iz
+- [x] aa STOS/B Yb, AL
+- [x] ab STOS/W/D/Q Yv, rAX
+- [x] ac LODS/B AL, Xb
+- [x] ad LODS/W/D/Q rAX, Xv
+- [x] ae SCAS/B AL, Yb
+- [x] af SCAS/W/D/Q rAX, Yv
+- [x] b0 MOV AL/R8B, Ib
+- [x] b1 MOV CL/R9B, Ib
+- [x] b2 MOV DL/R10B, Ib
+- [x] b3 MOV BL/R11B, Ib
+- [x] b4 MOV AH/R12B, Ib
+- [x] b5 MOV CH/R13B, Ib
+- [x] b6 MOV DH/R14B, Ib
+- [x] b7 MOV BH/R15B, Ib
+- [x] b8 MOV rAX/r8, Iv
+- [x] b9 MOV rCX/r9, Iv
+- [x] ba MOV rDX/r10, Iv
+- [x] bb MOV rBX/r11, Iv
+- [x] bc MOV rSP/r12, Iv
+- [x] bd MOV rBP/r13, Iv
+- [x] be MOV rSI/r14, Iv
+- [x] bf MOV rDI/r15, Iv
+- [x] c0 Shift Grp 2 Eb, Ib
+- [x] c1 Shift Grp 2 Ev, Iv
+- [x] c2 near RET Iw
+- [x] c3 RET
+- [x] c4 LES Gz, Mp VEX + 2 byte
+- [x] c5 LDS Gz, Mp VEX + 1 byte
+- [x] c6 Grp 11 MOV Eb, Ib
+- [x] c7 Grp 11 MOV Ev, Iz
+- [x] c8 ENTER Iw, Ib
+- [x] c9 LEAVE
+- [x] ca far RET Iw
+- [x] cb far RET
+- [x] cc INT3
+- [x] cd INT Ib
+- [x] ce INTO
+- [x] cf IRET/D/Q
+- [x] d0 Shift Grp 2 Eb, 1
+- [x] d1 Shift Grp 2 Ev, 1
+- [x] d2 Shift Grp 2 Eb, CL
+- [x] d3 Shift Grp 2 Ev, CL
+- [x] d4 AAM Ib
+- [x] d5 AAD Ib
+- [x] d7 XLAT/XLATB
+- [x] d8-df ESC (Escape to coprocessor instruction set)
+- [x] e0 LOOPNE/LOOPNZ Jb
+- [x] e1 LOOPE/LOOPZ Jb
+- [x] e2 LOOP Jb
+- [x] e3 JrCXZ Jb
+- [x] e4 IN AL, Ib
+- [x] e5 IN eAX, Ib
+- [x] e6 OUT Ib, AL
+- [x] e7 OUT Ib, eAX
+- [x] e8 near CALL Jz
+- [x] e9 JMP near Jz
+- [x] ea JMP far Ap
+- [x] eb JMP short Jb
+- [x] ec IN AL, DX
+- [x] ed IN eAX, DX
+- [x] ee OUT DX, AL
+- [x] ef OUT DX, eAX
+- [x] f0 LOCK (Prefix)
+- [x] f1 INT1
+- [x] f2 REPNE XACQUIRE (Prefix)
+- [x] f3 REP/REPE XRELEASE (Prefix)
+- [x] f4 HLT
+- [x] f5 CMC
+- [x] f6 Unary Grp 3 Eb
+- [x] f7 Unary Grp 3 Ev
+- [x] f8 CLC
+- [x] f9 STC
+- [x] fa CLI
+- [x] fb STI
+- [x] fc CLD
+- [x] fd STD
+- [x] fe INC/DEC Grp 4
+- [x] ff INC/DEC Grp 5

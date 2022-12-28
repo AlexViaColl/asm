@@ -1,0 +1,74 @@
+## 2-byte Opcodes
+- [ ] 00 Grp 6
+- [ ] 01 Grp 7
+- [ ] 02 LAR Gv, Ew
+- [ ] 03 LSL Gv, Ew
+- [x] 05 SYSCALL
+- [x] 06 CLTS
+- [x] 07 SYSRET
+- [x] 08 INVD
+- [x] 09 WBINVD
+- [ ] 0B 2-byte Illegal Opcodes UD2
+- [ ] 10-1f
+- [ ] 20 MOV Rd, Cd
+- [ ] 21 MOV Rd, Dd
+- [ ] 22 MOV Cd, Rd
+- [ ] 23 MOV Dd, Rd
+- [ ] 28-2f
+- [x] 30 WRMSR
+- [x] 31 RDTSC
+- [x] 32 RDMSR
+- [x] 33 RDPMC
+- [x] 34 SYSENTER
+- [x] 35 SYSEXIT
+- [x] 37 GETSEC
+- [ ] 38 3-byte opcode escape
+- [ ] 3a 3-byte opcode escape
+- [ ] 40-4f CMOVcc (Gv, Ev) - Conditional Move
+- [ ] 50-5f
+- [ ] 60-6f
+- [ ] 70-7f
+- [ ] 80-8f Jcc, Jz - Long-displacement jump on condition
+- [ ] 90-9f SETcc, Eb - Byte Set on condition
+- [x] a0 PUSH FS
+- [x] a1 POP FS
+- [x] a2 CPUID
+- [ ] a3 BT Ev, Gv
+- [ ] a4 SHLD Ev, Gv, Ib
+- [ ] a5 SHLD Ev, Gv, CL
+- [x] a8 PUSH GS
+- [x] a9 POP GS
+- [x] aa RSM
+- [ ] ab BTS Ev, Gv
+- [ ] ac SHRD Ev, Gv, Ib
+- [ ] ad SHRD Ev, Gv, CL
+- [ ] ae Grp 15
+- [ ] af IMUL Gv, Ev
+- [ ] b0 CMPXCHG Eb, Gb
+- [ ] b1 CMPXCHG Ev, Gv
+- [ ] b2 LSS Gv, Mp
+- [ ] b3 BTR Ev, Gv
+- [ ] b4 LFS Gv, Mp
+- [ ] b5 LGS Gv, Mp
+- [ ] b6 MOVZ Gv, Eb
+- [x] b7 MOVZ Gv, Ew
+- [ ] b8 JMPE/POPCNT Gv, Ev
+- [ ] b9 Grp 10 Invalid Opcode
+- [ ] ba Grp 8 Ev, Ib
+- [ ] bb BTC Ev, Gv
+- [ ] bc BSF Gv, Ev / TZCNT Gv, Ev
+- [ ] bd BSR Gv, Ev / LZCNT Gv, Ev
+- [ ] be MOVSX Gv, Eb
+- [ ] bf MOVSX Gv, Ew
+- [ ] c0 XADD Eb, Gb
+- [ ] c1 XADD Ev, Gv
+- [ ] c2
+- [ ] c3 movnti My, Gy
+- [ ] c4
+- [ ] c5
+- [ ] c6
+- [ ] c7 Grp 9
+- [ ] c8-cf BSWAP
+- [ ] d0-df
+- [ ] e0-ef
+- [ ] ef-ff
