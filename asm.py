@@ -535,7 +535,11 @@ def disassemble_2b(raw, state):
             state['eip'] += 1
             return f'GETSEC'
     elif hi == 4:
-        pass
+        inst = [
+            'CMOVO', 'CMOVNO', 'CMOVB', 'CMOVAE', 'CMOVE', 'CMOVNE', 'CMOVBE', 'CMOVA',
+            'CMOVS', 'CMOVNS', 'CMOVP', 'CMOVNP', 'CMOVL', 'CMOVGE', 'CMOVLE', 'CMOVG',
+        ][lo]
+        return dis_modrm_dst_src(raw, inst, 'Gv', 'Ev', state)
     elif hi == 5:
         pass
     elif hi == 6:
