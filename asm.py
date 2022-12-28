@@ -479,6 +479,8 @@ def disassemble_2b(raw, state):
             return f'MOVLPS xmm1, QWORD PTR [eax]'
         elif lo == 3:
             return dis_modrm_dst_src(raw, 'MOVLPS', 'Mq', 'Vq', state)
+        elif lo == 4:
+            return dis_modrm_dst_src(raw, 'UNPCKLPS', 'Vps', 'Wps', state)
     elif hi == 2:
         if lo == 0:
             pass
