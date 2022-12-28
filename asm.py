@@ -497,8 +497,21 @@ def disassemble_2b(raw, state):
         if lo == 0:
             pass
         elif lo == 8:
-            state['eip'] += 4
-            return f'MOVAPS xmm1, XMMWORD PTR [esp+0x0]'
+            return dis_modrm_dst_src(raw, 'MOVAPS', 'Vps', 'Wps', state)
+        elif lo == 9:
+            return dis_modrm_dst_src(raw, 'MOVAPS', 'Wps', 'Vps', state)
+        elif lo == 0xa:
+            return dis_modrm_dst_src(raw, 'CVTPI2PS', 'Vps', 'Qq', state)
+        elif lo == 0xb:
+            return dis_modrm_dst_src(raw, 'MOVNTPS', 'Mp', 'Vps', state)
+        elif lo == 0xc:
+            return dis_modrm_dst_src(raw, 'CVTTPS2PI', 'Pq', 'Wps', state)
+        elif lo == 0xd:
+            return dis_modrm_dst_src(raw, 'CVTPS2PI', 'Pq', 'Wps', state)
+        elif lo == 0xe:
+            return dis_modrm_dst_src(raw, 'UCOMISS', 'Vps', 'Wps', state)
+        elif lo == 0xf:
+            return dis_modrm_dst_src(raw, 'COMISS', 'Vps', 'Wps', state)
     elif hi == 3:
         if lo == 0:
             state['eip'] += 1
