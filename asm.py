@@ -2090,9 +2090,66 @@ def tokenize(inst):
     return tokens
 
 def assemble(inst, state):
-    # 1. Lexer
     tokens = tokenize(inst)
     print(tokens)
+
+    op = tokens[0][1]
+    if op == 'AAA':
+        return b'\x37'
+    elif op == 'AAS':
+        return b'\x3f'
+    elif op == 'CDQ':
+        return b'\x99'
+    elif op == 'CLC':
+        return b'\xf8'
+    elif op == 'CLD':
+        return b'\xfc'
+    elif op == 'CLI':
+        return b'\xfa'
+    elif op == 'CMC':
+        return b'\xf5'
+    elif op == 'CWDE':
+        return b'\x98'
+    elif op == 'DAA':
+        return b'\x27'
+    elif op == 'DAS':
+        return b'\x2f'
+    elif op == 'FWAIT':
+        return b'\x9b'
+    elif op == 'HLT':
+        return b'\xf4'
+    elif op == 'INT1':
+        return b'\xf1'
+    elif op == 'INT3':
+        return b'\xcc'
+    elif op == 'INTO':
+        return b'\xce'
+    elif op == 'IRET':
+        return b'\xcf'
+    elif op == 'LAHF':
+        return b'\x9f'
+    elif op == 'LEAVE':
+        return b'\xc9'
+    elif op == 'NOP':
+        return b'\x90'
+    elif op = 'POPA':
+        return b'\x61'
+    elif op = 'POPF':
+        return b'\x9d'
+    elif op = 'PUSHA':
+        return b'\x60'
+    elif op = 'PUSHF':
+        return b'\x9c'
+    elif op = 'RETF':
+        return b'\xcb'
+    elif op = 'SAHF':
+        return b'\x9e'
+    elif op = 'STC':
+        return b'\xf9'
+    elif op = 'STI':
+        return b'\xfb'
+    elif op = 'XLAT':
+        return b'\xd7'
 
     return b''
 
