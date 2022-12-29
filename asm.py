@@ -2055,6 +2055,47 @@ def disassemble(raw, state=None):
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 
+def tokenize(inst):
+    inst = inst.strip()
+    i = 0
+    tokens = []
+    curr_token = None
+    while i < len(inst):
+        c = inst[i]
+        if c == ' ' or c == '\t' or c == '\n' or c == '\r':
+            if curr_token != None:
+                tokens.append(curr_token)
+                curr_token = None
+        elif c in '[](),:+-*':
+            tokens.append(['sym', c])
+            if curr_token != None:
+                tokens.append(curr_token)
+                curr_token = None
+        # Number literals
+        elif (c >= '0' and c <= '9') or (c >= 'a' and c <= 'f'):
+            if curr_token == None:
+                curr_token = ['literal', c]
+            else:
+                curr_token[1] += c
+        # Identifiers
+        elif (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z'):
+            if curr_token == None:
+                curr_token = ['ident', c]
+            else:
+                curr_token[1] += c
+
+        i += 1
+    if curr_token != None:
+        tokens.append(curr_token)
+    return tokens
+
+def assemble(inst, state):
+    # 1. Lexer
+    tokens = tokenize(inst)
+    print(tokens)
+
+    return b''
+
 if __name__ == '__main__':
     #state = {'eip': 191, 'seg': '', 'prefix': ''}
     #print(disassemble(b'\xf6\x45\xd0\x01', state))
