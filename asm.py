@@ -2132,23 +2132,23 @@ def assemble(inst, state):
         return b'\xc9'
     elif op == 'NOP':
         return b'\x90'
-    elif op = 'POPA':
+    elif op == 'POPA':
         return b'\x61'
-    elif op = 'POPF':
+    elif op == 'POPF':
         return b'\x9d'
-    elif op = 'PUSHA':
+    elif op == 'PUSHA':
         return b'\x60'
-    elif op = 'PUSHF':
+    elif op == 'PUSHF':
         return b'\x9c'
-    elif op = 'RETF':
+    elif op == 'RETF':
         return b'\xcb'
-    elif op = 'SAHF':
+    elif op == 'SAHF':
         return b'\x9e'
-    elif op = 'STC':
+    elif op == 'STC':
         return b'\xf9'
-    elif op = 'STI':
+    elif op == 'STI':
         return b'\xfb'
-    elif op = 'XLAT':
+    elif op == 'XLAT':
         return b'\xd7'
 
     return b''
