@@ -1083,5 +1083,9 @@ def test_disassemble():
             print(traceback.format_exc())
             sys.exit(1)
 
+def test_assemble():
+    pass
+
 if __name__ == '__main__':
     test_disassemble()
+    test_assemble()
