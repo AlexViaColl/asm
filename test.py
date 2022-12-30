@@ -1098,8 +1098,22 @@ def test_tokenize():
             sys.exit(1)
 
 def test_assemble():
-    test_tokenize()
+    cases = [
+        ['NOP',         b'\x90'],
+        ['MOV eax, 1',  b'\xb8\x01\x00\x00\x00'],
+        ['INT 0x80',    b'\xcd\x80'],
+    ]
+    state = {}
+    for line, expected in cases:
+        actual = assemble(line, state)
+        if actual != expected:
+            print(f'[ERROR] Unexpected assembly for line: {line}')
+            print(f'  Expected: {expected.hex(" ")}')
+            print(f'  But got:  {actual.hex(" ")}')
+            sys.exit(1)
 
 if __name__ == '__main__':
     test_disassemble()
+
+    test_tokenize()
     test_assemble()
