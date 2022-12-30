@@ -2082,8 +2082,7 @@ def tokenize(line):
             if curr_token != None:
                 tokens.append(curr_token)
                 curr_token = None
-        elif c in '[](),:+-*':
-            tokens.append(['sym', c])
+        elif c in '[](),:+-*;#':
             if curr_token != None:
                 tokens.append(curr_token)
                 curr_token = None
