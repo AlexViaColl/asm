@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import NamedTuple
+from dataclasses import dataclass
 
 VERSION = '0.0.1'
 USAGE = '''
@@ -2055,13 +2057,27 @@ def disassemble(raw, state=None):
     else:
         fail(f'ERROR: Unknown opcode {hex(raw[0])}')
 
-def tokenize(inst):
-    inst = inst.strip()
+@dataclass
+class Token:
+    token_type: str
+    value: str
+
+def ident(s):
+    return Token('ident', s)
+
+def literal(s):
+    return Token('literal', s)
+
+def symbol(s):
+    return Token('symbol', s)
+
+def tokenize(line):
+    line = line.strip()
     i = 0
     tokens = []
     curr_token = None
-    while i < len(inst):
-        c = inst[i]
+    while i < len(line):
+        c = line[i]
         if c == ' ' or c == '\t' or c == '\n' or c == '\r':
             if curr_token != None:
                 tokens.append(curr_token)
@@ -2071,18 +2087,19 @@ def tokenize(inst):
             if curr_token != None:
                 tokens.append(curr_token)
                 curr_token = None
+            tokens.append(Token('symbol', c))
         # Number literals
-        elif (c >= '0' and c <= '9') or (c >= 'a' and c <= 'f'):
+        elif (c >= '0' and c <= '9'):
             if curr_token == None:
-                curr_token = ['literal', c]
+                curr_token = Token('literal', c)
             else:
-                curr_token[1] += c
+                curr_token.value += c
         # Identifiers
         elif (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z'):
             if curr_token == None:
-                curr_token = ['ident', c]
+                curr_token = Token('ident', c)
             else:
-                curr_token[1] += c
+                curr_token.value += c
 
         i += 1
     if curr_token != None:
