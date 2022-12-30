@@ -2105,66 +2105,83 @@ def tokenize(line):
         tokens.append(curr_token)
     return tokens
 
-def assemble(inst, state):
-    tokens = tokenize(inst)
-    print(tokens)
+class Inst(NamedTuple):
+    opcode: str
+    operands: list = []
+    prefixes: list = []
 
-    op = tokens[0][1]
-    if op == 'AAA':
+def assemble(line, state):
+    tokens = tokenize(line)
+    #print(tokens)
+
+    opcode = tokens[0].value.upper()
+    if opcode == 'MOV':
+        dst = tokens[1].value
+        assert tokens[2].value == ','
+        src = tokens[3].value
+        # B8+rd id
+        op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')
+        imm = int(src, base=16).to_bytes(4, 'little')
+        return op + imm
+    elif opcode == 'INT':
+        ib = int(tokens[1].value, base=16).to_bytes(1, 'little')
+        return b'\xcd' + ib
+
+    if opcode == 'AAA':
         return b'\x37'
-    elif op == 'AAS':
+    elif opcode == 'AAS':
         return b'\x3f'
-    elif op == 'CDQ':
+    elif opcode == 'CDQ':
         return b'\x99'
-    elif op == 'CLC':
+    elif opcode == 'CLC':
         return b'\xf8'
-    elif op == 'CLD':
+    elif opcode == 'CLD':
         return b'\xfc'
-    elif op == 'CLI':
+    elif opcode == 'CLI':
         return b'\xfa'
-    elif op == 'CMC':
+    elif opcode == 'CMC':
         return b'\xf5'
-    elif op == 'CWDE':
+    elif opcode == 'CWDE':
         return b'\x98'
-    elif op == 'DAA':
+    elif opcode == 'DAA':
         return b'\x27'
-    elif op == 'DAS':
+    elif opcode == 'DAS':
         return b'\x2f'
-    elif op == 'FWAIT':
+    elif opcode == 'FWAIT':
         return b'\x9b'
-    elif op == 'HLT':
+    elif opcode == 'HLT':
         return b'\xf4'
-    elif op == 'INT1':
+    elif opcode == 'INT1':
         return b'\xf1'
-    elif op == 'INT3':
+    elif opcode == 'INT3':
         return b'\xcc'
-    elif op == 'INTO':
+    elif opcode == 'INTO':
         return b'\xce'
-    elif op == 'IRET':
+    elif opcode == 'IRET':
         return b'\xcf'
-    elif op == 'LAHF':
+    elif opcode == 'LAHF':
         return b'\x9f'
-    elif op == 'LEAVE':
+    elif opcode == 'LEAVE':
         return b'\xc9'
-    elif op == 'NOP':
+    elif opcode == 'NOP':
         return b'\x90'
-    elif op == 'POPA':
+    elif opcode == 'POPA':
         return b'\x61'
-    elif op == 'POPF':
+    elif opcode == 'POPF':
         return b'\x9d'
-    elif op == 'PUSHA':
+    elif opcode == 'PUSHA':
         return b'\x60'
-    elif op == 'PUSHF':
+    elif opcode == 'PUSHF':
         return b'\x9c'
-    elif op == 'RETF':
+    elif opcode == 'RETF':
         return b'\xcb'
-    elif op == 'SAHF':
+    elif opcode == 'SAHF':
         return b'\x9e'
-    elif op == 'STC':
+    elif opcode == 'STC':
         return b'\xf9'
-    elif op == 'STI':
+    elif opcode == 'STI':
         return b'\xfb'
-    elif op == 'XLAT':
+    elif opcode == 'XLAT':
         return b'\xd7'
 
     return b''
