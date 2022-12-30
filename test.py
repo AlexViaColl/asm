@@ -586,6 +586,7 @@ if __name__ == '__main__':
         'RETF':                             b'\xcb',
         'INT3':                             b'\xcc',
         'INT 0x0':                          b'\xcd\x00',
+        'INT 0x80':                         b'\xcd\x80',
         'INT 0xff':                         b'\xcd\xff',
         'INTO':                             b'\xce',
         'IRET':                             b'\xcf',
