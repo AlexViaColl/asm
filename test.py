@@ -4,7 +4,7 @@ import sys
 import subprocess
 import traceback
 from operator import attrgetter
-from asm import assemble, disassemble
+from asm import assemble, disassemble, tokenize, Token, ident, literal, symbol
 
 instructions = {
     # 1-byte Opcodes
@@ -1083,8 +1083,22 @@ def test_disassemble():
             print(traceback.format_exc())
             sys.exit(1)
 
+def test_tokenize():
+    cases = [
+        ['NOP',         [ident('NOP')]],
+        ['MOV eax, 1',  [ident('MOV'), ident('eax'), symbol(','), literal('1')]],
+        ['INT 0x80',    [ident('INT'), literal('0x80')]],
+    ]
+    for line, expected in cases:
+        actual = tokenize(line)
+        if actual != expected:
+            print(f'[ERROR] Unexpected tokens for line: {line}')
+            print(f'  Expected: {expected}')
+            print(f'  But got:  {actual}')
+            sys.exit(1)
+
 def test_assemble():
-    pass
+    test_tokenize()
 
 if __name__ == '__main__':
     test_disassemble()
