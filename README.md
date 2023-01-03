@@ -7,8 +7,7 @@ The goal of this project is to understand the x86-64 Instruction Set Architectur
   - [x] [1-byte Opcodes](./doc/op_1.md)
   - [ ] [2-byte Opcodes](./doc/op_2.md)
   - [ ] 3-byte Opcodes
-    - [ ] ...
-  - [ ] ...
+  - [ ] Improve Performance
 - [ ] x86 Assembler
 - [ ] Add x64 support
 ...
