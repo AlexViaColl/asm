@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from struct import pack
 from typing import NamedTuple
 from dataclasses import dataclass
 
@@ -2185,6 +2186,89 @@ def assemble(line, state):
         return b'\xd7'
 
     return b''
+
+def link():
+    code = assemble('mov eax, 1', {})
+    code += assemble('mov ebx, 0', {})
+    code += assemble('int 0x80', {})
+
+    elf_hdr_sz = 52
+    prg_hdr_sz = 32
+    sct_hdr_sz = 40
+    base  = 0x8048000
+    entry = base + elf_hdr_sz + prg_hdr_sz
+    code_sz = len(code)
+    data_sz = 0
+    seg_sz  = elf_hdr_sz + prg_hdr_sz + code_sz + data_sz
+
+    # ELF constants
+    ELFCLASS32      = pack('<B', 1)
+    ELFCLASS64      = pack('<B', 2)
+    ELFDATA2LSB     = pack('<B', 1)
+    #EV_CURRENT      = pack('<B', 1)
+    ELFOSABI_SYSV   = pack('<B', 0)
+    ELFOSABI_LINUX  = pack('<B', 3)
+    ET_EXEC         = pack('<H', 2)
+    EM_386          = pack('<H', 3)
+    EM_ARM          = pack('<H', 40)
+    EM_X86_64       = pack('<H', 62)
+    EM_AARCH64      = pack('<H', 183)
+    #EV_CURRENT      = pack('<I', 1)
+    PT_LOAD         = pack('<I', 1)
+
+    b = b''
+    # ELF Header
+    # e_ident
+    b += b'\x7fELF'             # EI_MAG0, EI_MAG1, EI_MAG2, EI_MAG3
+    b += ELFCLASS32             # EI_CLASS:         ELFCLASS32 (1) / ELFCLASS64
+    b += ELFDATA2LSB            # EI_DATA:          ELFDATA2LSB (1)
+    b += b'\x01'                # EI_VERSION:       EV_CURRENT (1)
+    b += ELFOSABI_LINUX         # EI_OSABI:         ELFOSABI_SYSV (0) / ELFOSABI_LINUX (3)
+    b += b'\x00'                # EI_ABIVERSION:    0
+    b += b'\x00' * 7            # EI_PAD
+
+    b += ET_EXEC                # e_type:       ET_NONE (0) / ET_REL (1) / ET_EXEC (2) / ET_DYN (3) / ET_CORE (4)
+    b += EM_386                 # e_machine:    EM_386 (3) / EM_ARM (40) / EM_X86_64 (62) / EM_AARCH64 (183)
+    b += pack('<I', 1)          # e_version:    EV_CURRENT (1)
+    b += pack('<I', entry)      # e_entry:      Entry point address: 0x8048054
+    b += pack('<I', elf_hdr_sz) # e_phoff:      Start of program headers: Elf32_Ehdr (52), Elf64_Ehdr(64)
+    b += pack('<I', 0)          # e_shoff:      Start of section headers: 0
+    b += pack('<I', 0)          # flags
+    b += pack('<H', elf_hdr_sz) # e_ehsize:     Size of this header: Elf32_Ehdr (52), Elf64_Ehdr(64)
+    b += pack('<H', prg_hdr_sz) # e_phentsize:  Size of program headers: Elf32_Phdr (32), Elf64_Phdr (56)
+    b += pack('<H', 1)          # e_phnum:      Number of program headers: 1
+    b += pack('<H', sct_hdr_sz) # e_shentsize:  Size of section headers: Elf32_Shdr (40), Elf64_Shdr (64)
+    b += pack('<H', 0)          # e_shnum:      Number of section headers: 0 (1)
+    b += pack('<H', 0)          # e_shstrndx:   Section header string table index: 0 = SHN_UNDEF
+
+    # Section Headers (Overlapping with ELF Header ...)
+    # sh_name
+    # sh_type
+    # sh_flags
+    # sh_addr
+    # sh_offset
+    # sh_size
+    # sh_link
+    # sh_info
+    # sh_addralign
+    # sh_entsize
+
+    # Program Headers
+    b += PT_LOAD                # p_type    (Type:     LOAD)
+    b += pack('<I', 0)          # p_offset  (Offset:   0)
+    b += pack('<I', base)       # p_vaddr   (VirtAddr: 0x08048000)
+    b += pack('<I', base)       # p_paddr   (PhysAddr: 0x08048000)
+    b += pack('<I', seg_sz)     # p_filesz  (FileSize: 0x7c)
+    b += pack('<I', seg_sz)     # p_memsz   (MemSize:  0x7c)
+    b += pack('<I', 5)          # p_flags   (Flags:    R-X)
+    b += pack('<I', 0x1000)     # p_align   (Align:    0x1000)
+
+    # Assembled code goes here!
+    b += code
+
+    # Static data goes here!
+
+    return b
 
 if __name__ == '__main__':
     #state = {'eip': 191, 'seg': '', 'prefix': ''}
