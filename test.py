@@ -1102,9 +1102,13 @@ def test_tokenize():
 
 def test_assemble():
     cases = [
-        ['NOP',         b'\x90'],
-        ['MOV eax, 1',  b'\xb8\x01\x00\x00\x00'],
-        ['INT 0x80',    b'\xcd\x80'],
+        ['NOP',             b'\x90'],
+        ['MOV eax, 1',      b'\xb8\x01\x00\x00\x00'],
+        ['INT 0x80',        b'\xcd\x80'],
+        ['PUSH ebp',        b'\x55'],
+        ['PUSH 0xffffffff', b'\x6a\xff'],
+        ['PUSH 0x895530',   b'\x68\x30\x55\x89\x00'],
+        ['MOV ebp, esp',    b'\x8b\xec'],
     ]
     state = {}
     for line, expected in cases:

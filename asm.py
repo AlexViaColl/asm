@@ -2120,13 +2120,31 @@ def assemble(line, state):
         dst = tokens[1].value
         assert tokens[2].value == ','
         src = tokens[3].value
-        # B8+rd id
-        op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')
-        imm = int(src, base=16).to_bytes(4, 'little')
-        return op + imm
+
+        if src.lower() in REGISTERS:
+            # Move r/m32 to r32 => 8B /r
+            # ec => 11|101(ebp-dst)|100(esp-src)
+            modrm = 0b11000000 | REGISTERS.index(dst.lower()) << 3 | REGISTERS.index(src.lower())
+            return b'\x8b' + pack('<B', modrm)
+        else:
+            # Move imm32 to r32 => B8+rd id
+            op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')
+            imm = int(src, base=16).to_bytes(4, 'little')
+            return op + imm
     elif opcode == 'INT':
         ib = int(tokens[1].value, base=16).to_bytes(1, 'little')
         return b'\xcd' + ib
+    elif opcode == 'PUSH':
+        assert len(tokens) == 2
+        if tokens[1].value in REGISTERS:
+            reg = REGISTERS.index(tokens[1].value)
+            return pack('<B', 0x50 + reg)
+        elif tokens[1].token_type == 'literal':
+            imm = int(tokens[1].value, base=16)
+            if (imm >= 0xffffff80 and imm <= 0xffffffff) or (imm >= 0x0 and imm <= 0x7f):
+                return b'\x6a' + pack('<B', imm & 0xff)
+            else:
+                return b'\x68' + pack('<I', imm)
 
     if opcode == 'AAA':
         return b'\x37'
