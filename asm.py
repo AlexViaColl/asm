@@ -2221,6 +2221,11 @@ def assemble(line, state):
         return b'\xf9'
     elif opcode == 'STI':
         return b'\xfb'
+    elif opcode == 'SUB':
+        dst = tokens[1].value
+        assert tokens[2].value == ','
+        imm = int(tokens[3].value, base=16)
+        return b'\x83' + pack('<B', 0b11101000 | REGISTERS.index(dst.lower())) + pack('<B', imm)
     elif opcode == 'XLAT':
         return b'\xd7'
     elif opcode == 'XOR':

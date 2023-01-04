@@ -1112,6 +1112,7 @@ def test_assemble():
         ['PUSH ebp',                    b'\x55'],
         ['PUSH 0x895530',               b'\x68\x30\x55\x89\x00'],
         ['PUSH 0xffffffff',             b'\x6a\xff'],
+        ['SUB esp, 0x58',               b'\x83\xec\x58'],
         ['XOR eax, eax',                b'\x33\xc0'], # Could also be \x31\xc0
     ]
     state = {}
