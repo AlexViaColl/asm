@@ -2116,7 +2116,54 @@ def assemble(line, state):
     #print(tokens)
 
     opcode = tokens[0].value.upper()
-    if opcode == 'MOV':
+
+    if opcode == 'AAA':
+        return b'\x37'
+    elif opcode == 'AAS':
+        return b'\x3f'
+    elif opcode == 'CALL':
+        assert tokens[1].value == 'DWORD'
+        assert tokens[2].value == 'PTR'
+        assert tokens[3].value == 'ds'
+        assert tokens[4].value == ':'
+        disp = int(tokens[5].value, base=16)
+        return b'\xff\x15' + pack('<I', disp)
+    elif opcode == 'CDQ':
+        return b'\x99'
+    elif opcode == 'CLC':
+        return b'\xf8'
+    elif opcode == 'CLD':
+        return b'\xfc'
+    elif opcode == 'CLI':
+        return b'\xfa'
+    elif opcode == 'CMC':
+        return b'\xf5'
+    elif opcode == 'CWDE':
+        return b'\x98'
+    elif opcode == 'DAA':
+        return b'\x27'
+    elif opcode == 'DAS':
+        return b'\x2f'
+    elif opcode == 'FWAIT':
+        return b'\x9b'
+    elif opcode == 'HLT':
+        return b'\xf4'
+    elif opcode == 'INT':
+        ib = int(tokens[1].value, base=16).to_bytes(1, 'little')
+        return b'\xcd' + ib
+    elif opcode == 'INT1':
+        return b'\xf1'
+    elif opcode == 'INT3':
+        return b'\xcc'
+    elif opcode == 'INTO':
+        return b'\xce'
+    elif opcode == 'IRET':
+        return b'\xcf'
+    elif opcode == 'LAHF':
+        return b'\x9f'
+    elif opcode == 'LEAVE':
+        return b'\xc9'
+    elif opcode == 'MOV':
         dst = tokens[1].value
         if tokens[2].value == 'PTR':
             assert tokens[3].value == 'fs'
@@ -2145,9 +2192,12 @@ def assemble(line, state):
             op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')
             imm = int(src, base=16).to_bytes(4, 'little')
             return op + imm
-    elif opcode == 'INT':
-        ib = int(tokens[1].value, base=16).to_bytes(1, 'little')
-        return b'\xcd' + ib
+    elif opcode == 'NOP':
+        return b'\x90'
+    elif opcode == 'POPA':
+        return b'\x61'
+    elif opcode == 'POPF':
+        return b'\x9d'
     elif opcode == 'PUSH':
         assert len(tokens) == 2
         if tokens[1].value in REGISTERS:
@@ -2159,64 +2209,6 @@ def assemble(line, state):
                 return b'\x6a' + pack('<B', imm & 0xff)
             else:
                 return b'\x68' + pack('<I', imm)
-    elif opcode == 'XOR':
-        dst = tokens[1].value
-        assert tokens[2].value == ','
-        src = tokens[3].value
-        assert src.lower() in REGISTERS
-        assert dst.lower() in REGISTERS
-        modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
-        return b'\x33' + pack('<B', modrm)
-    elif opcode == 'CALL':
-        assert tokens[1].value == 'DWORD'
-        assert tokens[2].value == 'PTR'
-        assert tokens[3].value == 'ds'
-        assert tokens[4].value == ':'
-        disp = int(tokens[5].value, base=16)
-        return b'\xff\x15' + pack('<I', disp)
-
-    if opcode == 'AAA':
-        return b'\x37'
-    elif opcode == 'AAS':
-        return b'\x3f'
-    elif opcode == 'CDQ':
-        return b'\x99'
-    elif opcode == 'CLC':
-        return b'\xf8'
-    elif opcode == 'CLD':
-        return b'\xfc'
-    elif opcode == 'CLI':
-        return b'\xfa'
-    elif opcode == 'CMC':
-        return b'\xf5'
-    elif opcode == 'CWDE':
-        return b'\x98'
-    elif opcode == 'DAA':
-        return b'\x27'
-    elif opcode == 'DAS':
-        return b'\x2f'
-    elif opcode == 'FWAIT':
-        return b'\x9b'
-    elif opcode == 'HLT':
-        return b'\xf4'
-    elif opcode == 'INT1':
-        return b'\xf1'
-    elif opcode == 'INT3':
-        return b'\xcc'
-    elif opcode == 'INTO':
-        return b'\xce'
-    elif opcode == 'IRET':
-        return b'\xcf'
-    elif opcode == 'LAHF':
-        return b'\x9f'
-    elif opcode == 'LEAVE':
-        return b'\xc9'
-    elif opcode == 'NOP':
-        return b'\x90'
-    elif opcode == 'POPA':
-        return b'\x61'
-    elif opcode == 'POPF':
-        return b'\x9d'
     elif opcode == 'PUSHA':
         return b'\x60'
     elif opcode == 'PUSHF':
@@ -2231,6 +2223,14 @@ def assemble(line, state):
         return b'\xfb'
     elif opcode == 'XLAT':
         return b'\xd7'
+    elif opcode == 'XOR':
+        dst = tokens[1].value
+        assert tokens[2].value == ','
+        src = tokens[3].value
+        assert src.lower() in REGISTERS
+        assert dst.lower() in REGISTERS
+        modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
+        return b'\x33' + pack('<B', modrm)
 
     return b''
 
