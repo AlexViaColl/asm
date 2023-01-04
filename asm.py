@@ -2279,6 +2279,7 @@ if __name__ == '__main__':
     show_usage = False
     base = 0
     skip = 0
+    asm_path = None
     if len(sys.argv) > 1:
         args = sys.argv[1:]
         for i, arg in enumerate(args):
@@ -2302,12 +2303,26 @@ if __name__ == '__main__':
                     skip = int(skip, base=2)
                 else:
                     skip = int(skip)
+            elif (arg == '-a' or arg == '--assemble') and len(args) > i+1:
+                asm_path = args[i+1]
 
     if show_version:
         print(f'asm version {VERSION}')
         sys.exit(0)
     elif show_usage:
         print(USAGE)
+        sys.exit(0)
+
+    if asm_path != None:
+        with open(asm_path) as f:
+            contents = f.read()
+        lines = contents.splitlines()
+        buf = b''
+        state = {}
+        for line in lines:
+            if line.strip() != '':
+                buf += assemble(line, state)
+        print(buf.hex(" "))
         sys.exit(0)
 
     raw = sys.stdin.buffer.read()
