@@ -1102,13 +1102,17 @@ def test_tokenize():
 
 def test_assemble():
     cases = [
-        ['NOP',             b'\x90'],
-        ['MOV eax, 1',      b'\xb8\x01\x00\x00\x00'],
-        ['INT 0x80',        b'\xcd\x80'],
-        ['PUSH ebp',        b'\x55'],
-        ['PUSH 0xffffffff', b'\x6a\xff'],
-        ['PUSH 0x895530',   b'\x68\x30\x55\x89\x00'],
-        ['MOV ebp, esp',    b'\x8b\xec'],
+        ['CALL DWORD PTR ds:0x86e2d8',  b'\xff\x15\xd8\xe2\x86\x00'],
+        ['INT 0x80',                    b'\xcd\x80'],
+        ['MOV DWORD PTR fs:0x0, esp',   b'\x64\x89\x25\x00\x00\x00\x00'],
+        ['MOV eax, fs:0x0',             b'\x64\xa1\x00\x00\x00\x00'],
+        ['MOV ebp, esp',                b'\x8b\xec'],
+        ['MOV eax, 1',                  b'\xb8\x01\x00\x00\x00'],
+        ['NOP',                         b'\x90'],
+        ['PUSH ebp',                    b'\x55'],
+        ['PUSH 0x895530',               b'\x68\x30\x55\x89\x00'],
+        ['PUSH 0xffffffff',             b'\x6a\xff'],
+        ['XOR eax, eax',                b'\x33\xc0'], # Could also be \x31\xc0
     ]
     state = {}
     for line, expected in cases:

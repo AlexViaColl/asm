@@ -2118,7 +2118,21 @@ def assemble(line, state):
     opcode = tokens[0].value.upper()
     if opcode == 'MOV':
         dst = tokens[1].value
+        if tokens[2].value == 'PTR':
+            assert tokens[3].value == 'fs'
+            assert tokens[4].value == ':'
+            disp = int(tokens[5].value, base=16)
+            assert tokens[6].value == ','
+            src = tokens[7].value
+            return b'\x64' + b'\x89' + pack('<B', 0b00000101 | REGISTERS.index(src.lower()) << 3) + pack('<I', disp)
+
         assert tokens[2].value == ','
+        prefix = b''
+        if tokens[3].value == 'fs':
+            src = tokens[5].value
+            prefix = b'\x64'
+            return prefix + b'\xa1' + pack('<I', int(src, base=16))
+
         src = tokens[3].value
 
         if src.lower() in REGISTERS:
@@ -2145,6 +2159,21 @@ def assemble(line, state):
                 return b'\x6a' + pack('<B', imm & 0xff)
             else:
                 return b'\x68' + pack('<I', imm)
+    elif opcode == 'XOR':
+        dst = tokens[1].value
+        assert tokens[2].value == ','
+        src = tokens[3].value
+        assert src.lower() in REGISTERS
+        assert dst.lower() in REGISTERS
+        modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
+        return b'\x33' + pack('<B', modrm)
+    elif opcode == 'CALL':
+        assert tokens[1].value == 'DWORD'
+        assert tokens[2].value == 'PTR'
+        assert tokens[3].value == 'ds'
+        assert tokens[4].value == ':'
+        disp = int(tokens[5].value, base=16)
+        return b'\xff\x15' + pack('<I', disp)
 
     if opcode == 'AAA':
         return b'\x37'
