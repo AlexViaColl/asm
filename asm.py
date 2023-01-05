@@ -2121,6 +2121,13 @@ def assemble(line, state):
         return b'\x37'
     elif opcode == 'AAS':
         return b'\x3f'
+    elif opcode == 'AND':
+        if tokens[1].value in REGISTERS:
+            # 81 /4 id AND r/m32, imm32
+            assert tokens[2].value == ','
+            imm = int(tokens[3].value, base=16)
+            modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
+            return b'\x81' + pack('<B', modrm) + pack('<I', imm)
     elif opcode == 'CALL':
         assert tokens[1].value == 'DWORD'
         assert tokens[2].value == 'PTR'
