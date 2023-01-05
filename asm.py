@@ -2167,8 +2167,11 @@ def assemble(line, state):
         dst = tokens[1].value
         if tokens[2].value == 'PTR':
             prefix = b''
-            if tokens[3].value == 'fs':
-                prefix = b'\x64'
+            if tokens[3].value in ['fs', 'ds']:
+                prefix = {
+                    'ds': b'',
+                    'fs': b'\x64',
+                }[tokens[3].value]
                 assert tokens[4].value == ':'
                 disp = int(tokens[5].value, base=16)
                 assert tokens[6].value == ','

@@ -1104,6 +1104,7 @@ def test_assemble():
     cases = [
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
+        ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
         ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
         ['MOV dl, ah',                      b'\x8a\xd4'],
