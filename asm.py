@@ -2182,6 +2182,16 @@ def assemble(line, state):
         return b'\x75' + pack('<B', rel)
     elif opcode == 'LAHF':
         return b'\x9f'
+    elif opcode == 'LEA':
+        # LEA r32,m (8D /r)
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        assert tokens[3].value == '['
+        assert tokens[4].value == 'ebp'
+        assert tokens[5].value == '-'
+        disp = -int(tokens[6].value, base=16)
+        modrm = 0b01000101 | dst << 3
+        return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
     elif opcode == 'LEAVE':
         return b'\xc9'
     elif opcode == 'MOV':
