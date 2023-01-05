@@ -1104,6 +1104,7 @@ def test_assemble():
     cases = [
         ['ADD ecx, edx',                    b'\x03\xca'],
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
+        ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
@@ -1114,8 +1115,10 @@ def test_assemble():
         ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
         ['MOV eax, 1',                      b'\xb8\x01\x00\x00\x00'],
         ['NOP',                             b'\x90'],
+        ['POP ecx',                         b'\x59'],
         ['PUSH ebp',                        b'\x55'],
         ['PUSH 0x895530',                   b'\x68\x30\x55\x89\x00'],
+        ['PUSH 0x1',                        b'\x6a\x01'],
         ['PUSH 0xffffffff',                 b'\x6a\xff'],
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],

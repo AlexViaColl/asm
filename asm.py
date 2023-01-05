@@ -2135,12 +2135,16 @@ def assemble(line, state):
             modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
             return b'\x81' + pack('<B', modrm) + pack('<I', imm)
     elif opcode == 'CALL':
-        assert tokens[1].value == 'DWORD'
-        assert tokens[2].value == 'PTR'
-        assert tokens[3].value == 'ds'
-        assert tokens[4].value == ':'
-        disp = int(tokens[5].value, base=16)
-        return b'\xff\x15' + pack('<I', disp)
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == 'ds'
+            assert tokens[4].value == ':'
+            disp = int(tokens[5].value, base=16)
+            return b'\xff\x15' + pack('<I', disp)
+        else:
+            # CALL rel32 (E8 cd)
+            rel = int(tokens[1].value, base=16) - 5
+            return b'\xe8' + pack('<I', rel)
     elif opcode == 'CDQ':
         return b'\x99'
     elif opcode == 'CLC':
@@ -2226,6 +2230,11 @@ def assemble(line, state):
             return op + imm
     elif opcode == 'NOP':
         return b'\x90'
+    elif opcode == 'POP':
+        assert len(tokens) == 2
+        if tokens[1].value in REGISTERS:
+            reg = REGISTERS.index(tokens[1].value)
+            return pack('<B', 0x58 + reg)
     elif opcode == 'POPA':
         return b'\x61'
     elif opcode == 'POPF':
