@@ -2166,12 +2166,24 @@ def assemble(line, state):
     elif opcode == 'MOV':
         dst = tokens[1].value
         if tokens[2].value == 'PTR':
-            assert tokens[3].value == 'fs'
-            assert tokens[4].value == ':'
-            disp = int(tokens[5].value, base=16)
-            assert tokens[6].value == ','
-            src = tokens[7].value
-            return b'\x64' + b'\x89' + pack('<B', 0b00000101 | REGISTERS.index(src.lower()) << 3) + pack('<I', disp)
+            prefix = b''
+            if tokens[3].value == 'fs':
+                prefix = b'\x64'
+                assert tokens[4].value == ':'
+                disp = int(tokens[5].value, base=16)
+                assert tokens[6].value == ','
+                src = tokens[7].value
+                return prefix + b'\x89' + pack('<B', 0b00000101 | REGISTERS.index(src.lower()) << 3) + pack('<I', disp)
+            elif tokens[3].value == '[':
+                # TODO: Properly check addressing mode
+                assert tokens[4].value == 'ebp'
+                assert tokens[5].value == '-'
+                disp = ~int(tokens[6].value, base=16) + 1
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                src = tokens[9].value
+                return prefix + b'\x89' + pack('<B', 0b01000101 | REGISTERS.index(src.lower()) << 3) \
+                    + pack('<b', disp)
 
         assert tokens[2].value == ','
         prefix = b''
@@ -2187,6 +2199,10 @@ def assemble(line, state):
             # ec => 11|101(ebp-dst)|100(esp-src)
             modrm = 0b11000000 | REGISTERS.index(dst.lower()) << 3 | REGISTERS.index(src.lower())
             return b'\x8b' + pack('<B', modrm)
+        elif src.lower() in REGISTERS8:
+            # Move r/m8 to r8 => 8A /r
+            modrm = 0b11000000 | REGISTERS8.index(dst.lower()) << 3 | REGISTERS8.index(src.lower())
+            return b'\x8a' + pack('<B', modrm)
         else:
             # Move imm32 to r32 => B8+rd id
             op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')

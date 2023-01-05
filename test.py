@@ -1102,18 +1102,20 @@ def test_tokenize():
 
 def test_assemble():
     cases = [
-        ['CALL DWORD PTR ds:0x86e2d8',  b'\xff\x15\xd8\xe2\x86\x00'],
-        ['INT 0x80',                    b'\xcd\x80'],
-        ['MOV DWORD PTR fs:0x0, esp',   b'\x64\x89\x25\x00\x00\x00\x00'],
-        ['MOV eax, fs:0x0',             b'\x64\xa1\x00\x00\x00\x00'],
-        ['MOV ebp, esp',                b'\x8b\xec'],
-        ['MOV eax, 1',                  b'\xb8\x01\x00\x00\x00'],
-        ['NOP',                         b'\x90'],
-        ['PUSH ebp',                    b'\x55'],
-        ['PUSH 0x895530',               b'\x68\x30\x55\x89\x00'],
-        ['PUSH 0xffffffff',             b'\x6a\xff'],
-        ['SUB esp, 0x58',               b'\x83\xec\x58'],
-        ['XOR eax, eax',                b'\x33\xc0'], # Could also be \x31\xc0
+        ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
+        ['INT 0x80',                        b'\xcd\x80'],
+        ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
+        ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
+        ['MOV dl, ah',                      b'\x8a\xd4'],
+        ['MOV ebp, esp',                    b'\x8b\xec'],
+        ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
+        ['MOV eax, 1',                      b'\xb8\x01\x00\x00\x00'],
+        ['NOP',                             b'\x90'],
+        ['PUSH ebp',                        b'\x55'],
+        ['PUSH 0x895530',                   b'\x68\x30\x55\x89\x00'],
+        ['PUSH 0xffffffff',                 b'\x6a\xff'],
+        ['SUB esp, 0x58',                   b'\x83\xec\x58'],
+        ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
     ]
     state = {}
     for line, expected in cases:
