@@ -2121,6 +2121,12 @@ def assemble(line, state):
         return b'\x37'
     elif opcode == 'AAS':
         return b'\x3f'
+    elif opcode == 'ADD':
+        if tokens[1].value in REGISTERS:
+            # ADD r32, r/m32 (03 /r)
+            dst = REGISTERS.index(tokens[1].value)
+            src = REGISTERS.index(tokens[3].value)
+            return b'\x03' + pack('<B', 0b11000000 | dst << 3 | src)
     elif opcode == 'AND':
         if tokens[1].value in REGISTERS:
             # 81 /4 id AND r/m32, imm32

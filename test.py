@@ -1102,6 +1102,7 @@ def test_tokenize():
 
 def test_assemble():
     cases = [
+        ['ADD ecx, edx',                    b'\x03\xca'],
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
