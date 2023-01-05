@@ -1114,6 +1114,7 @@ def test_assemble():
         ['MOV dl, ah',                      b'\x8a\xd4'],
         ['MOV ebp, esp',                    b'\x8b\xec'],
         ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
+        ['MOV ds:0xba8398, eax',            b'\xa3\x98\x83\xba\x00'],
         ['MOV eax, 1',                      b'\xb8\x01\x00\x00\x00'],
         ['NOP',                             b'\x90'],
         ['POP ecx',                         b'\x59'],

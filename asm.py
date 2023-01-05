@@ -2208,6 +2208,10 @@ def assemble(line, state):
                 src = tokens[9].value
                 return prefix + b'\x89' + pack('<B', 0b01000101 | REGISTERS.index(src.lower()) << 3) \
                     + pack('<b', disp)
+        elif tokens[1].value == 'ds':
+            # A3 MOV moffs32*,EAX
+            off = int(tokens[3].value, base=16)
+            return b'\xa3' + pack('<I', off)
 
         assert tokens[2].value == ','
         prefix = b''
