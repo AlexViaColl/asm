@@ -1111,6 +1111,7 @@ def test_assemble():
         ['JNE 0xa',                         b'\x75\x08'],
         ['JMP 0x5',                         b'\xeb\x03'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
+        ['LEAVE',                           b'\xc9'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
         ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
@@ -1151,6 +1152,20 @@ def test_assemble():
             print(traceback.format_exc())
             sys.exit(1)
 
+def test_assemble_file():
+    with open('./sro_client_7c280d.asm') as f:
+        contents = f.read()
+    state = {'eip': 0x7c280d}
+    all_raw = b''
+    for line in contents.splitlines():
+        if not line.startswith(';'):
+            raw = assemble(line, state)
+            all_raw += raw
+            state['eip'] += len(raw)
+            #print(f'{state["eip"]:8x}:    {raw.hex(" "):24} {line}')
+    #with open('./sro_client_7c280d.bin', 'wb') as f:
+    #    f.write(all_raw)
+
 def test_link():
     raw = link()
     raw_hex = hexlify(raw)
@@ -1166,5 +1181,6 @@ if __name__ == '__main__':
 
     test_tokenize()
     test_assemble()
+    test_assemble_file()
 
     test_link()
