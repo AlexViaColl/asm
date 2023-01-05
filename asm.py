@@ -2243,6 +2243,13 @@ def assemble(line, state):
         return b'\xcb'
     elif opcode == 'SAHF':
         return b'\x9e'
+    elif opcode == 'SHL':
+        if tokens[1].value in REGISTERS:
+            # SHL r/m32, imm8 (C1 /4 ib)
+            assert tokens[2].value == ','
+            imm = int(tokens[3].value, base=16)
+            modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
+            return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
     elif opcode == 'STC':
         return b'\xf9'
     elif opcode == 'STI':
