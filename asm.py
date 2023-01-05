@@ -2176,6 +2176,10 @@ def assemble(line, state):
         return b'\xce'
     elif opcode == 'IRET':
         return b'\xcf'
+    elif opcode == 'JNE':
+        # JNE rel8 (75 cb)
+        rel = int(tokens[1].value, base=16) - 2
+        return b'\x75' + pack('<B', rel)
     elif opcode == 'LAHF':
         return b'\x9f'
     elif opcode == 'LEAVE':
@@ -2281,6 +2285,12 @@ def assemble(line, state):
         assert tokens[2].value == ','
         imm = int(tokens[3].value, base=16)
         return b'\x83' + pack('<B', 0b11101000 | REGISTERS.index(dst.lower())) + pack('<B', imm)
+    elif opcode == 'TEST':
+        # TEST r/m32, r32 (85 /r)
+        rm32 = REGISTERS.index(tokens[1].value)
+        r32 = REGISTERS.index(tokens[3].value)
+        modrm = 0b11000000 | r32 << 3 | rm32
+        return b'\x85' + pack('<B', modrm)
     elif opcode == 'XLAT':
         return b'\xd7'
     elif opcode == 'XOR':

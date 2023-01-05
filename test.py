@@ -1107,6 +1107,7 @@ def test_assemble():
         ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
+        ['JNE 0xa',                         b'\x75\x08'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
         ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
@@ -1123,6 +1124,7 @@ def test_assemble():
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],
+        ['TEST eax, eax',                   b'\x85\xc0'],
         ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
     ]
     state = {}
