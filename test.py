@@ -1127,6 +1127,7 @@ def test_assemble():
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],
         ['TEST eax, eax',                   b'\x85\xc0'],
+        ['TEST BYTE PTR [ebp-0x30], 0x1',   b'\xf6\x45\xd0\x01'],
         ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
     ]
     state = {}

@@ -2300,11 +2300,24 @@ def assemble(line, state):
         imm = int(tokens[3].value, base=16)
         return b'\x83' + pack('<B', 0b11101000 | REGISTERS.index(dst.lower())) + pack('<B', imm)
     elif opcode == 'TEST':
-        # TEST r/m32, r32 (85 /r)
-        rm32 = REGISTERS.index(tokens[1].value)
-        r32 = REGISTERS.index(tokens[3].value)
-        modrm = 0b11000000 | r32 << 3 | rm32
-        return b'\x85' + pack('<B', modrm)
+        if tokens[1].value == 'BYTE':
+            # TEST r/m8, imm8 (F6 /0 ib)
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            assert tokens[4].value == 'ebp'
+            assert tokens[5].value == '-'
+            disp = -int(tokens[6].value, base=16)
+            assert tokens[7].value == ']'
+            assert tokens[8].value == ','
+            ib = int(tokens[9].value, base=16)
+            modrm = 0b01000101
+            return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+        else:
+            # TEST r/m32, r32 (85 /r)
+            rm32 = REGISTERS.index(tokens[1].value)
+            r32 = REGISTERS.index(tokens[3].value)
+            modrm = 0b11000000 | r32 << 3 | rm32
+            return b'\x85' + pack('<B', modrm)
     elif opcode == 'XLAT':
         return b'\xd7'
     elif opcode == 'XOR':
