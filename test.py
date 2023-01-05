@@ -1107,6 +1107,7 @@ def test_assemble():
         ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
+        ['JE 0x8',                          b'\x74\x06'],
         ['JNE 0xa',                         b'\x75\x08'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],

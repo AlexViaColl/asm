@@ -2176,10 +2176,15 @@ def assemble(line, state):
         return b'\xce'
     elif opcode == 'IRET':
         return b'\xcf'
-    elif opcode == 'JNE':
+    elif opcode in ['JE', 'JNE']:
+        # JE  rel8 (74 cb)
         # JNE rel8 (75 cb)
+        op = {
+            'JE':  b'\x74',
+            'JNE': b'\x75',
+        }[opcode]
         rel = int(tokens[1].value, base=16) - 2
-        return b'\x75' + pack('<B', rel)
+        return op + pack('<B', rel)
     elif opcode == 'LAHF':
         return b'\x9f'
     elif opcode == 'LEA':
