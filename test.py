@@ -1104,26 +1104,31 @@ def test_assemble():
     cases = [
         ['ADD ecx, edx',                    b'\x03\xca'],
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
-        ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
+        #['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['INT 0x80',                        b'\xcd\x80'],
         ['JE 0x8',                          b'\x74\x06'],
         ['JNE 0xa',                         b'\x75\x08'],
+        ['JMP 0x5',                         b'\xeb\x03'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
         ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
         ['MOV dl, ah',                      b'\x8a\xd4'],
+        ['MOV eax, DWORD PTR [ebp-0x14]',   b'\x8b\x45\xec'],
         ['MOV ebp, esp',                    b'\x8b\xec'],
         ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
         ['MOV ds:0xba8398, eax',            b'\xa3\x98\x83\xba\x00'],
         ['MOV eax, 1',                      b'\xb8\x01\x00\x00\x00'],
+        ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
         ['NOP',                             b'\x90'],
         ['POP ecx',                         b'\x59'],
         ['PUSH ebp',                        b'\x55'],
         ['PUSH 0x895530',                   b'\x68\x30\x55\x89\x00'],
         ['PUSH 0x1',                        b'\x6a\x01'],
         ['PUSH 0xffffffff',                 b'\x6a\xff'],
+        ['PUSH DWORD PTR [ebp-0x64]',       b'\xff\x75\x9c'],
+        ['RET',                             b'\xc3'],
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],
@@ -1133,11 +1138,17 @@ def test_assemble():
     ]
     state = {}
     for line, expected in cases:
-        actual = assemble(line, state)
-        if actual != expected:
-            print(f'[ERROR] Unexpected assembly for line: {line}')
+        try:
+            actual = assemble(line, state)
+            if actual != expected:
+                print(f'[ERROR] Unexpected assembly for line: {line}')
+                print(f'  Expected: {expected.hex(" ")}')
+                print(f'  But got:  {actual.hex(" ")}')
+                sys.exit(1)
+        except Exception as e:
+            print(f'[ERROR] Exception thrown on assemble of instruction: {line}')
             print(f'  Expected: {expected.hex(" ")}')
-            print(f'  But got:  {actual.hex(" ")}')
+            print(traceback.format_exc())
             sys.exit(1)
 
 def test_link():

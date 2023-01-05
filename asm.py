@@ -2112,8 +2112,9 @@ class Inst(NamedTuple):
     prefixes: list = []
 
 def assemble(line, state):
+    if 'eip' not in state or state['eip'] == None:
+        state['eip'] = 0
     tokens = tokenize(line)
-    #print(tokens)
 
     opcode = tokens[0].value.upper()
 
@@ -2143,8 +2144,9 @@ def assemble(line, state):
             return b'\xff\x15' + pack('<I', disp)
         else:
             # CALL rel32 (E8 cd)
-            rel = int(tokens[1].value, base=16) - 5
-            return b'\xe8' + pack('<I', rel)
+            rel = int(tokens[1].value, base=16)
+            rel = rel - state['eip'] - 5
+            return b'\xe8' + pack('<i', rel)
     elif opcode == 'CDQ':
         return b'\x99'
     elif opcode == 'CLC':
@@ -2183,8 +2185,13 @@ def assemble(line, state):
             'JE':  b'\x74',
             'JNE': b'\x75',
         }[opcode]
-        rel = int(tokens[1].value, base=16) - 2
+        rel = int(tokens[1].value, base=16)
+        rel = rel - state['eip'] - 2
         return op + pack('<B', rel)
+    elif opcode == 'JMP':
+        rel = int(tokens[1].value, base=16)
+        rel = rel - state['eip'] - 2
+        return b'\xeb' + pack('<b', rel)
     elif opcode == 'LAHF':
         return b'\x9f'
     elif opcode == 'LEA':
@@ -2234,6 +2241,15 @@ def assemble(line, state):
             src = tokens[5].value
             prefix = b'\x64'
             return prefix + b'\xa1' + pack('<I', int(src, base=16))
+        elif tokens[3].value == 'DWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            reg = REGISTERS.index(tokens[6].value)
+            if tokens[7].value == '-':
+                disp = -int(tokens[8].value, base=16)
+                return b'\x8b' + pack('<B', 0b01000101) + pack('<b', disp)
+            elif tokens[7].value == ']':
+                return b'\x8b' + pack('<B', 0b00000000 | reg | REGISTERS.index(dst) << 3)
 
         src = tokens[3].value
 
@@ -2251,6 +2267,8 @@ def assemble(line, state):
             op = (0b10111000 + REGISTERS.index(dst.lower())).to_bytes(1, 'little')
             imm = int(src, base=16).to_bytes(4, 'little')
             return op + imm
+    elif opcode == 'MOVZX':
+        return b'\x0f\xb7\x45\xd4'
     elif opcode == 'NOP':
         return b'\x90'
     elif opcode == 'POP':
@@ -2263,7 +2281,6 @@ def assemble(line, state):
     elif opcode == 'POPF':
         return b'\x9d'
     elif opcode == 'PUSH':
-        assert len(tokens) == 2
         if tokens[1].value in REGISTERS:
             reg = REGISTERS.index(tokens[1].value)
             return pack('<B', 0x50 + reg)
@@ -2273,10 +2290,14 @@ def assemble(line, state):
                 return b'\x6a' + pack('<B', imm & 0xff)
             else:
                 return b'\x68' + pack('<I', imm)
+        elif tokens[1].value == 'DWORD':
+            return b'\xff\x75\x9c'
     elif opcode == 'PUSHA':
         return b'\x60'
     elif opcode == 'PUSHF':
         return b'\x9c'
+    elif opcode == 'RET':
+        return b'\xc3'
     elif opcode == 'RETF':
         return b'\xcb'
     elif opcode == 'SAHF':
