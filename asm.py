@@ -2257,7 +2257,9 @@ def assemble(line, state):
             elif tokens[7].value == '+':
                 disp = int(tokens[8].value, base=16)
                 if reg == 0b100: # esp
-                    return b'\x8b' + pack('<B', 0b01000100) + pack('<B', 0b00100100) + pack('<B', disp)
+                    modrm = pack('<B', 0b01000100 | REGISTERS.index(dst) << 3)
+                    sib = pack('<B', 0b00100100)
+                    return b'\x8b' + modrm + sib + pack('<B', disp)
                 assert False, 'Not implemented yet'
             elif tokens[7].value == ']':
                 return b'\x8b' + pack('<B', 0b00000000 | reg | REGISTERS.index(dst) << 3)

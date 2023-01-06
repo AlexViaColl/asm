@@ -1137,6 +1137,7 @@ def test_assemble():
         ['MOV dl, ah',                      b'\x8a\xd4'],
         ['MOV eax, DWORD PTR [esp+0xc]',    b'\x8b\x44\x24\x0c'],
         ['MOV eax, DWORD PTR [ebp-0x14]',   b'\x8b\x45\xec'],
+        ['MOV ebx, DWORD PTR [esp+0x14]',   b'\x8b\x5c\x24\x14'],
         ['MOV ebp, esp',                    b'\x8b\xec'],
         ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
         ['MOV ds:0xba8398, eax',            b'\xa3\x98\x83\xba\x00'],
