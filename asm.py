@@ -2205,10 +2205,13 @@ def assemble(line, state):
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
         assert tokens[3].value == '['
-        assert tokens[4].value == 'ebp'
-        assert tokens[5].value == '-'
-        disp = -int(tokens[6].value, base=16)
-        modrm = 0b01000101 | dst << 3
+        base = tokens[4].value
+        #assert tokens[4].value == 'ebp'
+        if tokens[5].value == '-':
+            disp = -int(tokens[6].value, base=16)
+        else:
+            disp = int(tokens[6].value, base=16)
+        modrm = 0b01000000 | dst << 3 | REGISTERS.index(base)
         return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
     elif opcode == 'LEAVE':
         return b'\xc9'
