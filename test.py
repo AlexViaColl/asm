@@ -1126,6 +1126,7 @@ def test_assemble():
         ['IRET',                            b'\xcf'],
         ['JE 0x8',                          b'\x74\x06'],
         ['JNE 0xa',                         b'\x75\x08'],
+        ['JS 0x22',                         b'\x78\x20'],
         ['JMP 0x5',                         b'\xeb\x03'],
         ['LAHF',                            b'\x9f'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
