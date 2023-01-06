@@ -2163,6 +2163,10 @@ def assemble(line, state):
         return b'\x27'
     elif opcode == 'DAS':
         return b'\x2f'
+    elif opcode == 'DEC':
+        # DEC r32 (48 + rd)
+        reg = tokens[1].value
+        return pack('<B', 0x48 + REGISTERS.index(reg))
     elif opcode == 'FWAIT':
         return b'\x9b'
     elif opcode == 'HLT':

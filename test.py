@@ -1116,6 +1116,7 @@ def test_assemble():
         ['CWDE',                            b'\x98'],
         ['DAA',                             b'\x27'],
         ['DAS',                             b'\x2f'],
+        ['DEC eax',                         b'\x48'],
         ['FWAIT',                           b'\x9b'],
         ['HLT',                             b'\xf4'],
         ['INT 0x80',                        b'\xcd\x80'],
