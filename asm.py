@@ -2125,6 +2125,11 @@ def assemble(line, state):
             return b'\xd5\x0a'
         else:
             return b'\xd5' + pack('<B', int(tokens[1].value, base=16))
+    elif opcode == 'AAM':
+        if len(tokens) == 1:
+            return b'\xd4\x0a'
+        else:
+            return b'\xd4' + pack('<B', int(tokens[1].value, base=16))
     elif opcode == 'AAS':
         return b'\x3f'
     elif opcode == 'ADD':

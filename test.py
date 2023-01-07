@@ -1105,6 +1105,8 @@ def test_assemble():
         ['AAA',                             b'\x37'],
         ['AAD',                             b'\xd5\x0a'],
         ['AAD 0x42',                        b'\xd5\x42'],
+        ['AAM',                             b'\xd4\x0a'],
+        ['AAM 0x42',                        b'\xd4\x42'],
         ['AAS',                             b'\x3f'],
         ['ADD ecx, edx',                    b'\x03\xca'],
         ['ADD eax, 0x4',                    b'\x83\xc0\x04'],
