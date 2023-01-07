@@ -1159,6 +1159,7 @@ def test_assemble():
         ['PUSH DWORD PTR [ebp-0x64]',       b'\xff\x75\x9c'],
         ['PUSHA',                           b'\x60'],
         ['PUSHF',                           b'\x9c'],
+        ['RET 0x10',                        b'\xc2\x10\x00'],
         ['RET',                             b'\xc3'],
         ['RETF',                            b'\xcb'],
         ['SAHF',                            b'\x9e'],

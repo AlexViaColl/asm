@@ -2316,7 +2316,11 @@ def assemble(line, state):
     elif opcode == 'PUSHF':
         return b'\x9c'
     elif opcode == 'RET':
-        return b'\xc3'
+        if len(tokens) > 1:
+            iw = int(tokens[1].value, base=16)
+            return b'\xc2' + pack('<H', iw)
+        else:
+            return b'\xc3'
     elif opcode == 'RETF':
         return b'\xcb'
     elif opcode == 'SAHF':
