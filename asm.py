@@ -2214,8 +2214,14 @@ def assemble(line, state):
             disp = -int(tokens[6].value, base=16)
         else:
             disp = int(tokens[6].value, base=16)
-        modrm = 0b01000000 | dst << 3 | REGISTERS.index(base)
-        return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
+
+        if base == 'esp':
+            modrm = 0b01000100 | dst << 3
+            sib = 0b00100000 | REGISTERS.index(base)
+            return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+        else:
+            modrm = 0b01000000 | dst << 3 | REGISTERS.index(base)
+            return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
     elif opcode == 'LEAVE':
         return b'\xc9'
     elif opcode == 'MOV':

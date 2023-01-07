@@ -1131,6 +1131,7 @@ def test_assemble():
         ['JMP 0x5',                         b'\xeb\x03'],
         ['LAHF',                            b'\x9f'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
+        ['LEA ecx, [esp+0x10]',             b'\x8d\x4c\x24\x10'],
         ['LEA edi, [eax+0x1]',              b'\x8d\x78\x01'],
         ['LEAVE',                           b'\xc9'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
