@@ -2175,6 +2175,11 @@ def assemble(line, state):
             assert tokens[6].value == ','
             imm = int(tokens[7].value, base=16)
             return b'\x83' + pack('<B', 0b00111000 | REGISTERS.index(reg)) + pack('<B', imm)
+        elif tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            assert tokens[2].value == ','
+            src = REGISTERS.index(tokens[3].value)
+            return b'\x3b' + pack('<B', 0b11000000 | dst << 3 | src)
     elif opcode == 'CWDE':
         return b'\x98'
     elif opcode == 'DAA':
