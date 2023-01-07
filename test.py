@@ -1114,6 +1114,7 @@ def test_assemble():
         ['CLD',                             b'\xfc'],
         ['CLI',                             b'\xfa'],
         ['CMC',                             b'\xf5'],
+        ['CMP DWORD PTR [edi], 0x1',        b'\x83\x3f\x01'],
         ['CWDE',                            b'\x98'],
         ['DAA',                             b'\x27'],
         ['DAS',                             b'\x2f'],

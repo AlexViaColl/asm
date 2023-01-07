@@ -2160,6 +2160,15 @@ def assemble(line, state):
         return b'\xfa'
     elif opcode == 'CMC':
         return b'\xf5'
+    elif opcode == 'CMP':
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            reg = tokens[4].value
+            assert tokens[5].value == ']'
+            assert tokens[6].value == ','
+            imm = int(tokens[7].value, base=16)
+            return b'\x83' + pack('<B', 0b00111000 | REGISTERS.index(reg)) + pack('<B', imm)
     elif opcode == 'CWDE':
         return b'\x98'
     elif opcode == 'DAA':
