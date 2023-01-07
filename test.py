@@ -1108,6 +1108,7 @@ def test_assemble():
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
         #['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
+        ['CALL ebx',                        b'\xff\xd3'],
         ['CDQ',                             b'\x99'],
         ['CLC',                             b'\xf8'],
         ['CLD',                             b'\xfc'],

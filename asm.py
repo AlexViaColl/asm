@@ -2142,6 +2142,9 @@ def assemble(line, state):
             assert tokens[4].value == ':'
             disp = int(tokens[5].value, base=16)
             return b'\xff\x15' + pack('<I', disp)
+        elif tokens[1].value in REGISTERS:
+            # CALL r/m32 (FF /2)
+            return b'\xff' + pack('<B', 0b11010000 | REGISTERS.index(tokens[1].value))
         else:
             # CALL rel32 (E8 cd)
             rel = int(tokens[1].value, base=16)
