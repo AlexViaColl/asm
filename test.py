@@ -1121,6 +1121,7 @@ def test_assemble():
         ['DAA',                             b'\x27'],
         ['DAS',                             b'\x2f'],
         ['DEC eax',                         b'\x48'],
+        ['DIV edi',                         b'\xf7\xf7'],
         ['FWAIT',                           b'\x9b'],
         ['HLT',                             b'\xf4'],
         ['INT 0x80',                        b'\xcd\x80'],

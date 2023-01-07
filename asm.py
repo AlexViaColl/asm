@@ -2190,6 +2190,10 @@ def assemble(line, state):
         # DEC r32 (48 + rd)
         reg = tokens[1].value
         return pack('<B', 0x48 + REGISTERS.index(reg))
+    elif opcode == 'DIV':
+        if tokens[1].value in REGISTERS:
+            modrm = 0b11110000 | REGISTERS.index(tokens[1].value)
+            return b'\xf7' + pack('<B', modrm)
     elif opcode == 'FWAIT':
         return b'\x9b'
     elif opcode == 'HLT':
