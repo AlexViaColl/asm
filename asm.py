@@ -2192,7 +2192,9 @@ def assemble(line, state):
                 im = int(tokens[3].value, base=16)
                 return b'\x15' + pack('<I', im)
         else:
-            pass
+            assert False, 'Unreachable'
+    elif opcode == 'ADCX':
+        assert False, 'Not implemented'
     elif opcode == 'ADD':
         if tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
