@@ -2124,10 +2124,16 @@ def assemble(line, state):
         return b'\x3f'
     elif opcode == 'ADD':
         if tokens[1].value in REGISTERS:
-            # ADD r32, r/m32 (03 /r)
             dst = REGISTERS.index(tokens[1].value)
-            src = REGISTERS.index(tokens[3].value)
-            return b'\x03' + pack('<B', 0b11000000 | dst << 3 | src)
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS:
+                # ADD r32, r/m32 (03 /r)
+                src = REGISTERS.index(tokens[3].value)
+                return b'\x03' + pack('<B', 0b11000000 | dst << 3 | src)
+            else:
+                modrm = 0b11000000 | dst
+                imm = int(tokens[3].value, base=16)
+                return b'\x83' + pack('<B', modrm) + pack('<B', imm)
     elif opcode == 'AND':
         if tokens[1].value in REGISTERS:
             # 81 /4 id AND r/m32, imm32

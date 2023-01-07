@@ -1105,6 +1105,7 @@ def test_assemble():
         ['AAA',                             b'\x37'],
         ['AAS',                             b'\x3f'],
         ['ADD ecx, edx',                    b'\x03\xca'],
+        ['ADD eax, 0x4',                    b'\x83\xc0\x04'],
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
         #['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
