@@ -2205,14 +2205,15 @@ def assemble(line, state):
         return b'\xce'
     elif opcode == 'IRET':
         return b'\xcf'
-    elif opcode in ['JE', 'JNE', 'JS']:
-        # JE  rel8 (74 cb)
-        # JNE rel8 (75 cb)
-        # JS  rel8 (78 cb)
+    elif opcode in [
+        'JO', 'JNO', 'JB', 'JAE', 'JE', 'JNE', 'JBE', 'JA',
+        'JS', 'JNS', 'JP', 'JNP', 'JL', 'JGE', 'JLE', 'JG'
+    ]:
         op = {
-            'JE':  b'\x74',
-            'JNE': b'\x75',
-            'JS':  b'\x78',
+            'JO':  b'\x70', 'JNO': b'\x71', 'JB':  b'\x72', 'JAE': b'\x73',
+            'JE':  b'\x74', 'JNE': b'\x75', 'JBE': b'\x76', 'JA':  b'\x77',
+            'JS':  b'\x78', 'JNS': b'\x79', 'JP':  b'\x7a', 'JNP': b'\x7b',
+            'JL':  b'\x7c', 'JGE': b'\x7d', 'JLE': b'\x7e', 'JG':  b'\x7f',
         }[opcode]
         rel = int(tokens[1].value, base=16)
         rel = rel - state['eip'] - 2
