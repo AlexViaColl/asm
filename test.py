@@ -1254,8 +1254,21 @@ def test_assemble():
         ['SYSRET',                          b'\x0f\x07'],
         ['TEST eax, eax',                   b'\x85\xc0'],
         ['TEST BYTE PTR [ebp-0x30], 0x1',   b'\xf6\x45\xd0\x01'],
+        ['VZEROALL',                        b'\xc5\xfc\x77'],
+        ['VZEROUPPER',                      b'\xc5\xf8\x77'],
+        ['WAIT',                            b'\x9b'],
+        ['WBINVD',                          b'\x0f\x09'],
+        ['WBNOINVD',                        b'\xf3\x0f\x09'],
+        ['WRMSR',                           b'\x0f\x30'],
+        ['WRPKRU',                          b'\x0f\x01\xef'],
+        ['XACQUIRE',                        b'\xf2'],
+        ['XRELEASE',                        b'\xf3'],
+        ['XEND',                            b'\x0f\x01\xd5'],
+        ['XGETBV',                          b'\x0f\x01\xd0'],
         ['XLAT',                            b'\xd7'],
         ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
+        ['XSETBV',                          b'\x0f\x01\xd1'],
+        ['XTEST',                           b'\x0f\x01\xd6'],
     ]
     state = {}
     for line, expected in cases:

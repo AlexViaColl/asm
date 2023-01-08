@@ -2797,8 +2797,46 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('UNPCK'):
         assert False, 'Not implemented'
+    elif opcode == 'VZEROALL':
+        return b'\xc5\xfc\x77'
+    elif opcode == 'VZEROUPPER':
+        return b'\xc5\xf8\x77'
+    elif opcode.startswith('V'):
+        assert False, 'Not implemented'
     elif opcode == 'XLAT':
         return b'\xd7'
+    elif opcode in ['WAIT', 'FWAIT']:
+        return b'\x9b'
+    elif opcode == 'WBINVD':
+        return b'\x0f\x09'
+    elif opcode == 'WBNOINVD':
+        return b'\xf3\x0f\x09'
+    elif opcode in ['WRFSBASE', 'WRGSBASE']:
+        assert False, 'Not implemented'
+    elif opcode == 'WRMSR':
+        return b'\x0f\x30'
+    elif opcode == 'WRPKRU':
+        return b'\x0f\x01\xef'
+    elif opcode.startswith('WR'):
+        assert False, 'Not implemented'
+    elif opcode == 'XACQUIRE':
+        return b'\xf2'
+    elif opcode == 'XRELEASE':
+        return b'\xf3'
+    elif opcode == 'XABORT':
+        assert False, 'Not implemented'
+    elif opcode == 'XADD':
+        assert False, 'Not implemented'
+    elif opcode == 'XBEGIN':
+        assert False, 'Not implemented'
+    elif opcode == 'XCHG':
+        assert False, 'Not implemented'
+    elif opcode == 'XEND':
+        return b'\x0f\x01\xd5'
+    elif opcode == 'XGETBV':
+        return b'\x0f\x01\xd0'
+    elif opcode in ['XLAT', 'XLATB']:
+        assert False, 'Not implemented'
     elif opcode == 'XOR':
         dst = tokens[1].value
         assert tokens[2].value == ','
@@ -2807,6 +2845,12 @@ def assemble(line, state):
         assert dst.lower() in REGISTERS
         modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
         return b'\x33' + pack('<B', modrm)
+    elif opcode in ['XORPD', 'XORPS', 'XRSTOR', 'XRSTORS', 'XSAVE', 'XSAVEC', 'XSAVEOPT', 'XSAVES']:
+        assert False, 'Not implemented'
+    elif opcode == 'XSETBV':
+        return b'\x0f\x01\xd1'
+    elif opcode == 'XTEST':
+        return b'\x0f\x01\xd6'
 
     return b''
 
