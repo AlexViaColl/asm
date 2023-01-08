@@ -2486,6 +2486,16 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode in ['LSL', 'LTR', 'LZCNT']:
         assert False, 'Not implemented'
+    elif opcode.startswith('MASK'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('MAX'):
+        assert False, 'Not implemented'
+    elif opcode == 'MFENCE':
+        return b'\x0f\xae\xf0'
+    elif opcode.startswith('MIN'):
+        assert False, 'Not implemented'
+    elif opcode == 'MONITOR':
+        return b'\x0f\x01\xc8'
     elif opcode == 'MOV':
         dst = tokens[1].value
         if tokens[2].value == 'PTR':
@@ -2556,8 +2566,58 @@ def assemble(line, state):
             return op + imm
     elif opcode == 'MOVZX':
         return b'\x0f\xb7\x45\xd4'
+    elif opcode.startswith('MOV'):
+        assert False, 'Not implemented'
+    elif opcode == 'MPSADBW':
+        assert False, 'Not implemented'
+    elif opcode == 'MUL':
+        assert False, 'Not implemented'
+    elif opcode.startswith('MUL'):
+        assert False, 'Not implemented'
+    elif opcode == 'MWAIT':
+        return b'\x0f\x01\xc9'
+    elif opcode == 'NEG':
+        assert False, 'Not implemented'
     elif opcode == 'NOP':
         return b'\x90'
+    elif opcode == 'NOT':
+        assert False, 'Not implemented'
+    elif opcode == 'OR':
+        assert False, 'Not implemented'
+    elif opcode.startswith('OR'):
+        assert False, 'Not implemented'
+    elif opcode == 'OUT':
+        assert False, 'Not implemented'
+    elif opcode.startswith('OUTS'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PABS'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PACK'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PADD'):
+        assert False, 'Not implemented'
+    elif opcode == 'PALIGNR':
+        assert False, 'Not implemented'
+    elif opcode in ['PAND', 'PANDN']:
+        assert False, 'Not implemented'
+    elif opcode == 'PAUSE':
+        return b'\xf3\x90'
+    elif opcode in ['PAVGB', 'PAVGW', 'PBLENDVB', 'PBLENDW', 'PCLMULQDQ', '']:
+        assert False, 'Not implemented'
+    elif opcode.startswith('PCMP'):
+        assert False, 'Not implemented'
+    elif opcode == 'PCONFIG':
+        return b'\x0f\x01\xc5'
+    elif opcode == 'PDEP':
+        assert False, 'Not implemented'
+    elif opcode.startswith('PEXT'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PH'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PINS'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PM'):
+        assert False, 'Not implemented'
     elif opcode == 'POP':
         assert len(tokens) == 2
         if tokens[1].value in REGISTERS:
@@ -2565,8 +2625,20 @@ def assemble(line, state):
             return pack('<B', 0x58 + reg)
     elif opcode == 'POPA':
         return b'\x61'
+    elif opcode == 'POPCNT':
+        assert False, 'Not implemented'
     elif opcode == 'POPF':
         return b'\x9d'
+    elif opcode == 'POR':
+        assert False, 'Not implemented'
+    elif opcode.startswith('PREFETCH'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PS'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PT'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('PUNPCK'):
+        assert False, 'Not implemented'
     elif opcode == 'PUSH':
         if tokens[1].value in REGISTERS:
             reg = REGISTERS.index(tokens[1].value)
@@ -2583,6 +2655,34 @@ def assemble(line, state):
         return b'\x60'
     elif opcode == 'PUSHF':
         return b'\x9c'
+    elif opcode == 'PXOR':
+        assert False, 'Not implemented'
+    elif opcode in ['RCL', 'RCR', 'ROL', 'ROR']:
+        assert False, 'Not implemented'
+    elif opcode.startswith('RCP'):
+        assert False, 'Not implemented'
+    elif opcode in ['RDFSBASE', 'RDGSBASE']:
+        assert False, 'Not implemented'
+    elif opcode == 'RDMSR':
+        return b'\x0f\x32'
+    elif opcode == 'RDPID':
+        assert False, 'Not implemented'
+    elif opcode == 'RDPKRU':
+        return b'\x0f\x01\xee'
+    elif opcode == 'RDPMC':
+        return b'\x0f\x33'
+    elif opcode == 'RDRAND':
+        assert False, 'Not implemented'
+    elif opcode == 'RDSEED':
+        assert False, 'Not implemented'
+    elif opcode.startswith('RDSSP'):
+        assert False, 'Not implemented'
+    elif opcode == 'RDTSC':
+        return b'\x0f\x31'
+    elif opcode == 'RDTSCP':
+        return b'\x0f\x01\xf9'
+    elif opcode.startswith('REP'):
+        assert False, 'Not implemented'
     elif opcode == 'RET':
         if len(tokens) > 1:
             iw = int(tokens[1].value, base=16)
@@ -2591,6 +2691,12 @@ def assemble(line, state):
             return b'\xc3'
     elif opcode == 'RETF':
         return b'\xcb'
+    elif opcode.startswith('RO'):
+        assert False, 'Not implemented'
+    elif opcode == 'RSM':
+        return b'\x0f\xaa'
+    elif opcode.startswith('RS'):
+        assert False, 'Not implemented'
     elif opcode == 'SAHF':
         return b'\x9e'
     elif opcode == 'SHL':
@@ -2607,15 +2713,57 @@ def assemble(line, state):
             imm = int(tokens[3].value, base=16)
             modrm = 0b11101000 + REGISTERS.index(tokens[1].value)
             return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
+    elif opcode in ['SAL', 'SAR']:
+        assert False, 'Not implemented'
+    elif opcode in ['SARX', 'SHLX', 'SHRX']:
+        assert False, 'Not implemented'
+    elif opcode == 'SAVEPREVSSP':
+        return b'\xf3\x0f\x01\xea'
+    elif opcode == 'SBB':
+        assert False, 'Not implemented'
+    elif opcode.startswith('SCAS'):
+        assert False, 'Not implemented'
+    elif opcode == 'SERIALIZE':
+        return b'\x0f\x01\xe8'
+    elif opcode.startswith('SET'):
+        assert False, 'Not implemented'
+    elif opcode == 'SFENCE':
+        return b'\x0f\xae\xf8'
+    elif opcode == 'SGDT':
+        assert False, 'Not implemented'
+    elif opcode.startswith('SH'):
+        assert False, 'Not implemented'
+    elif opcode in ['SIDT', 'SLDT', 'SMSW']:
+        assert False, 'Not implemented'
+    elif opcode.startswith('SQRT'):
+        assert False, 'Not implemented'
+    elif opcode == 'STAC':
+        return b'\x0f\x01\xcb'
     elif opcode == 'STC':
         return b'\xf9'
+    elif opcode == 'STD':
+        return b'\xfd'
     elif opcode == 'STI':
         return b'\xfb'
+    elif opcode.startswith('ST'):
+        assert False, 'Not implemented'
     elif opcode == 'SUB':
         dst = tokens[1].value
         assert tokens[2].value == ','
         imm = int(tokens[3].value, base=16)
         return b'\x83' + pack('<B', 0b11101000 | REGISTERS.index(dst.lower())) + pack('<B', imm)
+    elif opcode.startswith('SUB'):
+        assert False, 'Not implemented'
+    elif opcode == 'SWAPGS':
+        return b'\x0f\x01\xf8'
+    elif opcode == 'SYSCALL':
+        return b'\x0f\x05'
+    elif opcode == 'SYSENTER':
+        return b'\x0f\x34'
+    elif opcode == 'SYSEXIT':
+        return b'\x0f\x35'
+    elif opcode == 'SYSRET':
+        return b'\x0f\x07'
     elif opcode == 'TEST':
         if tokens[1].value == 'BYTE':
             # TEST r/m8, imm8 (F6 /0 ib)
@@ -2635,6 +2783,20 @@ def assemble(line, state):
             r32 = REGISTERS.index(tokens[3].value)
             modrm = 0b11000000 | r32 << 3 | rm32
             return b'\x85' + pack('<B', modrm)
+    elif opcode == 'TPAUSE':
+        assert False, 'Not implemented'
+    elif opcode == 'TZCNT':
+        assert False, 'Not implemented'
+    elif opcode.startswith('UCOMIS'):
+        assert False, 'Not implemented'
+    elif opcode.startswith('UD'):
+        assert False, 'Not implemented'
+    elif opcode == 'UMONITOR':
+        assert False, 'Not implemented'
+    elif opcode == 'UMWAIT':
+        assert False, 'Not implemented'
+    elif opcode.startswith('UNPCK'):
+        assert False, 'Not implemented'
     elif opcode == 'XLAT':
         return b'\xd7'
     elif opcode == 'XOR':
