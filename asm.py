@@ -2271,12 +2271,78 @@ def assemble(line, state):
     elif opcode.startswith('AES'):
         assert False, 'Not implemented'
     elif opcode == 'AND':
-        if tokens[1].value in REGISTERS:
-            # 81 /4 id AND r/m32, imm32
+        if tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            reg = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == ']'
+            assert tokens[6].value == ','
+            if tokens[7].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | reg
+                return b'\x20' + pack('<B', modrm)
+            else:
+                ib = int(tokens[7].value, base=16)
+                modrm = 0b00100000
+                return b'\x80' + pack('<B', modrm) + pack('<B', ib)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            reg = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == ']'
+            assert tokens[6].value == ','
+            if tokens[7].value in REGISTERS:
+                src = REGISTERS.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | reg
+                return b'\x21' + pack('<B', modrm)
+            else:
+                im = int(tokens[7].value, base=16)
+                if im <= 0x7f:
+                    modrm = 0b00100000
+                    return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                else:
+                    modrm = 0b00100000 | reg
+                    return b'\x81' + pack('<B', modrm) + pack('<I', im)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','
-            imm = int(tokens[3].value, base=16)
-            modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
-            return b'\x81' + pack('<B', modrm) + pack('<I', imm)
+            if tokens[3].value == 'BYTE':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                reg = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == ']'
+                modrm = 0b00000000 | dst << 3 | reg
+                return b'\x22' + pack('<B', modrm)
+            else:
+                ib = int(tokens[3].value, base=16)
+                return b'\x24' + pack('<B', ib)
+        elif tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            assert tokens[2].value == ','
+            if tokens[3].value == 'DWORD':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                reg = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == ']'
+                modrm = 0b00000000 | dst << 3 | reg
+                return b'\x23' + pack('<B', modrm)
+            elif tokens[3].value in REGISTERS:
+                src = REGISTERS.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x23' + pack('<B', modrm)
+            else:
+                im = int(tokens[3].value, base=16)
+                if im <= 0x7f:
+                    modrm = 0b11100000 | dst
+                    return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                else:
+                    if dst == 0b000:
+                        return b'\x25' + pack('<I', im)
+                    else:
+                        modrm = 0b11100000 | dst
+                        return b'\x81' + pack('<B', modrm) + pack('<I', im)
+        else:
+            assert False, 'Unreachable'
     elif opcode.startswith('AND'):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
