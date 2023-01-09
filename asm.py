@@ -2660,7 +2660,16 @@ def assemble(line, state):
                     modrm = 0b01000000 | src << 3 | reg
                     return b'\x89' + pack('<B', modrm) + pack('<b', disp)
                 elif tokens[5].value == '+':
-                    assert False, 'Not implemented'
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERS.index(tokens[9].value)
+                    modrm = 0b01000000 | src << 3 | reg
+                    if reg == REGISTERS.index('esp'):
+                        sib = 0b00100100
+                        return b'\x89' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                    else:
+                        return b'\x89' + pack('<B', modrm) + pack('<b', disp)
                 else:
                     assert False, 'Unreachable'
             elif tokens[3].value in SEGMENTS:
@@ -2743,7 +2752,7 @@ def assemble(line, state):
                             sib = 0b00100100
                             return b'\x8b' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                         else:
-                            assert False, 'Unreachable'
+                            return b'\x8b' + pack('<B', modrm) + pack('<b', disp)
                     else:
                         assert False, 'Unreachable'
                 elif tokens[5].value in SEGMENTS:
