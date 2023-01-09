@@ -1143,7 +1143,9 @@ def test_assemble():
         ['AND DWORD PTR [eax], 0x1',        b'\x83\x20\x01'],
         ['AND eax, 0x4',                    b'\x83\xe0\x04'],
 
-        #['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
+        ['CALL 0x7b6',                      b'\xe8\xb1\x07\x00\x00'],
+        ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
+        #['CALL 0xfffffb92',                 b'\xe8\x8d\xfb\xff\xff'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
         ['CALL ebx',                        b'\xff\xd3'],
         ['CWDE',                            b'\x98'],
@@ -1219,10 +1221,16 @@ def test_assemble():
         ['LFENCE',                          b'\x0f\xae\xe8'],
         ['MFENCE',                          b'\x0f\xae\xf0'],
         ['MONITOR',                         b'\x0f\x01\xc8'],
+
+        ['MOV BYTE PTR [edi], cl',          b'\x88\x0f'],
+        ['MOV DWORD PTR [edi], ecx',        b'\x89\x0f'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
         ['MOV DWORD PTR [ebp-0x18], esp',   b'\x89\x65\xe8'],
+        ['MOV cl, BYTE PTR [edi]',          b'\x8a\x0f'],
         ['MOV dl, ah',                      b'\x8a\xd4'],
+        ['MOV ecx, DWORD PTR [edi]',        b'\x8b\x0f'],
+        ['MOV ecx, DWORD PTR ds:0x907fc0',  b'\x8b\x0d\xc0\x7f\x90\x00'],
         ['MOV eax, DWORD PTR [esp+0x4]',    b'\x8b\x44\x24\x04'],
         ['MOV eax, DWORD PTR [esp+0xc]',    b'\x8b\x44\x24\x0c'],
         ['MOV eax, DWORD PTR [ebp-0x14]',   b'\x8b\x45\xec'],
@@ -1231,10 +1239,24 @@ def test_assemble():
         ['MOV esi, DWORD PTR [esp+0x10]',   b'\x8b\x74\x24\x10'],
         ['MOV ecx, esi',                    b'\x8b\xce'],
         ['MOV ebp, esp',                    b'\x8b\xec'],
-        ['MOV eax, fs:0x0',                 b'\x64\xa1\x00\x00\x00\x00'],
+        ['MOV WORD PTR [edi], cs',          b'\x8c\x0f'],
+        ['MOV cs, WORD PTR [edi]',          b'\x8e\x0f'],
+        ['MOV al, ds:0x1',                  b'\xa0\x01\x00\x00\x00'],
+        ['MOV al, fs:0x1',                  b'\x64\xa0\x01\x00\x00\x00'],
+        ['MOV eax, ds:0x1',                 b'\xa1\x01\x00\x00\x00'],
+        ['MOV eax, fs:0x1',                 b'\x64\xa1\x01\x00\x00\x00'],
+        ['MOV ds:0x1, al',                  b'\xa2\x01\x00\x00\x00'],
+        ['MOV fs:0x1, al',                  b'\x64\xa2\x01\x00\x00\x00'],
+        ['MOV ds:0x1, eax',                 b'\xa3\x01\x00\x00\x00'],
         ['MOV ds:0xba8398, eax',            b'\xa3\x98\x83\xba\x00'],
-        ['MOV eax, 1',                      b'\xb8\x01\x00\x00\x00'],
+        ['MOV fs:0x1, eax',                 b'\x64\xa3\x01\x00\x00\x00'],
+        ['MOV bh, 0x1',                     b'\xb7\x01'],
+        ['MOV eax, 0x1',                    b'\xb8\x01\x00\x00\x00'],
         ['MOV ecx, 0x907f90',               b'\xb9\x90\x7f\x90\x00'],
+        ['MOV edi, 0x1',                    b'\xbf\x01\x00\x00\x00'],
+        ['MOV BYTE PTR [ecx], 0x1',         b'\xc6\x01\x01'],
+        ['MOV DWORD PTR [ecx], 0x1',        b'\xc7\x01\x01\x00\x00\x00'],
+
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],
@@ -1309,7 +1331,7 @@ def test_assemble():
             sys.exit(1)
 
 def test_assemble_file():
-    with open('./sro_client_7c280d.asm') as f:
+    with open('./test_7c280d.asm') as f:
         contents = f.read()
     state = {'eip': 0x7c280d}
     all_raw = b''
