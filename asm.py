@@ -2594,8 +2594,18 @@ def assemble(line, state):
         #assert tokens[4].value == 'ebp'
         if tokens[5].value == '-':
             disp = -int(tokens[6].value, base=16)
+        elif tokens[5].value == '+':
+            if tokens[6].value in REGISTERS:
+                reg = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '*'
+                assert tokens[8].value == '1'
+                modrm = 0b00000100 | dst << 3
+                sib = 0b00000000 | reg << 3 | REGISTERS.index(base)
+                return b'\x8d' + pack('<B', modrm) + pack('<b', sib)
+            else:
+                disp = int(tokens[6].value, base=16)
         else:
-            disp = int(tokens[6].value, base=16)
+            assert False, 'Unreachable'
 
         if base == 'esp':
             modrm = 0b01000100 | dst << 3

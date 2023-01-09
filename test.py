@@ -1215,6 +1215,8 @@ def test_assemble():
         ['JG 0x9',                          b'\x7f\x07'],
         ['JMP 0x5',                         b'\xeb\x03'],
         ['LAHF',                            b'\x9f'],
+        ['LEA ecx, [eax+edx*1]',            b'\x8d\x0c\x10'],
+        ['LEA ecx, [edi+edx*1]',            b'\x8d\x0c\x17'],
         ['LEA eax, [ebp-0x5c]',             b'\x8d\x45\xa4'],
         ['LEA ecx, [esp+0x10]',             b'\x8d\x4c\x24\x10'],
         ['LEA edi, [eax+0x1]',              b'\x8d\x78\x01'],
