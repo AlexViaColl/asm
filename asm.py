@@ -2647,6 +2647,18 @@ def assemble(line, state):
                 return b'\x8d' + pack('<B', modrm) + pack('<B', sib)
             else:
                 disp = int(tokens[6].value, base=16)
+        elif tokens[5].value == '*':
+            scale = {
+                '1': 0b00,
+                '2': 0b01,
+                '4': 0b10,
+                '8': 0b11,
+            }[tokens[6].value]
+            assert tokens[7].value == '+'
+            modrm = 0b00000100 | dst << 3
+            sib = 0b00000101 | scale << 6 | REGISTERS.index(base) << 3
+            disp = int(tokens[8].value, base=16)
+            return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
         else:
             assert False, 'Unreachable'
 
