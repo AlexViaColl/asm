@@ -2799,9 +2799,14 @@ def assemble(line, state):
                 assert tokens[4].value == ':'
                 off = int(tokens[5].value, base=16)
                 assert tokens[6].value == ','
-                src = REGISTERS.index(tokens[7].value)
-                modrm = 0b00000101 | src << 3
-                return seg + b'\x89' + pack('<B', modrm) + pack('<I', off)
+                if tokens[7].value in REGISTERS:
+                    src = REGISTERS.index(tokens[7].value)
+                    modrm = 0b00000101 | src << 3
+                    return seg + b'\x89' + pack('<B', modrm) + pack('<I', off)
+                else:
+                    modrm = 0b00000101
+                    im = int(tokens[7].value, base=16)
+                    return seg + b'\xc7' + pack('<B', modrm) + pack('<I', off) + pack('<I', im)
         elif tokens[1].value == 'WORD':
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
