@@ -2747,13 +2747,19 @@ def assemble(line, state):
                         disp = int(tokens[6].value, base=16)
                         assert tokens[7].value == ']'
                         assert tokens[8].value == ','
-                        src = REGISTERS.index(tokens[9].value)
-                        modrm = 0b01000000 | src << 3 | reg
-                        if reg == REGISTERS.index('esp'):
-                            sib = 0b00100100
-                            return b'\x89' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                        if tokens[9].value in REGISTERS:
+                            src = REGISTERS.index(tokens[9].value)
+                            modrm = 0b01000000 | src << 3 | reg
+                            if reg == REGISTERS.index('esp'):
+                                sib = 0b00100100
+                                return b'\x89' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                            else:
+                                return b'\x89' + pack('<B', modrm) + pack('<b', disp)
                         else:
-                            return b'\x89' + pack('<B', modrm) + pack('<b', disp)
+                            im = int(tokens[9].value, base=16)
+                            modrm = 0b01000100
+                            sib = 0b00100100
+                            return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
                 else:
                     assert False, 'Unreachable'
             elif tokens[3].value in SEGMENTS:
