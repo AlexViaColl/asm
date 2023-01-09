@@ -2409,9 +2409,12 @@ def assemble(line, state):
                 src = REGISTERS.index(tokens[3].value)
                 return b'\x3b' + pack('<B', 0b11000000 | dst << 3 | src)
             else:
-                modrm = 0b11111000 | dst
-                ib = int(tokens[3].value, base=16)
-                return b'\x83' + pack('<B', modrm) + pack('<B', ib)
+                im = int(tokens[3].value, base=16)
+                if im < 0x7f:
+                    modrm = 0b11111000 | dst
+                    return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                elif dst == REGISTERS.index('eax'):
+                    return b'\x3d' + pack('<I', im)
     elif opcode == 'CMPS':
         assert tokens[1].value == 'BYTE'
         assert tokens[2].value == 'PTR'

@@ -1159,6 +1159,7 @@ def test_assemble():
         ['CLI',                             b'\xfa'],
         ['CMC',                             b'\xf5'],
         ['CMP eax, ecx',                    b'\x3b\xc1'],
+        ['CMP eax, 0x80',                   b'\x3d\x80\x00\x00\x00'],
         ['CMP DWORD PTR [edi], 0x1',        b'\x83\x3f\x01'],
         ['CMP eax, 0x1',                    b'\x83\xf8\x01'],
         ['CPUID',                           b'\x0f\xa2'],
