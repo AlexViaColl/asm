@@ -2972,6 +2972,15 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'SAHF':
         return b'\x9e'
+    elif opcode == 'SAL':
+        assert False, 'Not implemented'
+    elif opcode == 'SAR':
+        if tokens[1].value in REGISTERS:
+            # SAR r/m32, imm8 (C1 /r7 ib)
+            assert tokens[2].value == ','
+            imm = int(tokens[3].value, base=16)
+            modrm = 0b11111000 + REGISTERS.index(tokens[1].value)
+            return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
     elif opcode == 'SHL':
         if tokens[1].value in REGISTERS:
             # SHL r/m32, imm8 (C1 /4 ib)
@@ -2986,8 +2995,6 @@ def assemble(line, state):
             imm = int(tokens[3].value, base=16)
             modrm = 0b11101000 + REGISTERS.index(tokens[1].value)
             return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
-    elif opcode in ['SAL', 'SAR']:
-        assert False, 'Not implemented'
     elif opcode in ['SARX', 'SHLX', 'SHRX']:
         assert False, 'Not implemented'
     elif opcode == 'SAVEPREVSSP':

@@ -1289,6 +1289,7 @@ def test_assemble():
         ['RETF',                            b'\xcb'],
         ['RSM',                             b'\x0f\xaa'],
         ['SAHF',                            b'\x9e'],
+        ['SAR esi, 0x2',                    b'\xc1\xfe\x02'],
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SAVEPREVSSP',                     b'\xf3\x0f\x01\xea'],
