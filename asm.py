@@ -2533,7 +2533,10 @@ def assemble(line, state):
     elif opcode == 'IN':
         assert False, 'Not implemented'
     elif opcode == 'INC':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS:
+            return pack('<B', 0x40 + REGISTERS.index(tokens[1].value))
+        else:
+            assert False, 'Not implemented'
     elif opcode.startswith('INCSS'):
         assert False, 'Not implemented'
     elif opcode.startswith('INS'):
