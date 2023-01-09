@@ -1301,6 +1301,7 @@ def test_assemble():
         ['SAR esi, 0x2',                    b'\xc1\xfe\x02'],
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
+        ['SHR ebx, 1',                      b'\xd1\xeb'],
         ['SAR eax, 1',                      b'\xd1\xf8'],
         ['SAVEPREVSSP',                     b'\xf3\x0f\x01\xea'],
         ['SERIALIZE',                       b'\x0f\x01\xe8'],

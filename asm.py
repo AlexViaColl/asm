@@ -3101,8 +3101,12 @@ def assemble(line, state):
             # SHR r/m32, imm8 (C1 /r5 ib)
             assert tokens[2].value == ','
             imm = int(tokens[3].value, base=16)
-            modrm = 0b11101000 + REGISTERS.index(tokens[1].value)
-            return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
+            if imm == 1:
+                modrm = 0b11101000 | REGISTERS.index(tokens[1].value)
+                return b'\xd1' + pack('<B', modrm)
+            else:
+                modrm = 0b11101000 + REGISTERS.index(tokens[1].value)
+                return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
     elif opcode in ['SARX', 'SHLX', 'SHRX']:
         assert False, 'Not implemented'
     elif opcode == 'SAVEPREVSSP':
