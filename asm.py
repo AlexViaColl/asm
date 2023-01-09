@@ -2590,7 +2590,7 @@ def assemble(line, state):
         }[opcode]
         rel = int(tokens[1].value, base=16)
         rel = rel - state['eip'] - 2
-        if rel > 0x7f:
+        if rel > 0x7f or rel < -0x80:
             rel -= 4
             return b'\x0f' + pack('<B', op[0] + 0x10) + pack('<i', rel)
         else:
@@ -2598,7 +2598,11 @@ def assemble(line, state):
     elif opcode == 'JMP':
         rel = int(tokens[1].value, base=16)
         rel = rel - state['eip'] - 2
-        return b'\xeb' + pack('<b', rel)
+        if rel > 0x7f or rel < -0x80:
+            rel -= 3
+            return b'\xe9' + pack('<I', rel)
+        else:
+            return b'\xeb' + pack('<b', rel)
     elif opcode.startswith('K'):
         assert False, 'Not implemented'
     elif opcode == 'LAHF':
