@@ -3109,11 +3109,18 @@ def assemble(line, state):
                 return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
     elif opcode == 'SHL':
         if tokens[1].value in REGISTERS:
-            # SHL r/m32, imm8 (C1 /4 ib)
+            dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
-            imm = int(tokens[3].value, base=16)
-            modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
-            return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
+            if tokens[3].value in REGISTERS8:
+                # SHL r/m32, CL (D3 /4)
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11100000 | dst
+                return b'\xd3' + pack('<B', modrm)
+            else:
+                # SHL r/m32, imm8 (C1 /4 ib)
+                imm = int(tokens[3].value, base=16)
+                modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
+                return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
     elif opcode == 'SHR':
         if tokens[1].value in REGISTERS:
             # SHR r/m32, imm8 (C1 /r5 ib)

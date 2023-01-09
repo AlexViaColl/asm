@@ -1303,6 +1303,7 @@ def test_assemble():
         ['SAHF',                            b'\x9e'],
         ['SAR esi, 0x2',                    b'\xc1\xfe\x02'],
         ['SHL ecx, 0x8',                    b'\xc1\xe1\x08'],
+        ['SHL edx, cl',                     b'\xd3\xe2'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SHR ebx, 1',                      b'\xd1\xeb'],
         ['SAR eax, 1',                      b'\xd1\xf8'],
