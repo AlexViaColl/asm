@@ -2565,7 +2565,11 @@ def assemble(line, state):
         }[opcode]
         rel = int(tokens[1].value, base=16)
         rel = rel - state['eip'] - 2
-        return op + pack('<b', rel)
+        if rel > 0x7f:
+            rel -= 4
+            return b'\x0f' + pack('<B', op[0] + 0x10) + pack('<i', rel)
+        else:
+            return op + pack('<b', rel)
     elif opcode == 'JMP':
         rel = int(tokens[1].value, base=16)
         rel = rel - state['eip'] - 2
