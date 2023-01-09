@@ -1195,6 +1195,7 @@ def test_assemble():
         ['FYL2XP1',                         b'\xd9\xf9'],
         ['FWAIT',                           b'\x9b'],
         ['HLT',                             b'\xf4'],
+        ['IMUL eax, ecx',                   b'\x0f\xaf\xc1'],
         ['INC eax',                         b'\x40'],
         ['INT 0x80',                        b'\xcd\x80'],
         ['INT1',                            b'\xf1'],

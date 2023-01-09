@@ -2572,7 +2572,11 @@ def assemble(line, state):
     elif opcode == 'IDIV':
         assert False, 'Not implemented'
     elif opcode == 'IMUL':
-        assert False, 'Not implemented'
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        src = REGISTERS.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\xaf' + pack('<B', modrm)
     elif opcode == 'IN':
         assert False, 'Not implemented'
     elif opcode == 'INC':
