@@ -3149,7 +3149,13 @@ def assemble(line, state):
             ib = int(tokens[9].value, base=16)
             modrm = 0b01000101
             return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
-        else:
+        elif tokens[1].value in REGISTERS8:
+            # TEST r/m8, r8 (84 /r)
+            rm8 = REGISTERS8.index(tokens[1].value)
+            r8 = REGISTERS8.index(tokens[3].value)
+            modrm = 0b11000000 | r8 << 3 | rm8
+            return b'\x84' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS:
             # TEST r/m32, r32 (85 /r)
             rm32 = REGISTERS.index(tokens[1].value)
             r32 = REGISTERS.index(tokens[3].value)
