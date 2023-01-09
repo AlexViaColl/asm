@@ -1147,6 +1147,7 @@ def test_assemble():
         ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
         #['CALL 0xfffffb92',                 b'\xe8\x8d\xfb\xff\xff'],
         ['CALL DWORD PTR ds:0x86e2d8',      b'\xff\x15\xd8\xe2\x86\x00'],
+        ['CALL DWORD PTR [edi+0x20]',       b'\xff\x57\x20'],
         ['CALL ebx',                        b'\xff\xd3'],
         ['CWDE',                            b'\x98'],
         ['CDQ',                             b'\x99'],

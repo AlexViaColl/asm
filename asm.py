@@ -2352,10 +2352,19 @@ def assemble(line, state):
     elif opcode == 'CALL':
         if tokens[1].value == 'DWORD':
             assert tokens[2].value == 'PTR'
-            assert tokens[3].value == 'ds'
-            assert tokens[4].value == ':'
-            disp = int(tokens[5].value, base=16)
-            return b'\xff\x15' + pack('<I', disp)
+            if tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    modrm = 0b01010000 | base
+                    return b'\xff' + pack('<B', modrm) + pack('<B', disp)
+                else:
+                    assert False, 'Not implemented yet'
+            else:
+                assert tokens[3].value == 'ds'
+                assert tokens[4].value == ':'
+                disp = int(tokens[5].value, base=16)
+                return b'\xff\x15' + pack('<I', disp)
         elif tokens[1].value in REGISTERS:
             # CALL r/m32 (FF /2)
             return b'\xff' + pack('<B', 0b11010000 | REGISTERS.index(tokens[1].value))
