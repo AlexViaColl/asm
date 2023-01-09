@@ -2396,8 +2396,13 @@ def assemble(line, state):
         elif tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
-            src = REGISTERS.index(tokens[3].value)
-            return b'\x3b' + pack('<B', 0b11000000 | dst << 3 | src)
+            if tokens[3].value in REGISTERS:
+                src = REGISTERS.index(tokens[3].value)
+                return b'\x3b' + pack('<B', 0b11000000 | dst << 3 | src)
+            else:
+                modrm = 0b11111000 | dst
+                ib = int(tokens[3].value, base=16)
+                return b'\x83' + pack('<B', modrm) + pack('<B', ib)
     elif opcode.startswith('CMP'):
         assert False, 'Not implemented'
     elif opcode.startswith('COMIS'):
