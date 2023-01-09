@@ -2398,10 +2398,19 @@ def assemble(line, state):
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
             reg = tokens[4].value
-            assert tokens[5].value == ']'
-            assert tokens[6].value == ','
-            imm = int(tokens[7].value, base=16)
-            return b'\x83' + pack('<B', 0b00111000 | REGISTERS.index(reg)) + pack('<B', imm)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                ib = int(tokens[9].value, base=16)
+                modrm = 0b01111000 | REGISTERS.index(reg)
+                return b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
+            elif tokens[5].value == ']':
+                assert tokens[6].value == ','
+                imm = int(tokens[7].value, base=16)
+                return b'\x83' + pack('<B', 0b00111000 | REGISTERS.index(reg)) + pack('<B', imm)
+            else:
+                assert False, 'Unreachable'
         elif tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
