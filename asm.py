@@ -2403,6 +2403,23 @@ def assemble(line, state):
                 modrm = 0b11111000 | dst
                 ib = int(tokens[3].value, base=16)
                 return b'\x83' + pack('<B', modrm) + pack('<B', ib)
+    elif opcode == 'CMPS':
+        assert tokens[1].value == 'BYTE'
+        assert tokens[2].value == 'PTR'
+        assert tokens[3].value == 'ds'
+        assert tokens[4].value == ':'
+        assert tokens[5].value == '['
+        assert tokens[6].value == 'esi'
+        assert tokens[7].value == ']'
+        assert tokens[8].value == ','
+        assert tokens[9].value == 'BYTE'
+        assert tokens[10].value == 'PTR'
+        assert tokens[11].value == 'es'
+        assert tokens[12].value == ':'
+        assert tokens[13].value == '['
+        assert tokens[14].value == 'edi'
+        assert tokens[15].value == ']'
+        return b'\xa6'
     elif opcode.startswith('CMP'):
         assert False, 'Not implemented'
     elif opcode.startswith('COMIS'):
