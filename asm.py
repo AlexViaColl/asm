@@ -2809,9 +2809,13 @@ def assemble(line, state):
                                 return b'\x89' + pack('<B', modrm) + pack('<b', disp)
                         else:
                             im = int(tokens[9].value, base=16)
-                            modrm = 0b01000100
                             sib = 0b00100100
-                            return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
+                            if disp <= 0xff:
+                                modrm = 0b01000100
+                                return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
+                            else:
+                                modrm = 0b10000100
+                                return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp) + pack('<I', im)
                 elif tokens[5].value == '*':
                     scale = {
                         '0': 0b00,
