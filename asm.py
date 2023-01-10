@@ -2804,6 +2804,24 @@ def assemble(line, state):
                             modrm = 0b01000100
                             sib = 0b00100100
                             return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
+                elif tokens[5].value == '*':
+                    scale = {
+                        '0': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[6].value]
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    assert tokens[10].value == ','
+                    if tokens[11].value in REGISTERS:
+                        src = REGISTERS.index(tokens[11].value)
+                        modrm = 0b00000100 | src << 3
+                        sib = 0b00000101 | scale << 6 | reg << 3
+                        return b'\x89' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    else:
+                        assert False, 'Unreachable'
                 else:
                     assert False, 'Unreachable'
             elif tokens[3].value in SEGMENTS:

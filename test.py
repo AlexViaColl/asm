@@ -1238,6 +1238,7 @@ def test_assemble():
 
         ['MOV BYTE PTR [edi], cl',          b'\x88\x0f'],
         ['MOV DWORD PTR [eax+edx*4], ecx',  b'\x89\x0c\x90'],
+        ['MOV DWORD PTR [edx*4+0x9059cc], ecx', b'\x89\x0c\x95\xcc\x59\x90\x00'],
         ['MOV DWORD PTR [edi], ecx',        b'\x89\x0f'],
         ['MOV DWORD PTR ds:0xb625c4, edx',  b'\x89\x15\xc4\x25\xb6\x00'],
         ['MOV DWORD PTR fs:0x0, esp',       b'\x64\x89\x25\x00\x00\x00\x00'],
