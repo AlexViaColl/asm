@@ -2335,6 +2335,10 @@ def assemble(line, state):
                 if im <= 0x7f:
                     modrm = 0b11100000 | dst
                     return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                elif im > 0x7fffffff:
+                    im = -((~im & 0xffffffff) + 1)
+                    modrm = 0b11100000 | dst
+                    return b'\x83' + pack('<B', modrm) + pack('<b', im)
                 else:
                     if dst == 0b000:
                         return b'\x25' + pack('<I', im)

@@ -1143,6 +1143,7 @@ def test_assemble():
         ['AND ecx, 0xff',                   b'\x81\xe1\xff\x00\x00\x00'],
         ['AND DWORD PTR [eax], 0x1',        b'\x83\x20\x01'],
         ['AND eax, 0x4',                    b'\x83\xe0\x04'],
+        ['AND esi, 0xfffffff8',             b'\x83\xe6\xf8'],
 
         ['CALL 0x7b6',                      b'\xe8\xb1\x07\x00\x00'],
         ['CALL 0x23d1',                     b'\xe8\xcc\x23\x00\x00'],
