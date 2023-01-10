@@ -2260,8 +2260,11 @@ def assemble(line, state):
                 if im <= 0x7f:
                     modrm = 0b11000000 | dst
                     return b'\x83' + pack('<B', modrm) + pack('<B', im)
-                else:
+                elif dst == REGISTERS.index('eax'):
                     return b'\x05' + pack('<I', im)
+                else:
+                    modrm = 0b11000000 | dst
+                    return b'\x81' + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Unreachable'
     elif opcode in ['ADDPD', 'ADDPS', 'ADDSD', 'ADDSS', 'ADDSUBPD', 'ADDSUBPS']:

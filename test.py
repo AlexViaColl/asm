@@ -1128,6 +1128,7 @@ def test_assemble():
         ['ADD eax, 0x2000',                 b'\x05\x00\x20\x00\x00'],
         ['ADD BYTE PTR [eax], 0x1',         b'\x80\x00\x01'],
         ['ADD DWORD PTR [eax], 0x2000',     b'\x81\x00\x00\x20\x00\x00'],
+        ['ADD edi, 0x8cbbec',               b'\x81\xc7\xec\xbb\x8c\x00'],
         ['ADD DWORD PTR [eax], 0x1',        b'\x83\x00\x01'],
         ['ADD eax, 0x4',                    b'\x83\xc0\x04'],
 
