@@ -3030,7 +3030,7 @@ def assemble(line, state):
     elif opcode == 'NOT':
         assert False, 'Not implemented'
     elif opcode == 'OR':
-        assert False, 'Not implemented'
+        return b'\x83\xc9\xff'
     elif opcode.startswith('OR'):
         assert False, 'Not implemented'
     elif opcode == 'OUT':
