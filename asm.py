@@ -3227,7 +3227,10 @@ def assemble(line, state):
             return b'\x2b' + pack('<B', modrm)
         else:
             imm = int(tokens[3].value, base=16)
-            return b'\x83' + pack('<B', 0b11101000 | dst) + pack('<B', imm)
+            if imm <= 0x7f:
+                return b'\x83' + pack('<B', 0b11101000 | dst) + pack('<B', imm)
+            else:
+                return b'\x81' + pack('<B', 0b11101000 | dst) + pack('<I', imm)
     elif opcode.startswith('SUB'):
         assert False, 'Not implemented'
     elif opcode == 'SWAPGS':

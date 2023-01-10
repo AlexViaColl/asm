@@ -1319,6 +1319,7 @@ def test_assemble():
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
         ['SFENCE',                          b'\x0f\xae\xf8'],
         ['SUB esi, edi',                    b'\x2b\xf7'],
+        ['SUB esp, 0x118',                  b'\x81\xec\x18\x01\x00\x00'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],
         ['STAC',                            b'\x0f\x01\xcb'],
         ['STC',                             b'\xf9'],
