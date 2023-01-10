@@ -1282,6 +1282,8 @@ def test_assemble():
         ['MOV DWORD PTR [esp+0x50], 0xffffffff', b'\xc7\x44\x24\x50\xff\xff\xff\xff'],
         ['MOV DWORD PTR [ebp-0x4], 0x0',    b'\xc7\x45\xfc\x00\x00\x00\x00'],
 
+        ['MOVSX edx, BYTE PTR [ecx]',       b'\x0f\xbe\x11'],
+
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],

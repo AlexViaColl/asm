@@ -3004,7 +3004,15 @@ def assemble(line, state):
     elif opcode == 'MOVZX':
         return b'\x0f\xb7\x45\xd4'
     elif opcode == 'MOVSX':
-        return b'\x0f\xbe\x0f'
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        assert tokens[3].value == 'BYTE'
+        assert tokens[4].value == 'PTR'
+        assert tokens[5].value == '['
+        reg = REGISTERS.index(tokens[6].value)
+        assert tokens[7].value == ']'
+        modrm = 0b00000000 | dst << 3 | reg
+        return b'\x0f\xbe' + pack('<B', modrm)
     elif opcode.startswith('MOV'):
         assert False, 'Not implemented'
     elif opcode == 'MPSADBW':
