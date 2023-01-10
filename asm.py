@@ -3133,6 +3133,9 @@ def assemble(line, state):
         return b'\x0f\x31'
     elif opcode == 'RDTSCP':
         return b'\x0f\x01\xf9'
+    elif opcode == 'REPNZ':
+        rem = ' '.join(map(lambda x: x.value, tokens[1:]))
+        return b'\xf2' + assemble(rem, state)
     elif opcode == 'REPZ':
         rem = ' '.join(map(lambda x: x.value, tokens[1:]))
         return b'\xf3' + assemble(rem, state)
@@ -3198,7 +3201,7 @@ def assemble(line, state):
     elif opcode == 'SBB':
         assert False, 'Not implemented'
     elif opcode.startswith('SCAS'):
-        assert False, 'Not implemented'
+        return b'\xae'
     elif opcode == 'SERIALIZE':
         return b'\x0f\x01\xe8'
     elif opcode.startswith('SET'):

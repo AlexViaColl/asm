@@ -1306,6 +1306,7 @@ def test_assemble():
         ['RDPMC',                           b'\x0f\x33'],
         ['RDTSC',                           b'\x0f\x31'],
         ['RDTSCP',                          b'\x0f\x01\xf9'],
+        ['REPNZ SCAS al, BYTE PTR es:[edi]',b'\xf2\xae'],
         ['RET 0x10',                        b'\xc2\x10\x00'],
         ['RET',                             b'\xc3'],
         ['RETF',                            b'\xcb'],
