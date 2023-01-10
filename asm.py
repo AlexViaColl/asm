@@ -2796,7 +2796,12 @@ def assemble(line, state):
                             modrm = 0b01000000 | src << 3 | reg
                             if reg == REGISTERS.index('esp'):
                                 sib = 0b00100100
-                                return b'\x89' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                                if disp > 0xff:
+                                    modrm = 0b10000000 | src << 3 | reg
+                                    disp = pack('<I', disp)
+                                else:
+                                    disp = pack('<B', disp)
+                                return b'\x89' + pack('<B', modrm) + pack('<B', sib) + disp
                             else:
                                 return b'\x89' + pack('<B', modrm) + pack('<b', disp)
                         else:
