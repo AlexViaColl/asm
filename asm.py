@@ -2526,7 +2526,12 @@ def assemble(line, state):
     elif opcode.startswith('FIST'):
         assert False, 'Not implemented'
     elif opcode == 'FLD':
-        if tokens[1].value == 'DWORD':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            return b'\xd9' + pack('<B', 0xc0 + i)
+        elif tokens[1].value == 'DWORD':
             assert tokens[2].value == 'PTR'
             if tokens[3].value == '[':
                 if tokens[4].value in REGISTERS:
