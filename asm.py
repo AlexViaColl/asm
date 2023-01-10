@@ -3024,6 +3024,8 @@ def assemble(line, state):
                     assert False, 'Unreachable'
     elif opcode == 'MOVZX':
         return b'\x0f\xb7\x45\xd4'
+    elif opcode == 'MOVS':
+        return b'\xa5'
     elif opcode == 'MOVSX':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
@@ -3160,7 +3162,8 @@ def assemble(line, state):
         rem = ' '.join(map(lambda x: x.value, tokens[1:]))
         return b'\xf3' + assemble(rem, state)
     elif opcode.startswith('REP'):
-        assert False, 'Not implemented'
+        rem = ' '.join(map(lambda x: x.value, tokens[1:]))
+        return b'\xf3' + assemble(rem, state)
     elif opcode == 'RET':
         if len(tokens) > 1:
             iw = int(tokens[1].value, base=16)
