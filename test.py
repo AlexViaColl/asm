@@ -1329,6 +1329,7 @@ def test_assemble():
         ['SYSRET',                          b'\x0f\x07'],
         ['TEST al, al',                     b'\x84\xc0'],
         ['TEST eax, eax',                   b'\x85\xc0'],
+        ['TEST BYTE PTR [esp+0x8], 0x1',    b'\xf6\x44\x24\x08\x01'],
         ['TEST BYTE PTR [ebp-0x30], 0x1',   b'\xf6\x45\xd0\x01'],
         ['VZEROALL',                        b'\xc5\xfc\x77'],
         ['VZEROUPPER',                      b'\xc5\xf8\x77'],

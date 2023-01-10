@@ -3237,14 +3237,23 @@ def assemble(line, state):
             # TEST r/m8, imm8 (F6 /0 ib)
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
-            assert tokens[4].value == 'ebp'
-            assert tokens[5].value == '-'
-            disp = -int(tokens[6].value, base=16)
-            assert tokens[7].value == ']'
-            assert tokens[8].value == ','
-            ib = int(tokens[9].value, base=16)
-            modrm = 0b01000101
-            return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+            if tokens[4].value == 'ebp':
+                assert tokens[5].value == '-'
+                disp = -int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                ib = int(tokens[9].value, base=16)
+                modrm = 0b01000101
+                return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+            else:
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                ib = int(tokens[9].value, base=16)
+                modrm = 0b01000100
+                sib = 0b00100100
+                return b'\xf6' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp) + pack('<B', ib)
         elif tokens[1].value in REGISTERS8:
             # TEST r/m8, r8 (84 /r)
             rm8 = REGISTERS8.index(tokens[1].value)
