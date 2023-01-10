@@ -1288,6 +1288,7 @@ def test_assemble():
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],
+        ['NOT ecx',                         b'\xf7\xd1'],
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
         ['PAUSE',                           b'\xf3\x90'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],

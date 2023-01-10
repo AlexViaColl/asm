@@ -3033,7 +3033,11 @@ def assemble(line, state):
     elif opcode == 'NOP':
         return b'\x90'
     elif opcode == 'NOT':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS:
+            reg = REGISTERS.index(tokens[1].value)
+            return b'\xf7' + pack('<B', 0b11010000 | reg)
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'OR':
         return b'\x83\xc9\xff'
     elif opcode.startswith('OR'):
