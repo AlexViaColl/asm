@@ -2525,6 +2525,27 @@ def assemble(line, state):
         return b'\xdb\xe3'
     elif opcode.startswith('FIST'):
         assert False, 'Not implemented'
+    elif opcode == 'FLD':
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == '[':
+                if tokens[4].value in REGISTERS:
+                    reg = REGISTERS.index(tokens[4].value)
+                    assert tokens[5].value == '+'
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    modrm = 0b10000000 | reg
+                    return b'\xd9' + pack('<B', modrm) + pack('<I', disp)
+                else:
+                    assert False, 'Not implemented'
+            elif tokens[3].value in SEGMENTS:
+                seg = SEGMENTS.index(tokens[3].value)
+                assert tokens[4].value == ':'
+                modrm = 0b00000101
+                im = int(tokens[5].value, base=16)
+                return b'\xd9' + pack('<B', modrm) + pack('<I', im)
+        else:
+            assert False, 'Not implemented'
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
     elif opcode.startswith('FMUL'):

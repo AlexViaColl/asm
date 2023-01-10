@@ -1182,6 +1182,10 @@ def test_assemble():
         ['FDECSTP',                         b'\xd9\xf6'],
         ['FINCSTP',                         b'\xd9\xf7'],
         ['FINIT',                           b'\x9b\xdb\xe3'],
+
+        ['FLD DWORD PTR ds:0xb62f6c',       b'\xd9\x05\x6c\x2f\xb6\x00'],
+        ['FLD DWORD PTR [esi+0xdc]',        b'\xd9\x86\xdc\x00\x00\x00'],
+
         ['FNINIT',                          b'\xdb\xe3'],
         ['FNOP',                            b'\xd9\xd0'],
         ['FPATAN',                          b'\xd9\xf3'],
