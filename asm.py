@@ -2428,6 +2428,8 @@ def assemble(line, state):
                     modrm = 0b11111000 | dst
                     if im > 0x7fffffff:
                         im = -((~im & 0xffffffff) + 1)
+                    elif im >= 0x80:
+                        return b'\x81' + pack('<B', modrm) + pack('<I', im)
                     return b'\x83' + pack('<B', modrm) + pack('<b', im)
     elif opcode == 'CMPS':
         assert tokens[1].value == 'BYTE'
