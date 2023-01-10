@@ -2724,20 +2724,29 @@ def assemble(line, state):
             assert tokens[3].value == '['
             reg = REGISTERS.index(tokens[4].value)
             if tokens[5].value == '+':
-                idx = REGISTERS.index(tokens[6].value)
-                assert tokens[7].value == '*'
-                scale = {
-                    '1': 0b00,
-                    '2': 0b01,
-                    '4': 0b10,
-                    '8': 0b11,
-                }[tokens[8].value]
-                assert tokens[9].value == ']'
-                assert tokens[10].value == ','
-                ib = int(tokens[11].value, base=16)
-                modrm = 0b00000100
-                sib = 0b00000000 | scale << 6 | idx << 3 | reg
-                return b'\xc6' + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                if tokens[6].value in REGISTERS:
+                    idx = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '*'
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[8].value]
+                    assert tokens[9].value == ']'
+                    assert tokens[10].value == ','
+                    ib = int(tokens[11].value, base=16)
+                    modrm = 0b00000100
+                    sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                    return b'\xc6' + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                else:
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERS8.index(tokens[9].value)
+                    modrm = 0b10000100 | src << 3
+                    sib = 0b00100000 | reg
+                    return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
             else:
                 assert tokens[5].value == ']'
                 assert tokens[6].value == ','
