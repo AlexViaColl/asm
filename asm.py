@@ -2846,8 +2846,13 @@ def assemble(line, state):
                             return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                     else:
                         ib = int(tokens[9].value, base=16)
-                        modrm = 0b01000000 | reg
-                        return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                        if reg == REGISTERS.index('esp'):
+                            modrm = 0b01000000 | reg
+                            sib = 0b00100100
+                            return b'\xc6' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp) + pack('<B', ib)
+                        else:
+                            modrm = 0b01000000 | reg
+                            return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
             else:
                 assert tokens[5].value == ']'
                 assert tokens[6].value == ','
