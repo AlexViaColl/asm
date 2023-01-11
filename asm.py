@@ -2832,10 +2832,15 @@ def assemble(line, state):
                     disp = int(tokens[6].value, base=16)
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
-                    src = REGISTERS8.index(tokens[9].value)
-                    modrm = 0b10000100 | src << 3
-                    sib = 0b00100000 | reg
-                    return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    if tokens[9].value in REGISTERS8:
+                        src = REGISTERS8.index(tokens[9].value)
+                        modrm = 0b10000100 | src << 3
+                        sib = 0b00100000 | reg
+                        return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    else:
+                        ib = int(tokens[9].value, base=16)
+                        modrm = 0b01000000 | reg
+                        return b'\xc6' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
             else:
                 assert tokens[5].value == ']'
                 assert tokens[6].value == ','
