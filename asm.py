@@ -2937,12 +2937,23 @@ def assemble(line, state):
                         else:
                             im = int(tokens[9].value, base=16)
                             sib = 0b00100100
-                            if disp <= 0xff:
-                                modrm = 0b01000100
-                                return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
+                            if reg == REGISTERS.index('esp'):
+                                if disp <= 0xff:
+                                    modrm = 0b01000100
+                                    return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
+                                else:
+                                    modrm = 0b10000100
+                                    return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp) + pack('<I', im)
                             else:
-                                modrm = 0b10000100
-                                return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp) + pack('<I', im)
+                                if disp <= 0x7f:
+                                    modrm = 0b01000000 | reg
+                                    return b'\xc7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                                elif disp <= 0xff:
+                                    modrm = 0b01000100
+                                    return b'\xc7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                                else:
+                                    modrm = 0b10000100
+                                    return b'\xc7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
                 elif tokens[5].value == '*':
                     scale = {
                         '0': 0b00,

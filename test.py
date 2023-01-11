@@ -1318,6 +1318,7 @@ def test_assemble():
         ['MOV DWORD PTR ds:0x8cbb40, 0x3e8',b'\xc7\x05\x40\xbb\x8c\x00\xe8\x03\x00\x00'],
         ['MOV DWORD PTR [esp+0x50], 0xffffffff', b'\xc7\x44\x24\x50\xff\xff\xff\xff'],
         ['MOV DWORD PTR [ebp-0x4], 0x0',    b'\xc7\x45\xfc\x00\x00\x00\x00'],
+        ['MOV DWORD PTR [esi+0x7c], 0x0',   b'\xc7\x46\x7c\x00\x00\x00\x00'],
         ['MOV DWORD PTR [esp+0x130], 0x1',  b'\xc7\x84\x24\x30\x01\x00\x00\x01\x00\x00\x00'],
 
         ['MOVSX edx, BYTE PTR [ecx]',       b'\x0f\xbe\x11'],
