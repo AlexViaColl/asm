@@ -1291,6 +1291,7 @@ def test_assemble():
         ['MOV ebx, DWORD PTR [esp+0x14]',   b'\x8b\x5c\x24\x14'],
         ['MOV ebp, DWORD PTR [esp+0x10]',   b'\x8b\x6c\x24\x10'],
         ['MOV esi, DWORD PTR [esp+0x10]',   b'\x8b\x74\x24\x10'],
+        ['MOV ecx, DWORD PTR [ebx+0x84]',   b'\x8b\x8b\x84\x00\x00\x00'],
         ['MOV ecx, esi',                    b'\x8b\xce'],
         ['MOV ebp, esp',                    b'\x8b\xec'],
         ['MOV WORD PTR [edi], cs',          b'\x8c\x0f'],

@@ -3073,7 +3073,11 @@ def assemble(line, state):
                                 sib = 0b00100100
                                 return b'\x8b' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                             else:
-                                return b'\x8b' + pack('<B', modrm) + pack('<b', disp)
+                                if disp <= 0x7f:
+                                    return b'\x8b' + pack('<B', modrm) + pack('<b', disp)
+                                elif disp <= 0xff:
+                                    modrm = 0b10000000 | dst << 3 | reg
+                                    return b'\x8b' + pack('<B', modrm) + pack('<I', disp)
                     elif tokens[7].value == '*':
                         scale = {
                             '1': 0b00,
