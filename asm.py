@@ -2976,9 +2976,16 @@ def assemble(line, state):
                 assert tokens[4].value == 'PTR'
                 assert tokens[5].value == '['
                 reg = REGISTERS.index(tokens[6].value)
-                assert tokens[7].value == ']'
-                modrm = 0b00000000 | dst << 3 | reg
-                return b'\x8a' + pack('<B', modrm)
+                if tokens[7].value == ']':
+                    modrm = 0b00000000 | dst << 3 | reg
+                    return b'\x8a' + pack('<B', modrm)
+                elif tokens[7].value == '+':
+                    disp8 = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    modrm = 0b01000000 | dst << 3 | reg
+                    return b'\x8a' + pack('<B', modrm) + pack('<B', disp8)
+                else:
+                    assert False, 'Not implemented yet'
             elif tokens[3].value in SEGMENTS:
                 seg = {
                     'es': b'\x26',
