@@ -2997,8 +2997,13 @@ def assemble(line, state):
                 elif tokens[7].value == '+':
                     disp8 = int(tokens[8].value, base=16)
                     assert tokens[9].value == ']'
-                    modrm = 0b01000000 | dst << 3 | reg
-                    return b'\x8a' + pack('<B', modrm) + pack('<B', disp8)
+                    if reg == REGISTERS.index('esp'):
+                        modrm = 0b01000000 | dst << 3 | reg
+                        sib = 0b00100100
+                        return b'\x8a' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp8)
+                    else:
+                        modrm = 0b01000000 | dst << 3 | reg
+                        return b'\x8a' + pack('<B', modrm) + pack('<B', disp8)
                 else:
                     assert False, 'Not implemented yet'
             elif tokens[3].value in SEGMENTS:
