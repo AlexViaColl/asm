@@ -2836,7 +2836,11 @@ def assemble(line, state):
                         src = REGISTERS8.index(tokens[9].value)
                         modrm = 0b10000100 | src << 3
                         sib = 0b00100000 | reg
-                        return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                        if disp < 0xff:
+                            modrm = 0b01000000 | src << 3 | reg
+                            return b'\x88' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                     else:
                         ib = int(tokens[9].value, base=16)
                         modrm = 0b01000000 | reg

@@ -1262,6 +1262,7 @@ def test_assemble():
         ['MONITOR',                         b'\x0f\x01\xc8'],
 
         ['MOV BYTE PTR [edi], cl',          b'\x88\x0f'],
+        ['MOV BYTE PTR [ebp+0xb], dl',      b'\x88\x55\x0b'],
         ['MOV BYTE PTR [esp+0x127], bl',    b'\x88\x9c\x24\x27\x01\x00\x00'],
         ['MOV DWORD PTR [eax+edx*4], ecx',  b'\x89\x0c\x90'],
         ['MOV DWORD PTR [edx*4+0x9059cc], ecx', b'\x89\x0c\x95\xcc\x59\x90\x00'],
