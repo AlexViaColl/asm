@@ -2812,7 +2812,8 @@ def assemble(line, state):
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
             reg = REGISTERS.index(tokens[4].value)
-            if tokens[5].value == '+':
+            if tokens[5].value in ['+', '-']:
+                sign = tokens[5].value
                 if tokens[6].value in REGISTERS:
                     idx = REGISTERS.index(tokens[6].value)
                     assert tokens[7].value == '*'
@@ -2830,6 +2831,8 @@ def assemble(line, state):
                     return b'\xc6' + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
                 else:
                     disp = int(tokens[6].value, base=16)
+                    if sign == '-':
+                        disp = ~(disp & 0xff) + 1
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
                     if tokens[9].value in REGISTERS8:
@@ -2844,7 +2847,7 @@ def assemble(line, state):
                     else:
                         ib = int(tokens[9].value, base=16)
                         modrm = 0b01000000 | reg
-                        return b'\xc6' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
+                        return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
             else:
                 assert tokens[5].value == ']'
                 assert tokens[6].value == ','
