@@ -2949,10 +2949,10 @@ def assemble(line, state):
                                     modrm = 0b01000000 | reg
                                     return b'\xc7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
                                 elif disp <= 0xff:
-                                    modrm = 0b01000100
-                                    return b'\xc7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                                    modrm = 0b10000000 | reg
+                                    return b'\xc7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
                                 else:
-                                    modrm = 0b10000100
+                                    modrm = 0b10000000 | reg
                                     return b'\xc7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
                 elif tokens[5].value == '*':
                     scale = {
