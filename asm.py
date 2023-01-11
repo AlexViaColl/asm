@@ -2840,8 +2840,13 @@ def assemble(line, state):
                         modrm = 0b10000100 | src << 3
                         sib = 0b00100000 | reg
                         if disp <= 0x7f:
-                            modrm = 0b01000000 | src << 3 | reg
-                            return b'\x88' + pack('<B', modrm) + pack('<B', disp)
+                            if reg == REGISTERS.index('esp'):
+                                modrm = 0b01000000 | src << 3 | reg
+                                sib = 0b00100100
+                                return b'\x88' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                            else:
+                                modrm = 0b01000000 | src << 3 | reg
+                                return b'\x88' + pack('<B', modrm) + pack('<B', disp)
                         elif disp <= 0xff:
                             modrm = 0b10000000 | src << 3 | reg
                             return b'\x88' + pack('<B', modrm) + pack('<I', disp)
