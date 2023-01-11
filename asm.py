@@ -2929,7 +2929,11 @@ def assemble(line, state):
                                     disp = pack('<B', disp)
                                 return b'\x89' + pack('<B', modrm) + pack('<B', sib) + disp
                             else:
-                                return b'\x89' + pack('<B', modrm) + pack('<b', disp)
+                                if disp <= 0x7f:
+                                    return b'\x89' + pack('<B', modrm) + pack('<b', disp)
+                                elif disp <= 0xff:
+                                    modrm = 0b10000000 | src << 3 | reg
+                                    return b'\x89' + pack('<B', modrm) + pack('<I', disp)
                         else:
                             im = int(tokens[9].value, base=16)
                             sib = 0b00100100
