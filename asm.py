@@ -3053,6 +3053,11 @@ def assemble(line, state):
             else:
                 ib = int(tokens[3].value, base=16)
                 return pack('<B', 0xb0 + dst) + pack('<B', ib)
+        elif tokens[1].value in REGISTERS16:
+            r16 = tokens[1].value
+            line = line.replace(r16, REGISTERS[REGISTERS16.index(r16)])
+            line = line.replace('WORD', 'DWORD')
+            return b'\x66' + assemble(line, state)
         elif tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
