@@ -3003,7 +3003,13 @@ def assemble(line, state):
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
             reg = REGISTERS.index(tokens[4].value)
-            assert tokens[5].value == ']'
+            if tokens[5].value != ']':
+                line = line.replace('WORD', 'DWORD')
+                for token in tokens:
+                    for i, r16 in enumerate(REGISTERS16):
+                        if token.value == r16:
+                            line = line.replace(r16, REGISTERS[i])
+                return b'\x66' + assemble(line, state)
             assert tokens[6].value == ','
             seg = SEGMENTS.index(tokens[7].value)
             modrm = 0b00000000 | seg << 3 | reg
