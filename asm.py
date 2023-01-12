@@ -2862,7 +2862,7 @@ def assemble(line, state):
                             if disp <= 0x7f:
                                 modrm = 0b01000000 | reg
                                 return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
-                            elif disp <= 0xff:
+                            else:
                                 modrm = 0b10000000 | reg
                                 return b'\xc6' + pack('<B', modrm) + pack('<I', disp) + pack('<B', ib)
             else:
