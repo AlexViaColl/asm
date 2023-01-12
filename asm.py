@@ -2935,7 +2935,7 @@ def assemble(line, state):
                             else:
                                 if disp <= 0x7f:
                                     return b'\x89' + pack('<B', modrm) + pack('<b', disp)
-                                elif disp <= 0xff:
+                                else:
                                     modrm = 0b10000000 | src << 3 | reg
                                     return b'\x89' + pack('<B', modrm) + pack('<I', disp)
                         else:
