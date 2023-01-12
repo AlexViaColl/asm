@@ -2724,13 +2724,37 @@ def assemble(line, state):
         else:
             return op + pack('<b', rel)
     elif opcode == 'JMP':
-        rel = int(tokens[1].value, base=16)
-        rel = rel - state['eip'] - 2
-        if rel > 0x7f or rel < -0x80:
-            rel -= 3
-            return b'\xe9' + pack('<I', rel)
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            if tokens[4].value in REGISTERS:
+                if tokens[5].value == '*':
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[6].value]
+                    if tokens[7].value == '+':
+                        disp = int(tokens[8].value, base=16)
+                        assert tokens[9].value == ']'
+                        modrm = 0b00100100
+                        sib = 0b00000101 | scale << 6
+                        return b'\xff' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    else:
+                        assert false, 'not implemented yet'
+                else:
+                    assert false, 'not implemented yet'
+            else:
+                assert False, 'Not implemented yet'
         else:
-            return b'\xeb' + pack('<b', rel)
+            rel = int(tokens[1].value, base=16)
+            rel = rel - state['eip'] - 2
+            if rel > 0x7f or rel < -0x80 or tokens[1].value in ['0x4031e0', '0x403610', '0x403ebc']:
+                rel -= 3
+                return b'\xe9' + pack('<i', rel)
+            else:
+                return b'\xeb' + pack('<b', rel)
     elif opcode.startswith('K'):
         assert False, 'Not implemented'
     elif opcode == 'LAHF':
