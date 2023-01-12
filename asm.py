@@ -3019,15 +3019,19 @@ def assemble(line, state):
                     modrm = 0b00000000 | dst << 3 | reg
                     return b'\x8a' + pack('<B', modrm)
                 elif tokens[7].value == '+':
-                    disp8 = int(tokens[8].value, base=16)
+                    disp = int(tokens[8].value, base=16)
                     assert tokens[9].value == ']'
                     if reg == REGISTERS.index('esp'):
                         modrm = 0b01000000 | dst << 3 | reg
                         sib = 0b00100100
-                        return b'\x8a' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp8)
+                        return b'\x8a' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                     else:
-                        modrm = 0b01000000 | dst << 3 | reg
-                        return b'\x8a' + pack('<B', modrm) + pack('<B', disp8)
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | dst << 3 | reg
+                            return b'\x8a' + pack('<B', modrm) + pack('<B', disp)
+                        elif disp <= 0xff:
+                            modrm = 0b10000000 | dst << 3 | reg
+                            return b'\x8a' + pack('<B', modrm) + pack('<I', disp)
                 else:
                     assert False, 'Not implemented yet'
             elif tokens[3].value in SEGMENTS:
