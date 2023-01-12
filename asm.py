@@ -2859,8 +2859,12 @@ def assemble(line, state):
                             sib = 0b00100100
                             return b'\xc6' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp) + pack('<B', ib)
                         else:
-                            modrm = 0b01000000 | reg
-                            return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                            if disp <= 0x7f:
+                                modrm = 0b01000000 | reg
+                                return b'\xc6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                            elif disp <= 0xff:
+                                modrm = 0b10000000 | reg
+                                return b'\xc6' + pack('<B', modrm) + pack('<I', disp) + pack('<B', ib)
             else:
                 assert tokens[5].value == ']'
                 assert tokens[6].value == ','
