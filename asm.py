@@ -2961,7 +2961,7 @@ def assemble(line, state):
                             im = int(tokens[9].value, base=16)
                             sib = 0b00100100
                             if reg == REGISTERS.index('esp'):
-                                if disp <= 0xff:
+                                if disp <= 0x7f:
                                     modrm = 0b01000100
                                     return b'\xc7' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<I', im)
                                 else:
