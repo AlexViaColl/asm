@@ -2757,6 +2757,14 @@ def assemble(line, state):
         return b'\xd9\xfb'
     elif opcode == 'FSQRT':
         return b'\xd9\xfa'
+    elif opcode == 'FSTP':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            return b'\xdd' + pack('<B', 0xd8 + i)
+        else:
+            assert False, 'Not implemented'
     elif opcode.startswith('FST'):
         assert False, 'Not implemented'
     elif opcode.startswith('FSUB'):
