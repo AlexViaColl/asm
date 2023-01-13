@@ -1161,6 +1161,7 @@ def test_assemble():
         ['CLI',                             b'\xfa'],
         ['CMC',                             b'\xf5'],
         ['CMP DWORD PTR [eax+ecx*4], esi',  b'\x39\x34\x88'],
+        ['CMP al, bl',                      b'\x3a\xc3'],
         ['CMP eax, ecx',                    b'\x3b\xc1'],
         ['CMP eax, 0x80',                   b'\x3d\x80\x00\x00\x00'],
         ['CMP esi, 0x80',                   b'\x81\xfe\x80\x00\x00\x00'],

@@ -2459,6 +2459,27 @@ def assemble(line, state):
                     elif im >= 0x80:
                         return b'\x81' + pack('<B', modrm) + pack('<I', im)
                     return b'\x83' + pack('<B', modrm) + pack('<b', im)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                return b'\x3a' + pack('<B', 0b11000000 | dst << 3 | src)
+            else:
+                assert False, 'Not implemented yet'
+                #im = int(tokens[3].value, base=16)
+                #if im < 0x7f:
+                #    modrm = 0b11111000 | dst
+                #    return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                #elif dst == REGISTERS.index('eax'):
+                #    return b'\x3d' + pack('<I', im)
+                #else:
+                #    modrm = 0b11111000 | dst
+                #    if im > 0x7fffffff:
+                #        im = -((~im & 0xffffffff) + 1)
+                #    elif im >= 0x80:
+                #        return b'\x81' + pack('<B', modrm) + pack('<I', im)
+                #    return b'\x83' + pack('<B', modrm) + pack('<b', im)
     elif opcode == 'CMPS':
         assert tokens[1].value == 'BYTE'
         assert tokens[2].value == 'PTR'
