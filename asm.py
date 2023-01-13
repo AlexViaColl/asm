@@ -2453,8 +2453,13 @@ def assemble(line, state):
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     assert tokens[9].value == ']'
-                    modrm = 0b10000000 | dst << 3 | base
-                    return b'\x3b' + pack('<B', modrm) + pack('<I', disp)
+                    if base == REGISTERS.index('esp'):
+                        modrm = 0b01000000 | dst << 3 | base
+                        sib = 0b00100100
+                        return b'\x3b' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                    else:
+                        modrm = 0b10000000 | dst << 3 | base
+                        return b'\x3b' + pack('<B', modrm) + pack('<I', disp)
                 else:
                     im = int(tokens[3].value, base=16)
                     if im < 0x7f:
