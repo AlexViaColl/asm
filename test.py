@@ -1160,6 +1160,7 @@ def test_assemble():
         #['CLDEMOTE BYTE PTR [eax]',         b'\x0f\x1c\x00'],
         ['CLI',                             b'\xfa'],
         ['CMC',                             b'\xf5'],
+        ['CMP DWORD PTR [eax+ecx*4], esi',  b'\x39\x34\x88'],
         ['CMP eax, ecx',                    b'\x3b\xc1'],
         ['CMP eax, 0x80',                   b'\x3d\x80\x00\x00\x00'],
         ['CMP esi, 0x80',                   b'\x81\xfe\x80\x00\x00\x00'],
