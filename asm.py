@@ -2401,7 +2401,7 @@ def assemble(line, state):
     elif opcode.startswith('CMOV'):
         assert False, 'Not implemented'
     elif opcode == 'CMP':
-        if tokens[1].value == 'DWORD':
+        if tokens[1].value == 'BYTE':
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
             reg = REGISTERS.index(tokens[4].value)
@@ -2434,6 +2434,53 @@ def assemble(line, state):
                         src = REGISTERS.index(tokens[9].value)
                         modrm = 0b01000000 | src << 3 | reg
                         return b'\x39' + pack('<B', modrm) + pack('<B', disp)
+                    else:
+                        ib = int(tokens[9].value, base=16)
+                        modrm = 0b01111000 | reg
+                        return b'\x80' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
+            elif tokens[5].value == ']':
+                assert tokens[6].value == ','
+                imm = int(tokens[7].value, base=16)
+                return b'\x80' + pack('<B', 0b00111000 | reg) + pack('<B', imm)
+            else:
+                assert False, 'Unreachable'
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            reg = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                if tokens[6].value in REGISTERS:
+                    base = REGISTERS.index(tokens[6].value)
+                    if tokens[7].value == '*':
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[8].value]
+                        assert tokens[9].value == ']'
+                        assert tokens[10].value == ','
+                        if tokens[11].value in REGISTERS:
+                            src = REGISTERS.index(tokens[11].value)
+                            modrm = 0b00000100 | src << 3
+                            sib = 0b00000000 | scale << 6 | base << 3 | reg
+                            return b'\x39' + pack('<B', modrm) + pack('<B', sib)
+                        else:
+                            assert False, 'Not implemented yet'
+                    else:
+                        assert False, 'Not implemented yet'
+                else:
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    if tokens[9].value in REGISTERS:
+                        src = REGISTERS.index(tokens[9].value)
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | src << 3 | reg
+                            return b'\x39' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | src << 3 | reg
+                            return b'\x39' + pack('<B', modrm) + pack('<I', disp)
                     else:
                         ib = int(tokens[9].value, base=16)
                         modrm = 0b01111000 | reg
