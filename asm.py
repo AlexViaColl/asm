@@ -2462,18 +2462,24 @@ def assemble(line, state):
                         return b'\x3b' + pack('<B', modrm) + pack('<I', disp)
                 else:
                     im = int(tokens[3].value, base=16)
-                    if im < 0x7f:
-                        modrm = 0b11111000 | dst
-                        return b'\x83' + pack('<B', modrm) + pack('<B', im)
-                    elif dst == REGISTERS.index('eax'):
-                        return b'\x3d' + pack('<I', im)
+                    if dst == REGISTERS.index('eax'):
+                        if im <= 0x7f or im > 0x7fffffff:
+                            modrm = 0b11111000 | dst
+                            im = im & 0xff
+                            return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                        else:
+                            return b'\x3d' + pack('<I', im)
                     else:
-                        modrm = 0b11111000 | dst
-                        if im > 0x7fffffff:
-                            im = -((~im & 0xffffffff) + 1)
-                        elif im >= 0x80:
-                            return b'\x81' + pack('<B', modrm) + pack('<I', im)
-                        return b'\x83' + pack('<B', modrm) + pack('<b', im)
+                        if im <= 0x7f:
+                            modrm = 0b11111000 | dst
+                            return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                        else:
+                            modrm = 0b11111000 | dst
+                            if im > 0x7fffffff:
+                                im = -((~im & 0xffffffff) + 1)
+                            elif im >= 0x80:
+                                return b'\x81' + pack('<B', modrm) + pack('<I', im)
+                            return b'\x83' + pack('<B', modrm) + pack('<b', im)
         elif tokens[1].value in REGISTERS8:
             dst = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','

@@ -1170,6 +1170,7 @@ def test_assemble():
         ['CMP DWORD PTR [edi], 0x1',        b'\x83\x3f\x01'],
         ['CMP DWORD PTR [ebp+0x0], 0x0',    b'\x83\x7d\x00\x00'],
         ['CMP eax, 0x1',                    b'\x83\xf8\x01'],
+        ['CMP eax, 0xffffffff',             b'\x83\xf8\xff'],
         ['CMP esi, 0xfffffffe',             b'\x83\xfe\xfe'],
         ['CPUID',                           b'\x0f\xa2'],
         ['DAA',                             b'\x27'],
