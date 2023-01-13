@@ -2430,9 +2430,14 @@ def assemble(line, state):
                     disp = int(tokens[6].value, base=16)
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
-                    ib = int(tokens[9].value, base=16)
-                    modrm = 0b01111000 | reg
-                    return b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
+                    if tokens[9].value in REGISTERS:
+                        src = REGISTERS.index(tokens[9].value)
+                        modrm = 0b01000000 | src << 3 | reg
+                        return b'\x39' + pack('<B', modrm) + pack('<B', disp)
+                    else:
+                        ib = int(tokens[9].value, base=16)
+                        modrm = 0b01111000 | reg
+                        return b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', ib)
             elif tokens[5].value == ']':
                 assert tokens[6].value == ','
                 imm = int(tokens[7].value, base=16)
