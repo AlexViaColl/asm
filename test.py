@@ -1225,6 +1225,8 @@ def test_assemble():
         ['FSIN',                            b'\xd9\xfe'],
         ['FSINCOS',                         b'\xd9\xfb'],
         ['FSQRT',                           b'\xd9\xfa'],
+        ['FSTP DWORD PTR [eax]',            b'\xd9\x18'],
+        ['FSTP DWORD PTR [esp]',            b'\xd9\x1c\x24'],
         ['FSTP DWORD PTR [esp+0x10]',       b'\xd9\x5c\x24\x10'],
         ['FSTP DWORD PTR [esi+0xd4]',       b'\xd9\x9e\xd4\x00\x00\x00'],
         ['FSTP st(0)',                      b'\xdd\xd8'],

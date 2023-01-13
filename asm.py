@@ -2774,7 +2774,11 @@ def assemble(line, state):
                 if tokens[4].value in REGISTERS:
                     reg = REGISTERS.index(tokens[4].value)
                     if tokens[5].value == ']':
-                        return op + pack('<B', 0x0 + reg)
+                        if reg == REGISTERS.index('esp'):
+                            sib = 0b00100100
+                            return op + pack('<B', 0x18 + reg) + pack('<B', sib)
+                        else:
+                            return op + pack('<B', 0x18 + reg)
                     elif tokens[5].value == '+':
                         if tokens[6].value in REGISTERS:
                             idx = REGISTERS.index(tokens[6].value)
