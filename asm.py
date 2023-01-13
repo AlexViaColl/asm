@@ -2446,19 +2446,29 @@ def assemble(line, state):
                 src = REGISTERS.index(tokens[3].value)
                 return b'\x3b' + pack('<B', 0b11000000 | dst << 3 | src)
             else:
-                im = int(tokens[3].value, base=16)
-                if im < 0x7f:
-                    modrm = 0b11111000 | dst
-                    return b'\x83' + pack('<B', modrm) + pack('<B', im)
-                elif dst == REGISTERS.index('eax'):
-                    return b'\x3d' + pack('<I', im)
+                if tokens[3].value == 'DWORD':
+                    assert tokens[4].value == 'PTR'
+                    assert tokens[5].value == '['
+                    base = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    modrm = 0b10000000 | dst << 3 | base
+                    return b'\x3b' + pack('<B', modrm) + pack('<I', disp)
                 else:
-                    modrm = 0b11111000 | dst
-                    if im > 0x7fffffff:
-                        im = -((~im & 0xffffffff) + 1)
-                    elif im >= 0x80:
-                        return b'\x81' + pack('<B', modrm) + pack('<I', im)
-                    return b'\x83' + pack('<B', modrm) + pack('<b', im)
+                    im = int(tokens[3].value, base=16)
+                    if im < 0x7f:
+                        modrm = 0b11111000 | dst
+                        return b'\x83' + pack('<B', modrm) + pack('<B', im)
+                    elif dst == REGISTERS.index('eax'):
+                        return b'\x3d' + pack('<I', im)
+                    else:
+                        modrm = 0b11111000 | dst
+                        if im > 0x7fffffff:
+                            im = -((~im & 0xffffffff) + 1)
+                        elif im >= 0x80:
+                            return b'\x81' + pack('<B', modrm) + pack('<I', im)
+                        return b'\x83' + pack('<B', modrm) + pack('<b', im)
         elif tokens[1].value in REGISTERS8:
             dst = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','
