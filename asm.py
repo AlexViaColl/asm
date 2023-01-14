@@ -2995,9 +2995,13 @@ def assemble(line, state):
                 if tokens[9].value == '+':
                     ib = int(tokens[10].value, base=16)
                     if base == REGISTERS.index('esp'):
-                        modrm = 0b10000100 | dst << 3
                         sib = 0b00000000 | scale << 6 | reg << 3 | base
-                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', ib)
+                        if ib <= 0x7f:
+                            modrm = 0b01000100 | dst << 3
+                            return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                        else:
+                            modrm = 0b10000100 | dst << 3
+                            return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', ib)
                     else:
                         modrm = 0b01000100 | dst << 3
                         sib = 0b00000000 | scale << 6 | reg << 3 | base
