@@ -1415,6 +1415,7 @@ def test_assemble():
         ['SAVEPREVSSP',                     b'\xf3\x0f\x01\xea'],
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
         ['SFENCE',                          b'\x0f\xae\xf8'],
+        ['SGDTD [ecx]',                     b'\x0f\x01\x01'],
         ['SUB esi, edi',                    b'\x2b\xf7'],
         ['SUB esp, 0x118',                  b'\x81\xec\x18\x01\x00\x00'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],

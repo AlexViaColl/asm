@@ -3731,8 +3731,10 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'SFENCE':
         return b'\x0f\xae\xf8'
-    elif opcode == 'SGDT':
-        assert False, 'Not implemented'
+    elif opcode == 'SGDTD':
+        assert tokens[1].value == '['
+        assert tokens[3].value == ']'
+        return b'\x0f\x01' + pack('<B', REGISTERS.index(tokens[2].value))
     elif opcode.startswith('SH'):
         assert False, 'Not implemented'
     elif opcode in ['SIDT', 'SLDT', 'SMSW']:
