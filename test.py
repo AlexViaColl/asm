@@ -1271,6 +1271,7 @@ def test_assemble():
         ['LAHF',                            b'\x9f'],
         ['LEA ecx, [eax+edx*1]',            b'\x8d\x0c\x10'],
         ['LEA ecx, [edi+edx*1]',            b'\x8d\x0c\x17'],
+        ['LEA edx, [edx*4-0x1]',            b'\x8d\x14\x95\xff\xff\xff\xff'],
         ['LEA esi, [eax*4+0x9059cc]',       b'\x8d\x34\x85\xcc\x59\x90\x00'],
         ['LEA esi, [esi+esi*4]',            b'\x8d\x34\xb6'],
         ['LEA eax, [eax+ecx*4+0x4]',        b'\x8d\x44\x88\x04'],
