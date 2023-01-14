@@ -2111,6 +2111,90 @@ class Inst(NamedTuple):
     operands: list = []
     prefixes: list = []
 
+def mxxfp(tokens, op_mod ):
+    if tokens[1].value in ['DWORD', 'TBYTE', 'QWORD']:
+        op, mod = op_mod[tokens[1].value]
+        assert tokens[2].value == 'PTR'
+        if tokens[3].value == '[':
+            if tokens[4].value in REGISTERS:
+                reg = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    if reg == REGISTERS.index('esp'):
+                        sib = 0b00100100
+                        return op + pack('<B', 0x18 + reg) + pack('<B', sib)
+                    else:
+                        return op + pack('<B', 0x18 + reg)
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[8].value]
+                        if tokens[9].value == '-':
+                            ib = (~int(tokens[10].value, base=16) & 0xff) + 1
+                        elif tokens[9].value == '+':
+                            ib = int(tokens[10].value, base=16)
+                        elif tokens[9].value == ']':
+                            modrm = 0b00011100
+                            sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                            return op + pack('<B', modrm) + pack('<B', sib)
+                        modrm = 0b01011100
+                        sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                        return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        assert tokens[7].value == ']'
+                        if reg == REGISTERS.index('esp'):
+                            sib = 0b00100100
+                            if disp <= 0x7f:
+                                modrm = 0b01000000 | mod << 3 | reg
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                            else:
+                                modrm = 0b10000000 | mod << 3 | reg
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                        else:
+                            if disp <= 0x7f:
+                                modrm = 0b01000000 | mod << 3 | reg
+                                return op + pack('<B', modrm) + pack('<B', disp)
+                            else:
+                                modrm = 0b10000000 | mod << 3 | reg
+                                return op + pack('<B', modrm) + pack('<I', disp)
+                elif tokens[5].value == '*':
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[6].value]
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b00011100
+                    sib = 0b00000101 | scale << 6
+                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                else: # '-'
+                    im = int(tokens[6].value, base=16)
+                    #print(ib, hex(ib))
+                    if im <= 0xff:
+                        im = (~im & 0xff) + 1
+                        modrm = 0b01011000 | reg
+                        return b'\xd9' + pack('<B', modrm) + pack('<B', im)
+                    else:
+                        im = (~im & 0xffffffff) + 1
+                        return b'\xd9\x81' + pack('<I', im)
+            else:
+                assert False, 'Not implemented'
+        elif tokens[3].value in SEGMENTS:
+            seg = SEGMENTS.index(tokens[3].value)
+            assert tokens[4].value == ':'
+            modrm = 0b00000101 | mod << 3
+            im = int(tokens[5].value, base=16)
+            return op + pack('<B', modrm) + pack('<I', im)
+    assert False, 'Unreachable'
+
 def assemble(line, state):
     if 'eip' not in state or state['eip'] == None:
         state['eip'] = 0
@@ -2732,23 +2816,18 @@ def assemble(line, state):
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
     elif opcode.startswith('FMUL'):
-        if tokens[1].value == 'DWORD':
-            assert tokens[2].value == 'PTR'
-            if tokens[3].value in SEGMENTS:
-                seg = SEGMENTS.index(tokens[3].value)
-                assert tokens[4].value == ':'
-                m = int(tokens[5].value, base=16)
-                modrm = 0b00001101
-                return b'\xd8' + pack('<B', modrm) + pack('<I', m)
-            else:
-                assert False, 'Not implemented'
-        elif tokens[1].value == 'st':
+        if tokens[1].value == 'st':
             assert tokens[2].value == ','
             assert tokens[3].value == 'st'
             assert tokens[4].value == '('
             i = int(tokens[5].value)
             assert tokens[6].value == ')'
             return b'\xd8' + pack('<B', 0xc8 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            return mxxfp(tokens, {
+                'DWORD': [b'\xd8', 1],
+                'QWORD': [b'\xdc', 3],
+            })
         else:
             assert False, 'Not implemented'
     elif opcode == 'FNOP':
@@ -2782,90 +2861,11 @@ def assemble(line, state):
             assert tokens[4].value == ')'
             return b'\xdd' + pack('<B', 0xd8 + i)
         elif tokens[1].value in ['DWORD', 'TBYTE', 'QWORD']:
-            op, mod = {
+            return mxxfp(tokens, {
                 'DWORD': [b'\xd9', 3],
                 'TBYTE': [b'\xdb', 7],
                 'QWORD': [b'\xdd', 3],
-            }[tokens[1].value]
-            assert tokens[2].value == 'PTR'
-            if tokens[3].value == '[':
-                if tokens[4].value in REGISTERS:
-                    reg = REGISTERS.index(tokens[4].value)
-                    if tokens[5].value == ']':
-                        if reg == REGISTERS.index('esp'):
-                            sib = 0b00100100
-                            return op + pack('<B', 0x18 + reg) + pack('<B', sib)
-                        else:
-                            return op + pack('<B', 0x18 + reg)
-                    elif tokens[5].value == '+':
-                        if tokens[6].value in REGISTERS:
-                            idx = REGISTERS.index(tokens[6].value)
-                            assert tokens[7].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[8].value]
-                            if tokens[9].value == '-':
-                                ib = (~int(tokens[10].value, base=16) & 0xff) + 1
-                            elif tokens[9].value == '+':
-                                ib = int(tokens[10].value, base=16)
-                            elif tokens[9].value == ']':
-                                modrm = 0b00011100
-                                sib = 0b00000000 | scale << 6 | idx << 3 | reg
-                                return op + pack('<B', modrm) + pack('<B', sib)
-                            modrm = 0b01011100
-                            sib = 0b00000000 | scale << 6 | idx << 3 | reg
-                            return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
-                        else:
-                            disp = int(tokens[6].value, base=16)
-                            assert tokens[7].value == ']'
-                            if reg == REGISTERS.index('esp'):
-                                sib = 0b00100100
-                                if disp <= 0x7f:
-                                    modrm = 0b01000000 | mod << 3 | reg
-                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
-                                else:
-                                    modrm = 0b10000000 | mod << 3 | reg
-                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
-                            else:
-                                if disp <= 0x7f:
-                                    modrm = 0b01000000 | mod << 3 | reg
-                                    return op + pack('<B', modrm) + pack('<B', disp)
-                                else:
-                                    modrm = 0b10000000 | mod << 3 | reg
-                                    return op + pack('<B', modrm) + pack('<I', disp)
-                    elif tokens[5].value == '*':
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[6].value]
-                        assert tokens[7].value == '+'
-                        disp = int(tokens[8].value, base=16)
-                        modrm = 0b00011100
-                        sib = 0b00000101 | scale << 6
-                        return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
-                    else: # '-'
-                        im = int(tokens[6].value, base=16)
-                        #print(ib, hex(ib))
-                        if im <= 0xff:
-                            im = (~im & 0xff) + 1
-                            modrm = 0b01011000 | reg
-                            return b'\xd9' + pack('<B', modrm) + pack('<B', im)
-                        else:
-                            im = (~im & 0xffffffff) + 1
-                            return b'\xd9\x81' + pack('<I', im)
-                else:
-                    assert False, 'Not implemented'
-            elif tokens[3].value in SEGMENTS:
-                seg = SEGMENTS.index(tokens[3].value)
-                assert tokens[4].value == ':'
-                modrm = 0b00011101
-                im = int(tokens[5].value, base=16)
-                return op + pack('<B', modrm) + pack('<I', im)
+            })
         else:
             assert False, 'Not implemented'
     elif opcode.startswith('FST'):

@@ -601,7 +601,7 @@ instructions = {
     'AAD 0x6d':                         b'\xd5\x6d',
     'XLAT BYTE PTR ds:[ebx]':           b'\xd7',
 
-    'FMUL DWORD PTR ds:0x8f8de0':       b'\xd8\x0d\xe0\x8d\x8f\x00',
+
     'FCOMP DWORD PTR ds:0x86e75c':      b'\xd8\x1d\x5c\xe7\x86\x00',
     'FADD DWORD PTR [eax+0x78]':        b'\xd8\x40\x78',
     'FCOM DWORD PTR [esp+0x6c]':        b'\xd8\x54\x24\x6c',
@@ -610,7 +610,10 @@ instructions = {
     'FDIV DWORD PTR [esp+0x8]':         b'\xd8\x74\x24\x08',
     'FDIVR DWORD PTR [esp+0x8]':        b'\xd8\x7c\x24\x08',
     'FADD st, st(1)':                   b'\xd8\xc1',
+
+    'FMUL DWORD PTR ds:0x8f8de0':       b'\xd8\x0d\xe0\x8d\x8f\x00',
     'FMUL st, st(1)':                   b'\xd8\xc9',
+
     'FCOM st(1)':                       b'\xd8\xd1',
     'FCOMP st(1)':                      b'\xd8\xd9',
     'FSUB st, st(1)':                   b'\xd8\xe1',
@@ -1215,6 +1218,7 @@ def test_assemble():
         ['FLD QWORD PTR [ebx+0x0]',         b'\xdd\x43\x00'],
 
         ['FMUL DWORD PTR ds:0x86e734',      b'\xd8\x0d\x34\xe7\x86\x00'],
+        ['FMUL DWORD PTR [esp+0x124]',      b'\xd8\x8c\x24\x24\x01\x00\x00'],
         ['FMUL st, st(1)',                  b'\xd8\xc9'],
 
         ['FNINIT',                          b'\xdb\xe3'],
