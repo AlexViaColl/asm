@@ -1214,7 +1214,8 @@ def test_assemble():
         ['FLD QWORD PTR ds:0x874700',       b'\xdd\x05\x00\x47\x87\x00'],
         ['FLD QWORD PTR [ebx+0x0]',         b'\xdd\x43\x00'],
 
-        ['FMUL PTR ds:0x86e734',            b'\xd8\x0d\x34\xe7\x86\x00'],
+        ['FMUL DWORD PTR ds:0x86e734',      b'\xd8\x0d\x34\xe7\x86\x00'],
+        ['FMUL st, st(1)',                  b'\xd8\xc9'],
 
         ['FNINIT',                          b'\xdb\xe3'],
         ['FNOP',                            b'\xd9\xd0'],
