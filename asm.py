@@ -2120,10 +2120,12 @@ def mxxfp(tokens, op_mod ):
                 reg = REGISTERS.index(tokens[4].value)
                 if tokens[5].value == ']':
                     if reg == REGISTERS.index('esp'):
+                        modrm = 0b00000000 | mod << 3 | reg
                         sib = 0b00100100
-                        return op + pack('<B', 0x18 + reg) + pack('<B', sib)
+                        return op + pack('<B', modrm) + pack('<B', sib)
                     else:
-                        return op + pack('<B', 0x18 + reg)
+                        modrm = 0b00000000 | mod << 3 | reg
+                        return op + pack('<B', modrm)
                 elif tokens[5].value == '+':
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
@@ -2139,10 +2141,10 @@ def mxxfp(tokens, op_mod ):
                         elif tokens[9].value == '+':
                             ib = int(tokens[10].value, base=16)
                         elif tokens[9].value == ']':
-                            modrm = 0b00011100
+                            modrm = 0b00000100 | mod << 3
                             sib = 0b00000000 | scale << 6 | idx << 3 | reg
                             return op + pack('<B', modrm) + pack('<B', sib)
-                        modrm = 0b01011100
+                        modrm = 0b01000100 | mod << 3
                         sib = 0b00000000 | scale << 6 | idx << 3 | reg
                         return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
                     else:
@@ -2178,13 +2180,14 @@ def mxxfp(tokens, op_mod ):
                 else: # '-'
                     im = int(tokens[6].value, base=16)
                     #print(ib, hex(ib))
-                    if im <= 0xff:
+                    if im <= 0x7f:
                         im = (~im & 0xff) + 1
-                        modrm = 0b01011000 | reg
-                        return b'\xd9' + pack('<B', modrm) + pack('<B', im)
+                        modrm = 0b01000000 | mod << 3 | reg
+                        return op + pack('<B', modrm) + pack('<B', im)
                     else:
                         im = (~im & 0xffffffff) + 1
-                        return b'\xd9\x81' + pack('<I', im)
+                        modrm = 0b10000000 | mod << 3 | reg
+                        return op + pack('<B', modrm) + pack('<I', im)
             else:
                 assert False, 'Not implemented'
         elif tokens[3].value in SEGMENTS:
@@ -2826,7 +2829,7 @@ def assemble(line, state):
         elif tokens[1].value in ['DWORD', 'QWORD']:
             return mxxfp(tokens, {
                 'DWORD': [b'\xd8', 1],
-                'QWORD': [b'\xdc', 3],
+                'QWORD': [b'\xdc', 1],
             })
         else:
             assert False, 'Not implemented'
