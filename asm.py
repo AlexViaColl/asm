@@ -2979,9 +2979,28 @@ def assemble(line, state):
         assert tokens[2].value == ','
         assert tokens[3].value == '['
         base = REGISTERS.index(tokens[4].value)
-        #assert tokens[4].value == 'ebp'
         if tokens[5].value == '-':
-            disp = -int(tokens[6].value, base=16)
+            #disp = -int(tokens[6].value, base=16)
+            disp = int(tokens[6].value, base=16)
+            if base == REGISTERS.index('esp'):
+                sib = 0b00100000 | base
+                if disp <= 0x7f:
+                    disp = -disp
+                    modrm = 0b01000100 | dst << 3
+                    return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+                else:
+                    disp = (~disp & 0xffffffff) + 1
+                    modrm = 0b10000100 | dst << 3
+                    return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+            else:
+                if disp <= 0x7f:
+                    disp = -disp
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
+                else:
+                    disp = (~disp & 0xffffffff) + 1
+                    modrm = 0b10000000 | dst << 3 | base
+                    return b'\x8d' + pack('<B', modrm) + pack('<I', disp)
         elif tokens[5].value == '+':
             if tokens[6].value in REGISTERS:
                 reg = REGISTERS.index(tokens[6].value)
@@ -3015,8 +3034,26 @@ def assemble(line, state):
                     modrm = 0b00000100 | dst << 3
                     sib = 0b00000000 | scale << 6 | reg << 3 | base
                     return b'\x8d' + pack('<B', modrm) + pack('<B', sib)
+            elif tokens[5].value == '-':
+                assert False, 'Unreachable'
             else:
                 disp = int(tokens[6].value, base=16)
+                if base == REGISTERS.index('esp'):
+                    sib = 0b00100000 | base
+                    if disp <= 0x7f:
+                        modrm = 0b01000100 | dst << 3
+                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+                    else:
+                        modrm = 0b10000100 | dst << 3
+                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                else:
+                    if disp <= 0x7f:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
+                    else:
+                        modrm = 0b10000000 | dst << 3 | base
+                        return b'\x8d' + pack('<B', modrm) + pack('<I', disp)
+                #-----
         elif tokens[5].value == '*':
             scale = {
                 '1': 0b00,
@@ -3032,21 +3069,6 @@ def assemble(line, state):
         else:
             assert False, 'Unreachable'
 
-        if base == REGISTERS.index('esp'):
-            sib = 0b00100000 | base
-            if disp <= 0x7f:
-                modrm = 0b01000100 | dst << 3
-                return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
-            else:
-                modrm = 0b10000100 | dst << 3
-                return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
-        else:
-            if disp <= 0x7f:
-                modrm = 0b01000000 | dst << 3 | base
-                return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
-            else:
-                modrm = 0b10000000 | dst << 3 | base
-                return b'\x8d' + pack('<B', modrm) + pack('<I', disp)
     elif opcode == 'LEAVE':
         return b'\xc9'
     elif opcode == 'LFENCE':
