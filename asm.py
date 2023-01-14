@@ -3024,9 +3024,13 @@ def assemble(line, state):
             assert False, 'Unreachable'
 
         if base == 'esp':
-            modrm = 0b01000100 | dst << 3
             sib = 0b00100000 | REGISTERS.index(base)
-            return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+            if disp <= 0x7f:
+                modrm = 0b01000100 | dst << 3
+                return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+            else:
+                modrm = 0b10000100 | dst << 3
+                return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
         else:
             if disp <= 0x7f:
                 modrm = 0b01000000 | dst << 3 | REGISTERS.index(base)

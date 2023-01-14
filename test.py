@@ -1278,6 +1278,7 @@ def test_assemble():
         ['LEA ecx, [esp+0x10]',             b'\x8d\x4c\x24\x10'],
         ['LEA ecx, [edx+ebp*1-0x10]',       b'\x8d\x4c\x2a\xf0'],
         ['LEA edi, [eax+0x1]',              b'\x8d\x78\x01'],
+        ['LEA ecx, [esp+0x90]',             b'\x8d\x8c\x24\x90\x00\x00\x00'],
         ['LEA ecx, [esi+0x80]',             b'\x8d\x8e\x80\x00\x00\x00'],
         ['LEAVE',                           b'\xc9'],
         ['LFENCE',                          b'\x0f\xae\xe8'],
