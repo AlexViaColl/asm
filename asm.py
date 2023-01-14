@@ -2997,6 +2997,11 @@ def assemble(line, state):
                     modrm = 0b01000100 | dst << 3
                     sib = 0b00000000 | scale << 6 | reg << 3 | REGISTERS.index(base)
                     return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                elif tokens[9].value == '-':
+                    modrm = 0b01000100 | dst << 3
+                    sib = 0b00000000 | scale << 6 | reg << 3 | REGISTERS.index(base)
+                    disp = (~int(tokens[10].value, base=16) & 0xff)+1
+                    return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                 else:
                     modrm = 0b00000100 | dst << 3
                     sib = 0b00000000 | scale << 6 | reg << 3 | REGISTERS.index(base)
