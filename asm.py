@@ -2732,7 +2732,17 @@ def assemble(line, state):
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
     elif opcode.startswith('FMUL'):
-        assert False, 'Not implemented'
+        if tokens[1].value == 'PTR':
+            if tokens[2].value in SEGMENTS:
+                seg = SEGMENTS.index(tokens[2].value)
+                assert tokens[3].value == ':'
+                m = int(tokens[4].value, base=16)
+                modrm = 0b00001101
+                return b'\xd8' + pack('<B', modrm) + pack('<I', m)
+            else:
+                assert False, 'Not implemented'
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FNOP':
         return b'\xd9\xd0'
     elif opcode == 'FPATAN':
