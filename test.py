@@ -1511,6 +1511,7 @@ def test_assemble():
         ['SYSEXIT',                         b'\x0f\x35'],
         ['SYSRET',                          b'\x0f\x07'],
         ['TEST al, al',                     b'\x84\xc0'],
+        ['TEST DWORD PTR [ebx+0x384], esi', b'\x85\xb3\x84\x03\x00\x00'],
         ['TEST eax, eax',                   b'\x85\xc0'],
         ['TEST ax, ax',                     b'\x66\x85\xc0'],
         ['TEST al, 0x2',                    b'\xa8\x02'],

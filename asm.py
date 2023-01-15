@@ -4260,13 +4260,18 @@ def assemble(line, state):
                     disp = int(tokens[6].value, base=16)
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
-                    im = int(tokens[9].value, base=16)
-                    if disp <= 0x7f:
-                        modrm = 0b01000000 | reg
-                        return b'\xf7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                    if tokens[9].value in REGISTERS:
+                        src = REGISTERS.index(tokens[9].value)
+                        modrm = 0b10000000 | src << 3 | reg
+                        return b'\x85' + pack('<B', modrm) + pack('<I', disp)
                     else:
-                        modrm = 0b10000000 | reg
-                        return b'\xf7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
+                        im = int(tokens[9].value, base=16)
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | reg
+                            return b'\xf7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                        else:
+                            modrm = 0b10000000 | reg
+                            return b'\xf7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
                 else:
                     assert False, 'Not implemented'
             else:
