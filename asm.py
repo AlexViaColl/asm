@@ -4219,6 +4219,24 @@ def assemble(line, state):
                 modrm = 0b11000000 | rm32
                 im = int(tokens[3].value, base=16)
                 return b'\xf7' + pack('<B', modrm) + pack('<I', im)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            if tokens[4].value in REGISTERS:
+                reg = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    im = int(tokens[9].value, base=16)
+                    modrm = 0b01000000 | reg
+                    return b'\xf7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+                else:
+                    assert False, 'Not implemented'
+            else:
+                assert False, 'Not implemented'
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'TPAUSE':
         assert False, 'Not implemented'
     elif opcode == 'TZCNT':
