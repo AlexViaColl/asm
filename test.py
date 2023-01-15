@@ -1476,6 +1476,7 @@ def test_assemble():
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
         ['PAUSE',                           b'\xf3\x90'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],
+        ['PFMAX mm0, mm6',                  b'\x0f\x0f\xc6\xa4'],
         ['PFMIN mm0, mm1',                  b'\x0f\x0f\xc1\x94'],
         ['PFMIN mm1, mm2',                  b'\x0f\x0f\xca\x94'],
         ['POP ecx',                         b'\x59'],
