@@ -2188,7 +2188,7 @@ def mxxfp(tokens, op_mod ):
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     modrm = 0b00000100 | mod << 3
-                    sib = 0b00000101 | scale << 6
+                    sib = 0b00000101 | scale << 6 | reg << 3
                     return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                 else: # '-'
                     im = int(tokens[6].value, base=16)
@@ -3044,6 +3044,28 @@ def assemble(line, state):
             assert False, 'Not implemented'
     elif opcode.startswith('FST'):
         assert False, 'Not implemented'
+    elif opcode == 'FSUB':
+        if tokens[1].value == 'st':
+            if tokens[2].value == ',':
+                assert tokens[3].value == 'st'
+                assert tokens[4].value == '('
+                i = int(tokens[5].value)
+                assert tokens[6].value == ')'
+                return b'\xd8' + pack('<B', 0xe0 + i)
+            else:
+                assert tokens[2].value == '('
+                i = int(tokens[3].value)
+                assert tokens[4].value == ')'
+                assert tokens[5].value == ','
+                assert tokens[6].value == 'st'
+                return b'\xdc' + pack('<B', 0xe8 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            return mxxfp(tokens, {
+                'DWORD': [b'\xd8', 4],
+                'QWORD': [b'\xdc', 4],
+            })
+        else:
+            assert False, 'Not implemented'
     elif opcode.startswith('FSUB'):
         assert False, 'Not implemented'
     elif opcode == 'FTST':
