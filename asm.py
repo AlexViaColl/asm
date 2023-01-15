@@ -4522,7 +4522,9 @@ def assemble(line, state):
         assert dst.lower() in REGISTERS
         modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
         return b'\x33' + pack('<B', modrm)
-    elif opcode in ['XORPD', 'XORPS', 'XRSTOR', 'XRSTORS', 'XSAVE', 'XSAVEC', 'XSAVEOPT', 'XSAVES']:
+    elif opcode == 'XORPD':
+        return b'\x66\x0f\x57\xc0'
+    elif opcode in ['XORPS', 'XRSTOR', 'XRSTORS', 'XSAVE', 'XSAVEC', 'XSAVEOPT', 'XSAVES']:
         assert False, 'Not implemented'
     elif opcode == 'XSETBV':
         return b'\x0f\x01\xd1'

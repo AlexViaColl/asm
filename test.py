@@ -1570,6 +1570,7 @@ def test_assemble():
         ['XGETBV',                          b'\x0f\x01\xd0'],
         ['XLAT',                            b'\xd7'],
         ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
+        ['XORPD xmm0, xmm0',                b'\x66\x0f\x57\xc0'],
         ['XSETBV',                          b'\x0f\x01\xd1'],
         ['XTEST',                           b'\x0f\x01\xd6'],
     ]
