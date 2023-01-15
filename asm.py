@@ -4048,6 +4048,8 @@ def assemble(line, state):
         return b'\x9d'
     elif opcode == 'POR':
         assert False, 'Not implemented'
+    elif opcode == 'PREFETCHW':
+        return b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'
     elif opcode.startswith('PREFETCH'):
         assert False, 'Not implemented'
     elif opcode.startswith('PS'):

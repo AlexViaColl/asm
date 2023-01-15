@@ -1473,6 +1473,7 @@ def test_assemble():
         ['POP ecx',                         b'\x59'],
         ['POPA',                            b'\x61'],
         ['POPF',                            b'\x9d'],
+        ['PREFETCHW BYTE PTR ds:0xd0d0d0d', b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'],
         ['PUSH es',                         b'\x06'],
         ['PUSH cs',                         b'\x0e'],
         ['PUSH ss',                         b'\x16'],
