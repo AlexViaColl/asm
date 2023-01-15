@@ -4121,6 +4121,12 @@ def assemble(line, state):
         return b'\xf3\x90'
     elif opcode in ['PAVGB', 'PAVGW', 'PBLENDVB', 'PBLENDW', 'PCLMULQDQ', '']:
         assert False, 'Not implemented'
+    elif opcode == 'PCMPEQW':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x75' + pack('<B', modrm)
     elif opcode.startswith('PCMP'):
         assert False, 'Not implemented'
     elif opcode == 'PCONFIG':
