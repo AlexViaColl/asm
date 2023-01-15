@@ -1289,6 +1289,7 @@ def test_assemble():
 
         ['FNINIT',                          b'\xdb\xe3'],
         ['FNOP',                            b'\xd9\xd0'],
+        ['FNSTENV [esp]',                   b'\xd9\x34\x24'],
         ['FPATAN',                          b'\xd9\xf3'],
         ['FPREM',                           b'\xd9\xf8'],
         ['FPREM1',                          b'\xd9\xf5'],

@@ -3114,6 +3114,8 @@ def assemble(line, state):
             assert False, 'Not implemented'
     elif opcode == 'FNOP':
         return b'\xd9\xd0'
+    elif opcode == 'FNSTENV':
+        return b'\xd9\x34\x24'
     elif opcode == 'FPATAN':
         return b'\xd9\xf3'
     elif opcode == 'FPREM':
