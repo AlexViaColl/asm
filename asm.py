@@ -4190,8 +4190,12 @@ def assemble(line, state):
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
                     ib = int(tokens[9].value, base=16)
-                    modrm = 0b01000000 | reg
-                    return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                    if disp <= 0x7f:
+                        modrm = 0b01000000 | reg
+                        return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                    else:
+                        modrm = 0b10000000 | reg
+                        return b'\xf6' + pack('<B', modrm) + pack('<I', disp) + pack('<B', ib)
                 if tokens[5].value == '-':
                     disp = -int(tokens[6].value, base=16)
                     assert tokens[7].value == ']'
@@ -4231,6 +4235,22 @@ def assemble(line, state):
                     modrm = 0b11000000 | rm32
                     im = int(tokens[3].value, base=16)
                     return b'\xf7' + pack('<B', modrm) + pack('<I', im)
+        elif tokens[1].value in REGISTERS16:
+            rm16 = REGISTERS16.index(tokens[1].value)
+            assert tokens[2].value == ','
+            if rm16 == REGISTERS16.index('ax') and tokens[3].value not in REGISTERS16:
+                im = int(tokens[3].value, base=16)
+                return b'\x66\xa9' + pack('<I', im)
+            else:
+                if tokens[3].value in REGISTERS16:
+                    # TEST r/m16, r16 (85 /r)
+                    r16 = REGISTERS16.index(tokens[3].value)
+                    modrm = 0b11000000 | r16 << 3 | rm16
+                    return b'\x66\x85' + pack('<B', modrm)
+                else:
+                    modrm = 0b11000000 | rm16
+                    im = int(tokens[3].value, base=16)
+                    return b'\x66\xf7' + pack('<B', modrm) + pack('<I', im)
         elif tokens[1].value == 'DWORD':
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
