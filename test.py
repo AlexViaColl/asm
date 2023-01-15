@@ -1512,6 +1512,8 @@ def test_assemble():
         ['SYSRET',                          b'\x0f\x07'],
         ['TEST al, al',                     b'\x84\xc0'],
         ['TEST eax, eax',                   b'\x85\xc0'],
+        ['TEST al, 0x2',                    b'\xa8\x02'],
+        ['TEST eax, 0xa9bb0041',            b'\xa9\x41\x00\xbb\xa9'],
         ['TEST BYTE PTR [esp+0x8], 0x1',    b'\xf6\x44\x24\x08\x01'],
         ['TEST BYTE PTR [ebp-0x30], 0x1',   b'\xf6\x45\xd0\x01'],
         ['TEST BYTE PTR [esi+0x68], 0x1',   b'\xf6\x46\x68\x01'],

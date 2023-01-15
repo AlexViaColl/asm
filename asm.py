@@ -4202,27 +4202,35 @@ def assemble(line, state):
         elif tokens[1].value in REGISTERS8:
             rm8 = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','
-            if tokens[3].value in REGISTERS8:
-                # TEST r/m8, r8 (84 /r)
-                r8 = REGISTERS8.index(tokens[3].value)
-                modrm = 0b11000000 | r8 << 3 | rm8
-                return b'\x84' + pack('<B', modrm)
-            else:
-                modrm = 0b11000000 | rm8
+            if rm8 == REGISTERS8.index('al') and tokens[3].value not in REGISTERS8:
                 ib = int(tokens[3].value, base=16)
-                return b'\xf6' + pack('<B', modrm) + pack('<B', ib)
+                return b'\xa8' + pack('<B', ib)
+            else:
+                if tokens[3].value in REGISTERS8:
+                    # TEST r/m8, r8 (84 /r)
+                    r8 = REGISTERS8.index(tokens[3].value)
+                    modrm = 0b11000000 | r8 << 3 | rm8
+                    return b'\x84' + pack('<B', modrm)
+                else:
+                    modrm = 0b11000000 | rm8
+                    ib = int(tokens[3].value, base=16)
+                    return b'\xf6' + pack('<B', modrm) + pack('<B', ib)
         elif tokens[1].value in REGISTERS:
             rm32 = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
-            if tokens[3].value in REGISTERS:
-                # TEST r/m32, r32 (85 /r)
-                r32 = REGISTERS.index(tokens[3].value)
-                modrm = 0b11000000 | r32 << 3 | rm32
-                return b'\x85' + pack('<B', modrm)
-            else:
-                modrm = 0b11000000 | rm32
+            if rm32 == REGISTERS.index('eax') and tokens[3].value not in REGISTERS:
                 im = int(tokens[3].value, base=16)
-                return b'\xf7' + pack('<B', modrm) + pack('<I', im)
+                return b'\xa9' + pack('<I', im)
+            else:
+                if tokens[3].value in REGISTERS:
+                    # TEST r/m32, r32 (85 /r)
+                    r32 = REGISTERS.index(tokens[3].value)
+                    modrm = 0b11000000 | r32 << 3 | rm32
+                    return b'\x85' + pack('<B', modrm)
+                else:
+                    modrm = 0b11000000 | rm32
+                    im = int(tokens[3].value, base=16)
+                    return b'\xf7' + pack('<B', modrm) + pack('<I', im)
         elif tokens[1].value == 'DWORD':
             assert tokens[2].value == 'PTR'
             assert tokens[3].value == '['
