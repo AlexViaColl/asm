@@ -2137,16 +2137,29 @@ def mxxfp(tokens, op_mod ):
                             '8': 0b11,
                         }[tokens[8].value]
                         if tokens[9].value == '-':
-                            ib = (~int(tokens[10].value, base=16) & 0xff) + 1
+                            im = -int(tokens[10].value, base=16)
+                            sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                            if abs(im) <= 0x7f:
+                                modrm = 0b01000100 | mod << 3
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<b', im)
+                            else:
+                                modrm = 0b10000100 | mod << 3
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<i', im)
                         elif tokens[9].value == '+':
-                            ib = int(tokens[10].value, base=16)
+                            im = int(tokens[10].value, base=16)
+                            sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                            if im <= 0x7f:
+                                modrm = 0b01000100 | mod << 3
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', im)
+                            else:
+                                modrm = 0b10000100 | mod << 3
+                                return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', im)
                         elif tokens[9].value == ']':
                             modrm = 0b00000100 | mod << 3
                             sib = 0b00000000 | scale << 6 | idx << 3 | reg
                             return op + pack('<B', modrm) + pack('<B', sib)
-                        modrm = 0b01000100 | mod << 3
-                        sib = 0b00000000 | scale << 6 | idx << 3 | reg
-                        return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', ib)
+                        else:
+                            assert False, 'Not implemented'
                     else:
                         disp = int(tokens[6].value, base=16)
                         assert tokens[7].value == ']'
@@ -2174,7 +2187,7 @@ def mxxfp(tokens, op_mod ):
                     }[tokens[6].value]
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
-                    modrm = 0b00011100
+                    modrm = 0b00000100 | mod << 3
                     sib = 0b00000101 | scale << 6
                     return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                 else: # '-'
@@ -2822,7 +2835,27 @@ def assemble(line, state):
     elif opcode == 'FABS':
         return b'\xd9\xe1'
     elif opcode.startswith('FADD'):
-        assert False, 'Not implemented'
+        if tokens[1].value == 'st':
+            if tokens[2].value == ',':
+                assert tokens[3].value == 'st'
+                assert tokens[4].value == '('
+                i = int(tokens[5].value)
+                assert tokens[6].value == ')'
+                return b'\xd8' + pack('<B', 0xc0 + i)
+            else:
+                assert tokens[2].value == '('
+                i = int(tokens[3].value)
+                assert tokens[4].value == ')'
+                assert tokens[5].value == ','
+                assert tokens[6].value == 'st'
+                return b'\xdc' + pack('<B', 0xc0 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            return mxxfp(tokens, {
+                'DWORD': [b'\xd8', 0],
+                'QWORD': [b'\xdc', 0],
+            })
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FBLD':
         assert tokens[1].value == 'TBYTE'
         assert tokens[2].value == 'PTR'
