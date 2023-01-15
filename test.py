@@ -1522,6 +1522,7 @@ def test_assemble():
         ['TEST BYTE PTR [esi+0x31c], 0x2',  b'\xf6\x86\x1c\x03\x00\x00\x02'],
         ['TEST ah, 0x44',                   b'\xf6\xc4\x44'],
         ['TEST DWORD PTR [eax+0x0], 0x40f7c3', b'\xf7\x40\x00\xc3\xf7\x40\x00'],
+        ['TEST DWORD PTR [ebp+0x68c], 0x1000000', b'\xf7\x85\x8c\x06\x00\x00\x00\x00\x00\x01'],
         ['TEST ecx, 0xfffffff0',            b'\xf7\xc1\xf0\xff\xff\xff'],
         ['VZEROALL',                        b'\xc5\xfc\x77'],
         ['VZEROUPPER',                      b'\xc5\xf8\x77'],
