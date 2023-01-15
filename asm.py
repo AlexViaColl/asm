@@ -3862,7 +3862,10 @@ def assemble(line, state):
     elif opcode == 'MOVZX':
         return b'\x0f\xb7\x45\xd4'
     elif opcode == 'MOVS':
-        return b'\xa5'
+        if tokens[1].value == 'BYTE':
+            return b'\xa4'
+        else:
+            return b'\xa5'
     elif opcode == 'MOVSX':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
@@ -4105,9 +4108,15 @@ def assemble(line, state):
     elif opcode == 'REPZ':
         rem = ' '.join(map(lambda x: x.value, tokens[1:]))
         return b'\xf3' + assemble(rem, state)
-    elif opcode.startswith('REP'):
+    elif opcode == 'REP':
+        if 'WORD' in map(lambda x: x.value, tokens[1:]):
+            prefix = b'\x66'
+        else:
+            prefix = b''
         rem = ' '.join(map(lambda x: x.value, tokens[1:]))
-        return b'\xf3' + assemble(rem, state)
+        return prefix + b'\xf3' + assemble(rem, state)
+    elif opcode.startswith('REP'):
+        assert False, 'Not implemented'
     elif opcode == 'RET':
         if len(tokens) > 1:
             iw = int(tokens[1].value, base=16)
@@ -4193,8 +4202,13 @@ def assemble(line, state):
         return b'\xfd'
     elif opcode == 'STI':
         return b'\xfb'
+    elif opcode == 'STOS':
+        if tokens[1].value == 'BYTE':
+            return b'\xaa'
+        else:
+            return b'\xab'
     elif opcode.startswith('ST'):
-        assert False, 'Not implemented'
+        assert False, 'Not implented'
     elif opcode == 'SUB':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
