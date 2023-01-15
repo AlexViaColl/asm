@@ -4126,7 +4126,11 @@ def assemble(line, state):
         assert tokens[2].value == ','
         src = int(tokens[3].value[-1])
         modrm = 0b11000000 | dst << 3 | src
-        return b'\x0f\x75' + pack('<B', modrm)
+        if tokens[1].value.startswith('x'):
+            prefix = b'\x66'
+        else:
+            prefix = b''
+        return prefix + b'\x0f\x75' + pack('<B', modrm)
     elif opcode.startswith('PCMP'):
         assert False, 'Not implemented'
     elif opcode == 'PCONFIG':
@@ -4157,6 +4161,24 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PINS'):
         assert False, 'Not implemented'
+    elif opcode == 'PMAXSW':
+        dst = int(tokens[1].value[-1])
+        if tokens[1].value.startswith('x'):
+            prefix = b'\x66'
+        else:
+            prefix = b''
+        modrm = 0b00000101 | dst << 3
+        m = int(tokens[-1].value, base=16)
+        return prefix + b'\x0f\xee' + pack('<B', modrm) + pack('<I', m)
+    elif opcode == 'PMOVMSKB':
+        dst = REGISTERS.index(tokens[1].value)
+        src = int(tokens[3].value[-1])
+        if tokens[3].value.startswith('x'):
+            prefix = b'\x66'
+        else:
+            prefix = b''
+        modrm = 0b11000000 | dst << 3 | src
+        return prefix + b'\x0f\xd7' + pack('<B', modrm)
     elif opcode.startswith('PM'):
         assert False, 'Not implemented'
     elif opcode == 'POP':
