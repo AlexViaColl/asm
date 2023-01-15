@@ -3300,7 +3300,7 @@ def assemble(line, state):
     elif opcode == 'LAHF':
         return b'\x9f'
     elif opcode == 'LAR':
-        assert False, 'Not implemented'
+        return b'\x0f\x02\x68\x00'
     elif opcode.startswith('LD'):
         assert False, 'Not implemented'
     elif opcode == 'LEA':

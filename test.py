@@ -1346,6 +1346,7 @@ def test_assemble():
         ['JMP 0x5',                         b'\xeb\x03'],
         ['JMP DWORD PTR [eax*4+0x40418c]',  b'\xff\x24\x85\x8c\x41\x40\x00'],
         ['LAHF',                            b'\x9f'],
+        ['LAR ebp, WORD PTR [eax+0x0]',     b'\x0f\x02\x68\x00'],
         ['LEA ecx, [eax+edx*1]',            b'\x8d\x0c\x10'],
         ['LEA ecx, [edi+edx*1]',            b'\x8d\x0c\x17'],
         ['LEA edx, [edx*4-0x1]',            b'\x8d\x14\x95\xff\xff\xff\xff'],
