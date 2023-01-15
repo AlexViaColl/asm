@@ -1154,6 +1154,8 @@ def test_assemble():
         ['ADD eax, 0x4',                    b'\x83\xc0\x04'],
         ['ADD eax, 0xfffffffe',             b'\x83\xc0\xfe'],
 
+        ['ADDPD xmm0, xmm2',                b'\x66\x0f\x58\xc2'],
+
         ['AND BYTE PTR [ecx], al',          b'\x20\x01'],
         ['AND DWORD PTR [ecx], eax',        b'\x21\x01'],
         ['AND ecx, edx',                    b'\x23\xca'],
@@ -1167,6 +1169,8 @@ def test_assemble():
         ['AND DWORD PTR [eax], 0x1',        b'\x83\x20\x01'],
         ['AND eax, 0x4',                    b'\x83\xe0\x04'],
         ['AND esi, 0xfffffff8',             b'\x83\xe6\xf8'],
+
+        ['ANDPD xmm0, XMMWORD PTR ds:0x889b00', b'\x66\x0f\x54\x05\x00\x9b\x88\x00'],
 
         ['CALL 0x4a89:0xf3004a89',          b'\x9a\x89\x4a\x00\xf3\x89\x4a'],
         ['CALL 0x66cc:0xfd0066ca',          b'\x9a\xca\x66\x00\xfd\xcc\x66'],

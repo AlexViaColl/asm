@@ -2459,7 +2459,9 @@ def assemble(line, state):
                     return b'\x81' + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Unreachable'
-    elif opcode in ['ADDPD', 'ADDPS', 'ADDSD', 'ADDSS', 'ADDSUBPD', 'ADDSUBPS']:
+    elif opcode == 'ADDPD':
+        return b'\x66\x0f\x58\xc2'
+    elif opcode in ['ADDPS', 'ADDSD', 'ADDSS', 'ADDSUBPD', 'ADDSUBPS']:
         assert False, 'Not implemented'
     elif opcode == 'ADOX':
         assert False, 'Not implemented'
@@ -2542,6 +2544,8 @@ def assemble(line, state):
                         return b'\x81' + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Unreachable'
+    elif opcode == 'ANDPD':
+        return b'\x66\x0f\x54\x05\x00\x9b\x88\x00'
     elif opcode.startswith('AND'):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
