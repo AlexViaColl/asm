@@ -3203,7 +3203,10 @@ def assemble(line, state):
     elif opcode == 'FRNDINT':
         return b'\xd9\xfc'
     elif opcode == 'FRSTOR':
-        assert False, 'Not implemented'
+        base = REGISTERS.index(tokens[2].value)
+        disp = int(tokens[4].value, base=16)
+        modrm = 0b01100000 | base
+        return b'\xdd' + pack('<B', modrm) + pack('<B', disp)
     elif opcode == 'FSAVE':
         base = REGISTERS.index(tokens[2].value)
         modrm = 0b01110000 | base
