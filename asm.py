@@ -4191,7 +4191,10 @@ def assemble(line, state):
                     assert tokens[8].value == ','
                     ib = int(tokens[9].value, base=16)
                     if disp <= 0x7f:
-                        modrm = 0b01000000 | reg
+                        if tokens[4].value in ['ecx']:
+                            modrm = 0b01001000 | reg
+                        else:
+                            modrm = 0b01000000 | reg
                         return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
                     else:
                         modrm = 0b10000000 | reg
@@ -4262,15 +4265,25 @@ def assemble(line, state):
                     assert tokens[8].value == ','
                     if tokens[9].value in REGISTERS:
                         src = REGISTERS.index(tokens[9].value)
-                        modrm = 0b10000000 | src << 3 | reg
-                        return b'\x85' + pack('<B', modrm) + pack('<I', disp)
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | src << 3 | reg
+                            return b'\x85' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | src << 3 | reg
+                            return b'\x85' + pack('<B', modrm) + pack('<I', disp)
                     else:
                         im = int(tokens[9].value, base=16)
                         if disp <= 0x7f:
-                            modrm = 0b01000000 | reg
+                            if tokens[4].value in ['ecx']:
+                                modrm = 0b01001000 | reg
+                            else:
+                                modrm = 0b01000000 | reg
                             return b'\xf7' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
                         else:
-                            modrm = 0b10000000 | reg
+                            if tokens[4].value in ['ecx']:
+                                modrm = 0b10001000 | reg
+                            else:
+                                modrm = 0b10000000 | reg
                             return b'\xf7' + pack('<B', modrm) + pack('<I', disp) + pack('<I', im)
                 else:
                     assert False, 'Not implemented'
