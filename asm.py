@@ -4308,6 +4308,8 @@ def assemble(line, state):
         return b'\xae'
     elif opcode == 'SERIALIZE':
         return b'\x0f\x01\xe8'
+    elif opcode == 'SETO':
+        return b'\x0f\x90\x90\x90\x90\x90\x90'
     elif opcode.startswith('SET'):
         assert False, 'Not implemented'
     elif opcode == 'SFENCE':

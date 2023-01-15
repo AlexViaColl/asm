@@ -1539,6 +1539,7 @@ def test_assemble():
         ['SAR eax, 1',                      b'\xd1\xf8'],
         ['SAVEPREVSSP',                     b'\xf3\x0f\x01\xea'],
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
+        ['SETO BYTE PTR [eax-0x6f6f6f70]',  b'\x0f\x90\x90\x90\x90\x90\x90'],
         ['SFENCE',                          b'\x0f\xae\xf8'],
         ['SGDTD [ecx]',                     b'\x0f\x01\x01'],
         ['SUB esi, edi',                    b'\x2b\xf7'],
