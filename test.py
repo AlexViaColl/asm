@@ -1227,6 +1227,7 @@ def test_assemble():
         ['CMP eax, 0x1',                    b'\x83\xf8\x01'],
         ['CMP eax, 0xffffffff',             b'\x83\xf8\xff'],
         ['CMP esi, 0xfffffffe',             b'\x83\xfe\xfe'],
+        ['CMPLTSS xmm3, xmm2',              b'\xf3\x0f\xc2\xda\x01'],
         ['CPUID',                           b'\x0f\xa2'],
         ['DAA',                             b'\x27'],
         ['DAS',                             b'\x2f'],

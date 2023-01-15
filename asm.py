@@ -2873,6 +2873,8 @@ def assemble(line, state):
                 else:
                     modrm = 0b11111000 | dst
                     return b'\x80' + pack('<B', modrm) + pack('<B', ib)
+    elif opcode == 'CMPLTSS':
+        return b'\xf3\x0f\xc2\xda\x01'
     elif opcode == 'CMPS':
         assert tokens[1].value == 'BYTE'
         assert tokens[2].value == 'PTR'
