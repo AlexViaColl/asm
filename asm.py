@@ -2450,10 +2450,32 @@ def assemble(line, state):
                 base = REGISTERS.index(tokens[4].value)
                 if tokens[5].value == '+':
                     disp = int(tokens[6].value, base=16)
-                    modrm = 0b01010000 | base
-                    return b'\xff' + pack('<B', modrm) + pack('<B', disp)
+                    if base == REGISTERS.index('esp'):
+                        sib = 0b00100100
+                        if disp <= 0x7f:
+                            modrm = 0b01010000 | base
+                            return b'\xff' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                        else:
+                            modrm = 0b10010000 | base
+                            return b'\xff' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01010000 | base
+                            return b'\xff' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10010000 | base
+                            return b'\xff' + pack('<B', modrm) + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = -int(tokens[6].value, base=16)
+                    if disp <= 0x7f:
+                        modrm = 0b01010000 | base
+                        return b'\xff' + pack('<B', modrm) + pack('<b', disp)
+                    else:
+                        modrm = 0b10010000 | base
+                        return b'\xff' + pack('<B', modrm) + pack('<i', disp)
                 else:
-                    assert False, 'Not implemented yet'
+                    modrm = 0b00010000 | base
+                    return b'\xff' + pack('<B', modrm)
             else:
                 assert tokens[3].value == 'ds'
                 assert tokens[4].value == ':'
@@ -2463,10 +2485,19 @@ def assemble(line, state):
             # CALL r/m32 (FF /2)
             return b'\xff' + pack('<B', 0b11010000 | REGISTERS.index(tokens[1].value))
         else:
-            # CALL rel32 (E8 cd)
-            rel = int(tokens[1].value, base=16)
-            rel = rel - state['eip'] - 5
-            return b'\xe8' + pack('<i', rel)
+            if len(tokens) == 2:
+                # CALL rel32 (E8 cd)
+                to = int(tokens[1].value, base=16)
+                rel = to - state['eip'] - 5
+                if rel < 0:
+                    return b'\xe8' + pack('<i', rel)
+                else:
+                    return b'\xe8' + pack('<I', rel)
+            else:
+                ptr1 = int(tokens[1].value, base=16)
+                assert tokens[2].value == ':'
+                ptr2 = int(tokens[3].value, base=16)
+                return b'\x9a' + pack('<H', ptr1) + pack('<H', ptr2 >> 16) + pack('<H', ptr2 & 0xffff)
     elif opcode == 'CDQ':
         return b'\x99'
     elif opcode == 'CLAC':
