@@ -2661,6 +2661,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'CMC':
         return b'\xf5'
+    elif opcode == 'CMOVB':
+        return b'\x0f\x42\xd1'
     elif opcode.startswith('CMOV'):
         assert False, 'Not implemented'
     elif opcode == 'CMP':
