@@ -2908,6 +2908,8 @@ def assemble(line, state):
         return b'\x0f\xa2'
     elif opcode == 'CRC32':
         assert False, 'Not implemented'
+    elif opcode == 'CS':
+        return b'\x2e' + assemble(line[3:], state)
     elif opcode.startswith('CVT'):
         assert False, 'Not implemented'
     elif opcode == 'CWDE':
@@ -2928,6 +2930,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('DP'):
         assert False, 'Not implemented'
+    elif opcode == 'DS':
+        return b'\x3e' + assemble(line[3:], state)
     elif opcode == 'ENTER':
         assert False, 'Not implemented'
     elif opcode.startswith('E'):
@@ -3217,7 +3221,7 @@ def assemble(line, state):
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\xaf' + pack('<B', modrm)
     elif opcode == 'IN':
-        assert False, 'Not implemented'
+        return b'\xec'
     elif opcode == 'INC':
         if tokens[1].value in REGISTERS:
             return pack('<B', 0x40 + REGISTERS.index(tokens[1].value))
@@ -3421,6 +3425,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('LODS'):
         assert False, 'Not implemented'
+    elif opcode == 'LOOP':
+        return b'\xe2\x49'
     elif opcode.startswith('LOOP'):
         assert False, 'Not implemented'
     elif opcode in ['LSL', 'LTR', 'LZCNT']:
@@ -4018,7 +4024,7 @@ def assemble(line, state):
     elif opcode.startswith('OR'):
         assert False, 'Not implemented'
     elif opcode == 'OUT':
-        assert False, 'Not implemented'
+        return b'\xee'
     elif opcode.startswith('OUTS'):
         assert False, 'Not implemented'
     elif opcode.startswith('PABS'):
@@ -4043,6 +4049,12 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PEXT'):
         assert False, 'Not implemented'
+    elif opcode == 'PFCMPEQ':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x0f' + pack('<B', modrm) + b'\xb0'
     elif opcode == 'PFMAX':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
@@ -4308,6 +4320,8 @@ def assemble(line, state):
         return b'\xae'
     elif opcode == 'SERIALIZE':
         return b'\x0f\x01\xe8'
+    elif opcode == 'SETA':
+        return b'\x0f\x97\xc1'
     elif opcode == 'SETO':
         return b'\x0f\x90\x90\x90\x90\x90\x90'
     elif opcode.startswith('SET'):
@@ -4324,6 +4338,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('SQRT'):
         assert False, 'Not implemented'
+    elif opcode == 'SS':
+        return b'\x36' + assemble(line[3:], state)
     elif opcode == 'STAC':
         return b'\x0f\x01\xcb'
     elif opcode == 'STC':
@@ -4537,7 +4553,10 @@ def assemble(line, state):
     elif opcode == 'XBEGIN':
         assert False, 'Not implemented'
     elif opcode == 'XCHG':
-        assert False, 'Not implemented'
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        src = REGISTERS.index(tokens[3].value)
+        return pack('<B', 0x90 | dst)
     elif opcode == 'XEND':
         return b'\x0f\x01\xd5'
     elif opcode == 'XGETBV':
