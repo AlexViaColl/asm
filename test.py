@@ -1590,6 +1590,8 @@ def test_assemble():
         ['SUB esi, edi',                    b'\x2b\xf7'],
         ['SUB esp, 0x118',                  b'\x81\xec\x18\x01\x00\x00'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],
+        ['SUBPD xmm2, XMMWORD PTR [esp+0x130]', b'\x66\x0f\x5c\x94\x24\x30\x01\x00\x00'],
+        ['SUBPD xmm2, xmm0',                b'\x66\x0f\x5c\xd0'],
         ['STAC',                            b'\x0f\x01\xcb'],
         ['STC',                             b'\xf9'],
         ['STD',                             b'\xfd'],

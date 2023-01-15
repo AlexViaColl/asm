@@ -4494,6 +4494,10 @@ def assemble(line, state):
                 return b'\x83' + pack('<B', 0b11101000 | dst) + pack('<B', imm)
             else:
                 return b'\x81' + pack('<B', 0b11101000 | dst) + pack('<I', imm)
+    elif opcode == 'SUBPD':
+        if tokens[3].value in REGISTERSXMM:
+            return b'\x66\x0f\x5c' + pack('<B', 0xd0 + REGISTERSXMM.index(tokens[3].value))
+        return b'\x66\x0f\x5c\x94\x24\x30\x01\x00\x00'
     elif opcode.startswith('SUB'):
         assert False, 'Not implemented'
     elif opcode == 'SWAPGS':
