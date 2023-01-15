@@ -2966,6 +2966,14 @@ def assemble(line, state):
         return b'\x9b\xdb\xe2'
     elif opcode == 'FNCLEX':
         return b'\xdb\xe2'
+    elif opcode == 'FCMOVBE':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == ','
+        assert tokens[3].value == 'st'
+        assert tokens[4].value == '('
+        i = int(tokens[5].value)
+        assert tokens[6].value == ')'
+        return b'\xda' + pack('<B', 0xd0 + i)
     elif opcode.startswith('FCMOV'):
         assert False, 'Not implemented'
     elif opcode.startswith('FCOM'):

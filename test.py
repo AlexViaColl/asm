@@ -1242,6 +1242,7 @@ def test_assemble():
         ['FBLD TBYTE PTR [ebp-0x5909ffad]', b'\xdf\xa5\x53\x00\xf6\xa6'],
         ['FCHS',                            b'\xd9\xe0'],
         ['FCLEX',                           b'\x9b\xdb\xe2'],
+        ['FCMOVBE st, st(4)',               b'\xda\xd4'],
         ['FNCLEX',                          b'\xdb\xe2'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],
