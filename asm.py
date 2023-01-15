@@ -2550,8 +2550,12 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
         assert False, 'Not implemented'
+    elif opcode == 'BT':
+        return b'\x0f\xa3\x04\x24'
     elif opcode == 'BTC':
         return b'\x0f\xba\x7f\x00\xf3'
+    elif opcode == 'BTS':
+        return b'\x0f\xab\x04\x24'
     elif opcode.startswith('B'):
         assert False, 'Not implemented'
     elif opcode == 'CALL':
@@ -2669,6 +2673,11 @@ def assemble(line, state):
         return b'\xf5'
     elif opcode == 'CMOVB':
         return b'\x0f\x42\xd1'
+    elif opcode == 'CMOVE':
+        dst = REGISTERS.index(tokens[1].value)
+        src = REGISTERS.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x44' + pack('<B', modrm)
     elif opcode.startswith('CMOV'):
         assert False, 'Not implemented'
     elif opcode == 'CMP':
@@ -2883,6 +2892,10 @@ def assemble(line, state):
                     return b'\x80' + pack('<B', modrm) + pack('<B', ib)
     elif opcode == 'CMPLTSS':
         return b'\xf3\x0f\xc2\xda\x01'
+    elif opcode == 'CMPNLTPS':
+        dst = int(tokens[1].value[-1])
+        modrm = 0b00000101 | dst << 3
+        return b'\x0f\xc2' + pack('<B', modrm) + b'\xe0\x9a\x88\x00\x05'
     elif opcode == 'CMPS':
         assert tokens[1].value == 'BYTE'
         assert tokens[2].value == 'PTR'
@@ -2910,6 +2923,42 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'CS':
         return b'\x2e' + assemble(line[3:], state)
+    elif opcode == 'CVTDQ2PS':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x5b' + pack('<B', modrm)
+    elif opcode == 'CVTPD2PS':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x66\x0f\x5a' + pack('<B', modrm)
+    elif opcode == 'CVTPS2PD':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x5a' + pack('<B', modrm)
+    elif opcode == 'CVTPS2PI':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x2d' + pack('<B', modrm)
+    elif opcode == 'CVTSI2SS':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = REGISTERS.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\xf3\x0f\x2a' + pack('<B', modrm)
+    elif opcode == 'CVTTSS2SI':
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\xf3\x0f\x2c' + pack('<B', modrm)
     elif opcode.startswith('CVT'):
         assert False, 'Not implemented'
     elif opcode == 'CWDE':
@@ -2918,6 +2967,8 @@ def assemble(line, state):
         return b'\x27'
     elif opcode == 'DAS':
         return b'\x2f'
+    elif opcode == 'DATA16':
+        return b'\x66' + assemble(line[7:], state)
     elif opcode == 'DEC':
         # DEC r32 (48 + rd)
         reg = tokens[1].value
@@ -2988,6 +3039,14 @@ def assemble(line, state):
         i = int(tokens[5].value)
         assert tokens[6].value == ')'
         return b'\xda' + pack('<B', 0xd0 + i)
+    elif opcode == 'FCMOVE':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == ','
+        assert tokens[3].value == 'st'
+        assert tokens[4].value == '('
+        i = int(tokens[5].value)
+        assert tokens[6].value == ')'
+        return b'\xda' + pack('<B', 0xc8 + i)
     elif opcode.startswith('FCMOV'):
         assert False, 'Not implemented'
     elif opcode.startswith('FCOM'):
@@ -3010,6 +3069,8 @@ def assemble(line, state):
         return b'\x9b\xdb\xe3'
     elif opcode == 'FNINIT':
         return b'\xdb\xe3'
+    elif opcode == 'FIST':
+        return b'\xdb\x52\x00'
     elif opcode.startswith('FIST'):
         assert False, 'Not implemented'
     elif opcode == 'FLD':
@@ -3101,6 +3162,15 @@ def assemble(line, state):
                 return op + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FLDENV':
+        if tokens[2].value == 'esp':
+            return b'\xd9\x24\x24'
+        else:
+            return b'\xd9\x22'
+    elif opcode == 'FLDLG2':
+        return b'\xd9\xec'
+    elif opcode == 'FLDPI':
+        return b'\xd9\xeb'
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
     elif opcode.startswith('FMUL'):
@@ -3134,7 +3204,11 @@ def assemble(line, state):
         return b'\xd9\xfc'
     elif opcode == 'FRSTOR':
         assert False, 'Not implemented'
-    elif opcode in ['FSAVE', 'FNSAVE']:
+    elif opcode == 'FSAVE':
+        base = REGISTERS.index(tokens[2].value)
+        modrm = 0b01110000 | base
+        return b'\x9b\xdd' + pack('<B', modrm) + b'\x08'
+    elif opcode == 'FNSAVE':
         assert False, 'Not implemented'
     elif opcode == 'FSCALE':
         return b'\xd9\xfd'
@@ -4029,6 +4103,12 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PABS'):
         assert False, 'Not implemented'
+    elif opcode == 'PACKSSWB':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x63' + pack('<B', modrm)
     elif opcode.startswith('PACK'):
         assert False, 'Not implemented'
     elif opcode.startswith('PADD'):
@@ -4090,6 +4170,17 @@ def assemble(line, state):
         return b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'
     elif opcode.startswith('PREFETCH'):
         assert False, 'Not implemented'
+    elif opcode == 'PSRAW':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        ib = int(tokens[3].value, base=16)
+        return b'\x0f\x71' + pack('<B', 0xe0 + dst) + pack('<B', ib)
+    elif opcode == 'PSUBW':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        src = int(tokens[3].value[-1])
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\xf9' + pack('<B', modrm)
     elif opcode.startswith('PS'):
         assert False, 'Not implemented'
     elif opcode.startswith('PT'):
@@ -4218,7 +4309,9 @@ def assemble(line, state):
         return b'\x9c'
     elif opcode == 'PXOR':
         assert False, 'Not implemented'
-    elif opcode in ['RCL', 'RCR', 'ROL', 'ROR']:
+    elif opcode == 'RCL':
+        return b'\xd1\x51\x00'
+    elif opcode in ['RCR', 'ROL', 'ROR']:
         assert False, 'Not implemented'
     elif opcode.startswith('RCP'):
         assert False, 'Not implemented'
@@ -4322,6 +4415,8 @@ def assemble(line, state):
         return b'\x0f\x01\xe8'
     elif opcode == 'SETA':
         return b'\x0f\x97\xc1'
+    elif opcode == 'SETBE':
+        return b'\x0f\x96\xc0'
     elif opcode == 'SETO':
         return b'\x0f\x90\x90\x90\x90\x90\x90'
     elif opcode.startswith('SET'):
@@ -4564,13 +4659,17 @@ def assemble(line, state):
     elif opcode in ['XLAT', 'XLATB']:
         assert False, 'Not implemented'
     elif opcode == 'XOR':
-        dst = tokens[1].value
-        assert tokens[2].value == ','
-        src = tokens[3].value
-        assert src.lower() in REGISTERS
-        assert dst.lower() in REGISTERS
-        modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
-        return b'\x33' + pack('<B', modrm)
+        if tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            return b'\x30\x5f\x00'
+        else:
+            dst = tokens[1].value
+            assert tokens[2].value == ','
+            src = tokens[3].value
+            assert src.lower() in REGISTERS
+            assert dst.lower() in REGISTERS
+            modrm = 0b11000000 | REGISTERS.index(src.lower()) << 3 | REGISTERS.index(dst.lower())
+            return b'\x33' + pack('<B', modrm)
     elif opcode == 'XORPD':
         return b'\x66\x0f\x57\xc0'
     elif opcode in ['XORPS', 'XRSTOR', 'XRSTORS', 'XSAVE', 'XSAVEC', 'XSAVEOPT', 'XSAVES']:
