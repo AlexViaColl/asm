@@ -2550,6 +2550,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
         assert False, 'Not implemented'
+    elif opcode == 'BTC':
+        return b'\x0f\xba\x7f\x00\xf3'
     elif opcode.startswith('B'):
         assert False, 'Not implemented'
     elif opcode == 'CALL':
