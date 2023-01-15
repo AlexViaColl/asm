@@ -3178,6 +3178,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'FTST':
         return b'\xd9\xe4'
+    elif opcode == 'FUCOMP':
+        return b'\xdd\xee'
     elif opcode.startswith('FUCOM'):
         assert False, 'Not implemented'
     elif opcode == 'FWAIT':

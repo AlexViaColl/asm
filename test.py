@@ -1310,6 +1310,7 @@ def test_assemble():
         ['FSTP st(0)',                      b'\xdd\xd8'],
         ['FSUB DWORD PTR [ecx*4+0x903174]', b'\xd8\x24\x8d\x74\x31\x90\x00'],
         ['FTST',                            b'\xd9\xe4'],
+        ['FUCOMP st(6)',                    b'\xdd\xee'],
         ['FXAM',                            b'\xd9\xe5'],
         ['FYL2X',                           b'\xd9\xf1'],
         ['FYL2XP1',                         b'\xd9\xf9'],
