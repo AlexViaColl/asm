@@ -2550,6 +2550,9 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
         assert False, 'Not implemented'
+    elif opcode == 'BSWAP':
+        modrm = 0xc8 + REGISTERS.index(tokens[1].value)
+        return b'\x0f' + pack('<B', modrm)
     elif opcode == 'BT':
         return b'\x0f\xa3\x04\x24'
     elif opcode == 'BTC':
