@@ -2902,6 +2902,16 @@ def assemble(line, state):
         else:
             m = int(tokens[7].value, base=16)
             return b'\x0f\xc2\x3d' + pack('<I', m) + b'\x02'
+    elif opcode == 'CMPLTPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xc2' + pack('<B', modrm) + b'\x01'
+        else:
+            modrm = 0b00000101 | dst << 3
+            m = int(tokens[7].value, base=16)
+            return b'\x0f\xc2' + pack('<B', modrm) + pack('<I', m) + b'\x01'
     elif opcode == 'CMPLTSS':
         return b'\xf3\x0f\xc2\xda\x01'
     elif opcode == 'CMPNLTPS':
