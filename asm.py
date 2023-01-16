@@ -2914,6 +2914,9 @@ def assemble(line, state):
             return b'\x0f\xc2' + pack('<B', modrm) + pack('<I', m) + b'\x01'
     elif opcode == 'CMPLTSS':
         return b'\xf3\x0f\xc2\xda\x01'
+    elif opcode == 'CMPNEQPS':
+        modrm = 0b11000001
+        return b'\x0f\xc2' + pack('<B', modrm) + b'\x04'
     elif opcode == 'CMPNLTPS':
         dst = int(tokens[1].value[-1])
         modrm = 0b00000101 | dst << 3

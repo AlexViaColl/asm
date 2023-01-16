@@ -1246,6 +1246,7 @@ def test_assemble():
         ['CMPLTPS xmm1, XMMWORD PTR ds:0x889af0', b'\x0f\xc2\x0d\xf0\x9a\x88\x00\x01'],
         ['CMPLTPS xmm3, XMMWORD PTR ds:0x889af0', b'\x0f\xc2\x1d\xf0\x9a\x88\x00\x01'],
         ['CMPLTSS xmm3, xmm2',              b'\xf3\x0f\xc2\xda\x01'],
+        ['CMPNEQPS xmm0, xmm1',             b'\x0f\xc2\xc1\x04'],
         ['CMPNLTPS xmm0, XMMWORD PTR ds:0x889ae0', b'\x0f\xc2\x05\xe0\x9a\x88\x00\x05'],
         ['CMPNLTPS xmm2, XMMWORD PTR ds:0x889ae0', b'\x0f\xc2\x15\xe0\x9a\x88\x00\x05'],
         ['CPUID',                           b'\x0f\xa2'],
