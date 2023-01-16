@@ -2459,6 +2459,8 @@ def assemble(line, state):
                     return b'\x81' + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Unreachable'
+    elif opcode == 'ADDR16':
+        return b'\x67' + assemble(line[7:], state)
     elif opcode == 'ADDPD':
         return b'\x66\x0f\x58\xc2'
     elif opcode in ['ADDPS', 'ADDSD', 'ADDSS', 'ADDSUBPD', 'ADDSUBPS']:
