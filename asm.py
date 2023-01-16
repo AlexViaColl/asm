@@ -2550,6 +2550,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
         assert False, 'Not implemented'
+    elif opcode == 'BND':
+        state['eip'] += 1
+        inst = b'\xf2' + assemble(line[4:], state)
+        state['eip'] -= 1
+        return inst
     elif opcode == 'BSWAP':
         modrm = 0xc8 + REGISTERS.index(tokens[1].value)
         return b'\x0f' + pack('<B', modrm)

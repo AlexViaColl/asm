@@ -1171,6 +1171,8 @@ def test_assemble():
         ['AND esi, 0xfffffff8',             b'\x83\xe6\xf8'],
 
         ['ANDPD xmm0, XMMWORD PTR ds:0x889b00', b'\x66\x0f\x54\x05\x00\x9b\x88\x00'],
+        #['BND js 0x4a821d',                 b'\xf2\x78\x4a'],
+        #['BND jg 0x7ff4d8',                 b'\xf2\x7f\x00'],
         ['BSWAP ebx',                       b'\x0f\xcb'],
         ['BT DWORD PTR [esp], eax',         b'\x0f\xa3\x04\x24'],
         ['BTC DWORD PTR [edi+0x0], 0xf3',   b'\x0f\xba\x7f\x00\xf3'],
