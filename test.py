@@ -1508,6 +1508,7 @@ def test_assemble():
         ['PACKSSWB mm2, mm2',               b'\x0f\x63\xd2'],
         ['PACKSSWB mm6, mm6',               b'\x0f\x63\xf6'],
         ['PAUSE',                           b'\xf3\x90'],
+        ['PCMPEQD mm0, mm6',                b'\x0f\x76\xc6'],
         ['PCMPEQW mm3, mm7',                b'\x0f\x75\xdf'],
         ['PCMPEQW xmm3, xmm7',              b'\x66\x0f\x75\xdf'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],
