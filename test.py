@@ -1515,6 +1515,8 @@ def test_assemble():
         ['PFMAX mm0, mm6',                  b'\x0f\x0f\xc6\xa4'],
         ['PFMIN mm0, mm1',                  b'\x0f\x0f\xc1\x94'],
         ['PFMIN mm1, mm2',                  b'\x0f\x0f\xca\x94'],
+        ['PFNACC mm5, mm4',                 b'\x0f\x0f\xec\x8a'],
+        ['PFNACC mm6, mm7',                 b'\x0f\x0f\xf7\x8a'],
         ['PMAXSW mm6, QWORD PTR ds:0x8e99d0', b'\x0f\xee\x35\xd0\x99\x8e\x00'],
         ['PMAXSW xmm1, QWORD PTR ds:0x8e9bf0', b'\x66\x0f\xee\x0d\xf0\x9b\x8e\x00'],
         ['PMOVMSKB ecx, mm6',               b'\x0f\xd7\xce'],
