@@ -4480,6 +4480,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode in ['SIDT', 'SLDT', 'SMSW']:
         assert False, 'Not implemented'
+    elif opcode == 'SQRTPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x51' + pack('<B', modrm)
     elif opcode.startswith('SQRT'):
         assert False, 'Not implemented'
     elif opcode == 'SS':
