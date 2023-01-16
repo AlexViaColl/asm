@@ -4088,6 +4088,11 @@ def assemble(line, state):
                     return seg + b'\xa3' + pack('<I', off)
                 else:
                     assert False, 'Unreachable'
+    elif opcode == 'MOVMSKPS':
+        dst = REGISTERS.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x50' + pack('<B', modrm)
     elif opcode == 'MOVZX':
         return b'\x0f\xb7\x45\xd4'
     elif opcode == 'MOVS':
