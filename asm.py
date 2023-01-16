@@ -4196,6 +4196,11 @@ def assemble(line, state):
         src = REGISTERSMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x0f' + pack('<B', modrm) + b'\x8a'
+    elif opcode == 'PFPNACC':
+        dst = REGISTERSMM.index(tokens[1].value)
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x0f' + pack('<B', modrm) + b'\x8e'
     elif opcode.startswith('PH'):
         assert False, 'Not implemented'
     elif opcode.startswith('PINS'):
