@@ -3539,6 +3539,24 @@ def assemble(line, state):
 
     elif opcode == 'LEAVE':
         return b'\xc9'
+    elif opcode == 'LES':
+        dst = REGISTERS.index(tokens[1].value)
+        base = REGISTERS.index(tokens[6].value)
+        if tokens[7].value == ']':
+            modrm = 0b00000000 | dst << 3 | base
+            return b'\xc4' + pack('<B', modrm)
+        else:
+            if tokens[7].value == '+':
+                if tokens[8].value in REGISTERS:
+                    return b'\xc4\x54\x00\x58'
+                else:
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\xc4' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[7].value == '-':
+                disp = -int(tokens[8].value, base=16)
+                modrm = 0b10000000 | dst << 3 | base
+                return b'\xc4' + pack('<B', modrm) + pack('<i', disp)
     elif opcode == 'LFENCE':
         return b'\x0f\xae\xe8'
     elif opcode in ['LGDT', 'LIDT', 'LLDT', 'LMSW', 'LOADIWKEY']:
