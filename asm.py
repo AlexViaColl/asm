@@ -3119,6 +3119,15 @@ def assemble(line, state):
         return b'\xdb\xe3'
     elif opcode == 'FIST':
         return b'\xdb\x52\x00'
+    elif opcode == 'FISTTP':
+        op = {'WORD': b'\xdf', 'DWORD': b'\xdb', 'QWORD': b'\xdd'}[tokens[1].value]
+        base = REGISTERS.index(tokens[4].value)
+        if tokens[1].value == 'WORD':
+            modrm = 0b00001000 | base
+            return op + pack('<B', modrm)
+        else:
+            modrm = 0b01001000 | base
+            return op + pack('<B', modrm) + b'\x00'
     elif opcode.startswith('FIST'):
         assert False, 'Not implemented'
     elif opcode == 'FLD':
@@ -4482,6 +4491,7 @@ def assemble(line, state):
         if 'WORD' in map(lambda x: x.value, tokens[1:]):
             prefix = b'\x66'
             rem = line.replace('WORD', 'DWORD')
+            tokens = tokenize(rem)
             tokens = tokenize(rem)
         else:
             prefix = b''
