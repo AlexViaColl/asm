@@ -1533,6 +1533,7 @@ def test_assemble():
         ['PCMPEQW mm3, mm7',                b'\x0f\x75\xdf'],
         ['PCMPEQW xmm3, xmm7',              b'\x66\x0f\x75\xdf'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],
+        ['PF2ID mm4, mm4',                  b'\x0f\x0f\xe4\x1d'],
         ['PFCMPEQ mm3, mm4',                b'\x0f\x0f\xdc\xb0'],
         ['PFMAX mm0, mm6',                  b'\x0f\x0f\xc6\xa4'],
         ['PFMIN mm0, mm1',                  b'\x0f\x0f\xc1\x94'],

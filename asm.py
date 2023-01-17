@@ -4203,6 +4203,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PEXT'):
         assert False, 'Not implemented'
+    elif opcode == 'PF2ID':
+        dst = REGISTERSMM.index(tokens[1].value)
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x0f' + pack('<B', modrm) + b'\x1d'
     elif opcode == 'PFCMPEQ':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
