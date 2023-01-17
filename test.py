@@ -1526,6 +1526,7 @@ def test_assemble():
         ['MOVMSKPS eax, xmm1',              b'\x0f\x50\xc1'],
         ['MOVMSKPS ebx, xmm6',              b'\x0f\x50\xde'],
 
+        ['MOVS WORD PTR es:[edi], WORD PTR ds:[esi]', b'\x66\xa5'],
         ['MOVSX edx, BYTE PTR [ecx]',       b'\x0f\xbe\x11'],
 
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],

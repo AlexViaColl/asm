@@ -4141,6 +4141,8 @@ def assemble(line, state):
     elif opcode == 'MOVS':
         if tokens[1].value == 'BYTE':
             return b'\xa4'
+        elif tokens[1].value == 'WORD':
+            return b'\x66\xa5'
         else:
             return b'\xa5'
     elif opcode == 'MOVSX':
