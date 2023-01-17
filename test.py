@@ -1626,6 +1626,7 @@ def test_assemble():
         ['SQRTPS xmm0, xmm0',               b'\x0f\x51\xc0'],
         ['SS PUSH ebp',                     b'\x36\x55'],
         ['SS OUT dx, al',                   b'\x36\xee'],
+        ['STOS WORD PTR es:[edi], ax',      b'\x66\xab'],
         ['SUB esi, edi',                    b'\x2b\xf7'],
         ['SUB esp, 0x118',                  b'\x81\xec\x18\x01\x00\x00'],
         ['SUB esp, 0x58',                   b'\x83\xec\x58'],

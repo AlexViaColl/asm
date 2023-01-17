@@ -4481,6 +4481,8 @@ def assemble(line, state):
     elif opcode == 'REP':
         if 'WORD' in map(lambda x: x.value, tokens[1:]):
             prefix = b'\x66'
+            rem = line.replace('WORD', 'DWORD')
+            tokens = tokenize(rem)
         else:
             prefix = b''
         rem = ' '.join(map(lambda x: x.value, tokens[1:]))
@@ -4598,8 +4600,10 @@ def assemble(line, state):
     elif opcode == 'STOS':
         if tokens[1].value == 'BYTE':
             return b'\xaa'
-        else:
+        elif tokens[1].value == 'DWORD':
             return b'\xab'
+        elif tokens[1].value == 'WORD':
+            return b'\x66\xab'
     elif opcode.startswith('ST'):
         assert False, 'Not implented'
     elif opcode == 'SUB':
