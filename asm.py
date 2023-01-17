@@ -2681,6 +2681,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'CMC':
         return b'\xf5'
+    elif opcode == 'CMOVA':
+        dst = REGISTERS.index(tokens[1].value)
+        src = REGISTERS.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x47' + pack('<B', modrm)
     elif opcode == 'CMOVB':
         return b'\x0f\x42\xd1'
     elif opcode == 'CMOVE':
