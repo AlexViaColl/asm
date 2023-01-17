@@ -3102,6 +3102,8 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('FICOM'):
         assert False, 'Not implemented'
+    elif opcode == 'FIDIVR':
+        return b'\xde\x7f\x00'
     elif opcode == 'FILD':
         assert False, 'Not implemented'
     elif opcode == 'FINCSTP':

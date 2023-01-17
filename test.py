@@ -1283,6 +1283,7 @@ def test_assemble():
         ['FNCLEX',                          b'\xdb\xe2'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],
+        ['FIDIVR WORD PTR [edi+0x0]',       b'\xde\x7f\x00'],
         ['FINCSTP',                         b'\xd9\xf7'],
         ['FINIT',                           b'\x9b\xdb\xe3'],
         ['FIST DWORD PTR [edx+0x0]',        b'\xdb\x52\x00'],
