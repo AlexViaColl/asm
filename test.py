@@ -1586,6 +1586,7 @@ def test_assemble():
         ['PUSH DWORD PTR [esi+0x9c]',       b'\xff\xb6\x9c\x00\x00\x00'],
         ['PUSHA',                           b'\x60'],
         ['PUSHF',                           b'\x9c'],
+        ['RCPSS xmm2, xmm0',                b'\xf3\x0f\x53\xd0'],
         ['RDMSR',                           b'\x0f\x32'],
         ['RDPKRU',                          b'\x0f\x01\xee'],
         ['RDPMC',                           b'\x0f\x33'],

@@ -4440,6 +4440,11 @@ def assemble(line, state):
         return b'\xd1\x51\x00'
     elif opcode in ['RCR', 'ROL', 'ROR']:
         assert False, 'Not implemented'
+    elif opcode == 'RCPSS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\xf3\x0f\x53' + pack('<B', modrm)
     elif opcode.startswith('RCP'):
         assert False, 'Not implemented'
     elif opcode in ['RDFSBASE', 'RDGSBASE']:
