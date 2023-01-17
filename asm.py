@@ -4125,6 +4125,15 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'MUL':
         assert False, 'Not implemented'
+    elif opcode == 'MULPD':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x66\x0f\x59' + pack('<B', modrm)
+        else:
+            disp = int(tokens[8].value, base=16)
+            return b'\x66\x0f\x59\x84\x24' + pack('<I', disp)
     elif opcode.startswith('MUL'):
         assert False, 'Not implemented'
     elif opcode == 'MWAIT':

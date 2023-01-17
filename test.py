@@ -1518,6 +1518,9 @@ def test_assemble():
         ['MOVSX edx, BYTE PTR [ecx]',       b'\x0f\xbe\x11'],
 
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
+        ['MULPD xmm0, XMMWORD PTR [esp+0xe0]', b'\x66\x0f\x59\x84\x24\xe0\x00\x00\x00'],
+        ['MULPD xmm0, XMMWORD PTR [esp+0x150]',b'\x66\x0f\x59\x84\x24\x50\x01\x00\x00'],
+        ['MULPD xmm0, xmm0',                b'\x66\x0f\x59\xc0'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],
         ['NOT ecx',                         b'\xf7\xd1'],
