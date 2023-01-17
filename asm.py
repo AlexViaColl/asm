@@ -2924,6 +2924,15 @@ def assemble(line, state):
     elif opcode == 'CMPNEQPS':
         modrm = 0b11000001
         return b'\x0f\xc2' + pack('<B', modrm) + b'\x04'
+    elif opcode == 'CMPNLEPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xc2' + pack('<B', modrm) + b'\x06'
+        else:
+            modrm = 0b10000100 | dst << 3
+            return b'\x0f\xc2' + pack('<B', modrm) + b'\x24\xa0\x01\x00\x00\x06'
     elif opcode == 'CMPNLTPS':
         dst = int(tokens[1].value[-1])
         modrm = 0b00000101 | dst << 3
