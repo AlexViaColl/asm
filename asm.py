@@ -4508,7 +4508,11 @@ def assemble(line, state):
         else:
             return b'\xc3'
     elif opcode == 'RETF':
-        return b'\xcb'
+        if len(tokens) == 1:
+            return b'\xcb'
+        else:
+            im = int(tokens[1].value, base=16)
+            return b'\xca' + pack('<H', im)
     elif opcode.startswith('RO'):
         assert False, 'Not implemented'
     elif opcode == 'RSM':

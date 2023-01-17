@@ -1610,6 +1610,7 @@ def test_assemble():
         ['RET 0x10',                        b'\xc2\x10\x00'],
         ['RET',                             b'\xc3'],
         ['RETF',                            b'\xcb'],
+        ['RETF 0x45',                       b'\xca\x45\x00'],
         ['RSM',                             b'\x0f\xaa'],
         ['SAHF',                            b'\x9e'],
         ['SAR esi, 0x2',                    b'\xc1\xfe\x02'],
