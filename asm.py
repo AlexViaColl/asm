@@ -4368,6 +4368,11 @@ def assemble(line, state):
             prefix = b''
         modrm = 0b11000000 | dst << 3 | src
         return prefix + b'\x0f\xd7' + pack('<B', modrm)
+    elif opcode == 'PMULHW':
+        dst = REGISTERSMM.index(tokens[1].value)
+        m = int(tokens[7].value, base=16)
+        modrm = 0b00000101 | dst << 3
+        return b'\x0f\xe5' + pack('<B', modrm) + pack('<I', m)
     elif opcode.startswith('PM'):
         assert False, 'Not implemented'
     elif opcode == 'POP':
