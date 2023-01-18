@@ -1383,6 +1383,7 @@ def test_assemble():
         ['GS INS BYTE PTR es:[edi], dx',    b'\x65\x6c'],
         ['HLT',                             b'\xf4'],
         ['IMUL eax, ecx',                   b'\x0f\xaf\xc1'],
+        ['IN al, 0x42',                     b'\xe4\x42'],
         ['IN al, dx',                       b'\xec'],
         ['INC eax',                         b'\x40'],
         ['INT 0x80',                        b'\xcd\x80'],

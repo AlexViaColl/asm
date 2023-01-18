@@ -3416,9 +3416,19 @@ def assemble(line, state):
         return b'\x0f\xaf' + pack('<B', modrm)
     elif opcode == 'IN':
         if tokens[1].value == 'al':
-            return b'\xec'
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS16:
+                return b'\xec'
+            else:
+                ib = int(tokens[3].value, base=16)
+                return b'\xe4' + pack('<B', ib)
         elif tokens[1].value == 'eax':
-            return b'\xed'
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS16:
+                return b'\xed'
+            else:
+                ib = int(tokens[3].value, base=16)
+                return b'\xe5' + pack('<B', ib)
         else:
             assert False, 'Not implemented'
     elif opcode == 'INC':
