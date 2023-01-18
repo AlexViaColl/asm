@@ -4472,7 +4472,24 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'RCL':
         return b'\xd1\x51\x00'
-    elif opcode in ['RCR', 'ROL', 'ROR']:
+    elif opcode == 'ROL':
+        if tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                return b'\xd0\x07'
+            else:
+                return b'\xd2\x86\x7f\x00\xbd\x86'
+        elif tokens[1].value == 'DWORD':
+            return b'\xd3\x42\x00'
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            modrm = 0b11000000 | dst
+            return b'\xd0' + pack('<B', modrm)
+        elif tokens[1].value == 'esp':
+            return b'\xd1\xc4'
+    elif opcode in ['RCR', 'ROR']:
         assert False, 'Not implemented'
     elif opcode == 'RCPSS':
         dst = REGISTERSXMM.index(tokens[1].value)
