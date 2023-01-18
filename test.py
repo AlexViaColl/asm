@@ -1586,6 +1586,7 @@ def test_assemble():
         ['POPA',                            b'\x61'],
         ['POPF',                            b'\x9d'],
         ['PREFETCHW BYTE PTR ds:0xd0d0d0d', b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'],
+        ['PSLLW mm0, 0x2',                  b'\x0f\x71\xf0\x02'],
         ['PSRAW mm0, 0x2',                  b'\x0f\x71\xe0\x02'],
         ['PSRAW mm4, 0x2',                  b'\x0f\x71\xe4\x02'],
         ['PSUBW mm1, mm6',                  b'\x0f\xf9\xce'],
