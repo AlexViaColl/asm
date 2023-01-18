@@ -3439,7 +3439,12 @@ def assemble(line, state):
     elif opcode.startswith('INCSS'):
         assert False, 'Not implemented'
     elif opcode == 'INS':
-        return b'\x6c'
+        if tokens[1].value == 'DWORD':
+            return b'\x6d'
+        elif tokens[6].value in REGISTERS16:
+            return b'\x67\x6c'
+        else:
+            return b'\x6c'
     elif opcode.startswith('INS'):
         assert False, 'Not implemented'
     elif opcode == 'INT':
@@ -4368,6 +4373,20 @@ def assemble(line, state):
         src = int(tokens[3].value[-1])
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x0f' + pack('<B', modrm) + b'\xb0'
+    elif opcode == 'PFCMPGT':
+        dst = REGISTERSMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x0f' + pack('<B', modrm) + b'\xa0'
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == 'ds'
+            assert tokens[6].value == ':'
+            m = int(tokens[7].value, base=16)
+            modrm = 0b00000101 | dst << 3
+            return b'\x0f\x0f' + pack('<B', modrm) + pack('<I', m) + b'\xa0'
     elif opcode == 'PFMAX':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
