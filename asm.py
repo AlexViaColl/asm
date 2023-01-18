@@ -3457,6 +3457,10 @@ def assemble(line, state):
                 return b'\xe9' + pack('<i', rel)
             else:
                 return b'\xeb' + pack('<b', rel)
+    elif opcode == 'JECXZ':
+        to = int(tokens[1].value, base=16)
+        rel = to - state['eip'] - 2
+        return b'\xe3' + pack('<b', rel)
     elif opcode.startswith('K'):
         assert False, 'Not implemented'
     elif opcode == 'LAHF':

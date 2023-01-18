@@ -1402,6 +1402,7 @@ def test_assemble():
         #['JMP 0x4031e0',                    b'\xe9\x0b\x00\x00\x00'],
         ['JMP 0x5',                         b'\xeb\x03'],
         ['JMP DWORD PTR [eax*4+0x40418c]',  b'\xff\x24\x85\x8c\x41\x40\x00'],
+        #['JECXZ 0x49e6a4',                  b'\xe3\x49'],
         ['LAHF',                            b'\x9f'],
         ['LAR ebp, WORD PTR [eax+0x0]',     b'\x0f\x02\x68\x00'],
         ['LEA ecx, [eax+edx*1]',            b'\x8d\x0c\x10'],
