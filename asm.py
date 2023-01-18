@@ -3049,7 +3049,10 @@ def assemble(line, state):
     elif opcode.startswith('DP'):
         assert False, 'Not implemented'
     elif opcode == 'DS':
-        return b'\x3e' + assemble(line[3:], state)
+        state['eip'] += 1
+        inst = assemble(line[3:], state)
+        state['eip'] -= 1
+        return b'\x3e' + inst
     elif opcode == 'ENTER':
         assert False, 'Not implemented'
     elif opcode.startswith('E'):
