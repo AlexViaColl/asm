@@ -1275,6 +1275,8 @@ def test_assemble():
         ['DIV edi',                         b'\xf7\xf7'],
         #['DS LOOP 0x49e688',                b'\x3e\xe2\x49'],
         #['ENTER 0x73, 0x0',                 b'\xc8\x73\x00\x00'],
+        ['ES SBB al, 0x6b',                 b'\x26\x1c\x6b'],
+        ['ES IN eax, dx',                   b'\x26\xed'],
         ['F2XM1',                           b'\xd9\xf0'],
         ['FABS',                            b'\xd9\xe1'],
         ['FADD DWORD PTR [eax*4+0xb52df8]', b'\xd8\x04\x85\xf8\x2d\xb5\x00'],

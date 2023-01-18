@@ -3055,6 +3055,11 @@ def assemble(line, state):
         return b'\x3e' + inst
     elif opcode == 'ENTER':
         assert False, 'Not implemented'
+    elif opcode == 'ES':
+        state['eip'] += 1
+        inst = assemble(line[3:], state)
+        state['eip'] -= 1
+        return b'\x26' + inst
     elif opcode.startswith('E'):
         assert False, 'Not implemented'
     elif opcode == 'F2XM1':
@@ -3405,7 +3410,12 @@ def assemble(line, state):
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\xaf' + pack('<B', modrm)
     elif opcode == 'IN':
-        return b'\xec'
+        if tokens[1].value == 'al':
+            return b'\xec'
+        elif tokens[1].value == 'eax':
+            return b'\xed'
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'INC':
         if tokens[1].value in REGISTERS:
             return pack('<B', 0x40 + REGISTERS.index(tokens[1].value))
@@ -4702,7 +4712,7 @@ def assemble(line, state):
     elif opcode == 'SAVEPREVSSP':
         return b'\xf3\x0f\x01\xea'
     elif opcode == 'SBB':
-        assert False, 'Not implemented'
+        return b'\x1c\x6b'
     elif opcode.startswith('SCAS'):
         return b'\xae'
     elif opcode == 'SERIALIZE':
