@@ -4174,6 +4174,26 @@ def assemble(line, state):
                     return seg + b'\xa3' + pack('<I', off)
                 else:
                     assert False, 'Unreachable'
+    elif opcode == 'MOVAPD':
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+            assert tokens[2].value == ','
+            assert tokens[3].value == 'XMMWORD'
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '+'
+                disp = int(tokens[8].value, base=16)
+                return b'\x66\x0f\x28\x94\x24' + pack('<I', disp)
+            elif tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\x66\x0f\x28' + pack('<B', modrm) + pack('<I', m)
+        elif tokens[1].value == 'XMMWORD':
+            disp = int(tokens[6].value, base=16)
+            src = REGISTERSXMM.index(tokens[9].value)
+            modrm = 0b10000100 | src << 3
+            return b'\x66\x0f\x29' + pack('<B', modrm) + b'\x24' + pack('<I', disp)
     elif opcode == 'MOVMSKPS':
         dst = REGISTERS.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)
