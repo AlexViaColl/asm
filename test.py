@@ -1304,6 +1304,7 @@ def test_assemble():
         ['FISUB DWORD PTR [esp+0x34]',      b'\xda\x64\x24\x34'],
         ['FISUB DWORD PTR [esi+0x31e8]',    b'\xda\xa6\xe8\x31\x00\x00'],
         ['FISUB DWORD PTR [esi+0x31f4]',    b'\xda\xa6\xf4\x31\x00\x00'],
+        ['FISUBR DWORD PTR [ecx+0x0]',      b'\xda\x69\x00'],
 
         ['FLD DWORD PTR [edx]',             b'\xd9\x02'],
         ['FLD DWORD PTR [eax+edx*8]',       b'\xd9\x04\xd0'],

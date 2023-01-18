@@ -3169,6 +3169,12 @@ def assemble(line, state):
                 return b'\xda\x65' + pack('<b', disp)
             elif tokens[5].value == ']':
                 return b'\xda\x27'
+    elif opcode == 'FISUBR':
+        if tokens[1].value == 'WORD':
+            return b'\xde\x69\x00'
+        elif tokens[1].value == 'DWORD':
+            base = REGISTERS.index(tokens[4].value)
+            return b'\xda\x69\x00'
     elif opcode == 'FLD':
         if tokens[1].value == 'st':
             assert tokens[2].value == '('
