@@ -2986,6 +2986,22 @@ def assemble(line, state):
         src = int(tokens[3].value[-1])
         modrm = 0b11000000 | dst << 3 | src
         return b'\x66\x0f\x5a' + pack('<B', modrm)
+    elif opcode == 'CVTPI2PS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x2a' + pack('<B', modrm)
+
+        if tokens[6].value in REGISTERS:
+            src = REGISTERS.index(tokens[6].value)
+            modrm = 0b00000000 | dst << 3 | src
+            return b'\x0f\x2a' + pack('<B', modrm)
+        elif tokens[6].value == ':':
+            m = int(tokens[7].value, base=16)
+            modrm = 0b00000101 | dst << 3
+            return b'\x0f\x2a' + pack('<B', modrm) + pack('<I', m)
     elif opcode == 'CVTPS2PD':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
