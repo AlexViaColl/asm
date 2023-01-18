@@ -4246,6 +4246,12 @@ def assemble(line, state):
         src = int(tokens[3].value[-1])
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x63' + pack('<B', modrm)
+    elif opcode == 'PACKSSDW':
+        dst = REGISTERSMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x6b' + pack('<B', modrm)
     elif opcode.startswith('PACK'):
         assert False, 'Not implemented'
     elif opcode.startswith('PADD'):
