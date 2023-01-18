@@ -1563,6 +1563,8 @@ def test_assemble():
         ['PCMPEQD mm0, mm6',                b'\x0f\x76\xc6'],
         ['PCMPEQW mm3, mm7',                b'\x0f\x75\xdf'],
         ['PCMPEQW xmm3, xmm7',              b'\x66\x0f\x75\xdf'],
+        ['PCMPGTD mm3, mm5',                b'\x0f\x66\xdd'],
+        ['PCMPGTD mm6, mm0',                b'\x0f\x66\xf0'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],
         ['PF2ID mm4, mm4',                  b'\x0f\x0f\xe4\x1d'],
         ['PFCMPEQ mm3, mm4',                b'\x0f\x0f\xdc\xb0'],

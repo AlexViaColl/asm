@@ -4300,6 +4300,11 @@ def assemble(line, state):
         else:
             prefix = b''
         return prefix + b'\x0f\x75' + pack('<B', modrm)
+    elif opcode == 'PCMPGTD':
+        dst = REGISTERSMM.index(tokens[1].value)
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x66' + pack('<B', modrm)
     elif opcode.startswith('PCMP'):
         assert False, 'Not implemented'
     elif opcode == 'PCONFIG':
