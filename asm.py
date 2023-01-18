@@ -3393,6 +3393,11 @@ def assemble(line, state):
         return b'\xd9\xf9'
     elif opcode.startswith('GF'):
         assert False, 'Not implemented'
+    elif opcode == 'GS':
+        state['eip'] += 1
+        inst = assemble(line[3:], state)
+        state['eip'] -= 1
+        return b'\x65' + inst
     elif opcode.startswith('HADDP'):
         assert False, 'Not implemented'
     elif opcode == 'HLT':
@@ -3423,6 +3428,8 @@ def assemble(line, state):
             assert False, 'Not implemented'
     elif opcode.startswith('INCSS'):
         assert False, 'Not implemented'
+    elif opcode == 'INS':
+        return b'\x6c'
     elif opcode.startswith('INS'):
         assert False, 'Not implemented'
     elif opcode == 'INT':
@@ -3489,6 +3496,10 @@ def assemble(line, state):
                     assert false, 'not implemented yet'
             else:
                 assert False, 'Not implemented yet'
+        elif len(tokens) > 2 and tokens[2].value == ':':
+            disp = int(tokens[1].value, base=16)
+            ptr = int(tokens[3].value, base=16)
+            return b'\xea' + pack('<H', disp) + pack('<H', ptr >> 16) + pack('<H', ptr & 0xffff)
         else:
             to = int(tokens[1].value, base=16)
             rel = to - state['eip'] - 2
@@ -4794,6 +4805,10 @@ def assemble(line, state):
         if tokens[1].value == 'BYTE':
             # TEST r/m8, imm8 (F6 /0 ib)
             assert tokens[2].value == 'PTR'
+            if tokens[3].value in SEGMENTS:
+                assert tokens[4].value == ':'
+                # ...
+                return b'\x65\x84\x00'
             assert tokens[3].value == '['
             if tokens[4].value == 'esp':
                 assert tokens[5].value == '+'

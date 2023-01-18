@@ -1379,6 +1379,8 @@ def test_assemble():
         ['FYL2X',                           b'\xd9\xf1'],
         ['FYL2XP1',                         b'\xd9\xf9'],
         ['FWAIT',                           b'\x9b'],
+        ['GS TEST BYTE PTR gs:[eax], al',   b'\x65\x65\x84\x00'],
+        ['GS INS BYTE PTR es:[edi], dx',    b'\x65\x6c'],
         ['HLT',                             b'\xf4'],
         ['IMUL eax, ecx',                   b'\x0f\xaf\xc1'],
         ['IN al, dx',                       b'\xec'],
