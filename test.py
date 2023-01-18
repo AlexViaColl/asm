@@ -1212,6 +1212,7 @@ def test_assemble():
         ['CMOVB edx, ecx',                  b'\x0f\x42\xd1'],
         ['CMOVE ecx, eax',                  b'\x0f\x44\xc8'],
         ['CMOVE edx, eax',                  b'\x0f\x44\xd0'],
+        ['CMOVP eax, DWORD PTR [eax]',      b'\x0f\x4a\x00'],
         ['CMP BYTE PTR ds:0x9081c8, bl',    b'\x38\x1d\xc8\x81\x90\x00'],
         ['CMP BYTE PTR [eax], dh',          b'\x38\x30'],
         ['CMP BYTE PTR [esp+0x54], bl',     b'\x38\x5c\x24\x54'],
