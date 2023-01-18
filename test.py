@@ -1650,6 +1650,8 @@ def test_assemble():
         ['SHL edx, cl',                     b'\xd3\xe2'],
         ['SHR eax, 0x10',                   b'\xc1\xe8\x10'],
         ['SHR ebx, 1',                      b'\xd1\xeb'],
+        ['SHLD edx, eax, 0x10',             b'\x0f\xa4\xc2\x10'],
+        ['SHLD edx, eax, cl',               b'\x0f\xa5\xc2'],
         ['SHRD ecx, edx, 0x10',             b'\x0f\xac\xd1\x10'],
         ['SHRD ecx, ebx, 0x10',             b'\x0f\xac\xd9\x10'],
         ['SHRD eax, edx, cl',               b'\x0f\xad\xd0'],

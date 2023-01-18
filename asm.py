@@ -4630,6 +4630,16 @@ def assemble(line, state):
         return b'\x9e'
     elif opcode == 'SAL':
         assert False, 'Not implemented'
+    elif opcode == 'SHLD':
+        dst = REGISTERS.index(tokens[1].value)
+        src = REGISTERS.index(tokens[3].value)
+        if tokens[5].value in REGISTERS8:
+            modrm = 0b11000000 | src << 3 | dst
+            return b'\x0f\xa5' + pack('<B', modrm)
+        else:
+            ib = int(tokens[5].value, base=16)
+            modrm = 0b11000000 | src << 3 | dst
+            return b'\x0f\xa4' + pack('<B', modrm) + pack('<B', ib)
     elif opcode == 'SHRD':
         dst = REGISTERS.index(tokens[1].value)
         src = REGISTERS.index(tokens[3].value)
