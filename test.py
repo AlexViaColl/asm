@@ -1330,6 +1330,7 @@ def test_assemble():
         ['FLD QWORD PTR [ebx+0x0]',         b'\xdd\x43\x00'],
         ['FLDENV [edx]',                    b'\xd9\x22'],
         ['FLDENV [esp]',                    b'\xd9\x24\x24'],
+        ['FLDL2E',                          b'\xd9\xea'],
         ['FLDLG2',                          b'\xd9\xec'],
         ['FLDPI',                           b'\xd9\xeb'],
 
