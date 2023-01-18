@@ -3130,6 +3130,24 @@ def assemble(line, state):
             return op + pack('<B', modrm) + b'\x00'
     elif opcode.startswith('FIST'):
         assert False, 'Not implemented'
+    elif opcode == 'FISUB':
+        base = REGISTERS.index(tokens[4].value)
+        if base == REGISTERS.index('esp'):
+            disp = int(tokens[6].value, base=16)
+            return b'\xda\x64\x24' + pack('<B', disp)
+        else:
+            if tokens[5].value == '+':
+                modrm = 0b01100000 | base
+                disp = int(tokens[6].value, base=16)
+                if disp <= 0x7f:
+                    return b'\xda' + pack('<B', modrm) + pack('<B', disp)
+                else:
+                    return b'\xda\xa6' + pack('<i', disp)
+            elif tokens[5].value == '-':
+                disp = -int(tokens[6].value, base=16)
+                return b'\xda\x65' + pack('<b', disp)
+            elif tokens[5].value == ']':
+                return b'\xda\x27'
     elif opcode == 'FLD':
         if tokens[1].value == 'st':
             assert tokens[2].value == '('
