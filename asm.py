@@ -4647,7 +4647,53 @@ def assemble(line, state):
     elif opcode == 'PXOR':
         assert False, 'Not implemented'
     elif opcode == 'RCL':
-        return b'\xd1\x51\x00'
+        if tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            if tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11010000 | dst
+                return b'\xd2' + pack('<B', modrm)
+            else:
+                return b'\xc0\xd0\x69'
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            prefix = b''
+            i = 0
+            if tokens[3].value in SEGMENTS:
+                prefix = {
+                    'ds': b'\x3e',
+                    'fs': b'\x64',
+                }[tokens[3].value]
+                i += 2
+            base = REGISTERS.index(tokens[i+4].value)
+            if tokens[i+5].value == ']':
+                if tokens[i+7].value == 'cl':
+                    return b'\xd2\x13'
+                else:
+                    return b'\xc0\x10\x68'
+            else:
+                assert tokens[i+5].value == '+'
+                disp = int(tokens[i+6].value, base=16)
+                assert tokens[i+7].value == ']'
+                assert tokens[i+8].value == ','
+                modrm = 0x50 | base
+                if tokens[i+9].value in REGISTERS8:
+                    src = REGISTERS8.index(tokens[i+9].value)
+                    return prefix + pack('<B', 0xd1 + src) + pack('<B', modrm) + b'\x00'
+                else:
+                    return prefix + b'\xd0' + pack('<B', modrm) + b'\x00'
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == '+'
+            disp = int(tokens[6].value, base=16)
+            assert tokens[8].value == ','
+            modrm = 0x50 | base
+            if tokens[9].value in REGISTERS8:
+                return b'\xd3' + pack('<B', modrm) + b'\x00'
+            else:
+                return b'\xd1' + pack('<B', modrm) + b'\x00'
     elif opcode == 'ROL':
         if tokens[1].value == 'BYTE':
             assert tokens[2].value == 'PTR'
