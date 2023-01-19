@@ -3548,6 +3548,23 @@ def assemble(line, state):
         return b'\x9f'
     elif opcode == 'LAR':
         return b'\x0f\x02\x68\x00'
+    elif opcode == 'LDS':
+        dst = REGISTERS.index(tokens[1].value)
+        base = REGISTERS.index(tokens[6].value)
+        modrm = 0b01000000 | dst << 3 | base
+        if tokens[1].value == 'eax':
+            return b'\xc5' + pack('<B', modrm) + b'\x69'
+        elif tokens[1].value == 'ecx':
+            return b'\xc5' + pack('<B', modrm) + b'\x00'
+        elif tokens[1].value == 'edx':
+            return b'\xc5' + pack('<B', modrm) + b'\x90'
+        elif tokens[1].value == 'esp':
+            return b'\xc5' + pack('<B', modrm) + b'\x00'
+        elif tokens[1].value == 'ebp':
+            prefix = b'\x3e'
+            return prefix + b'\xc5' + pack('<B', modrm) + b'\x00'
+        elif tokens[1].value == 'esi':
+            return b'\xc5\x75\x5a'
     elif opcode.startswith('LD'):
         assert False, 'Not implemented'
     elif opcode == 'LEA':

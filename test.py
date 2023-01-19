@@ -1422,6 +1422,14 @@ def test_assemble():
         #['JECXZ 0x49e6a4',                  b'\xe3\x49'],
         ['LAHF',                            b'\x9f'],
         ['LAR ebp, WORD PTR [eax+0x0]',     b'\x0f\x02\x68\x00'],
+
+        #['LDS eax, FWORD PTR [edi+0x69]',   b'\xc5\x47\x69'],
+        #['LDS ecx, FWORD PTR [ecx+0x0]',    b'\xc5\x49\x00'],
+        #['LDS edx, FWORD PTR [eax+eax*1-0x70]', b'\xc5\x54\x00\x90'],
+        #['LDS esp, FWORD PTR [ebp+0x0]',    b'\xc5\x65\x00'],
+        #['LDS ebp, FWORD PTR ds:[ecx+0x0]', b'\x3e\xc5\x69\x00'],
+        #['LDS esi, FWORD PTR [ebp+0x5a]',   b'\xc5\x75\x5a'],
+
         ['LEA ecx, [eax+edx*1]',            b'\x8d\x0c\x10'],
         ['LEA ecx, [edi+edx*1]',            b'\x8d\x0c\x17'],
         ['LEA edx, [edx*4-0x1]',            b'\x8d\x14\x95\xff\xff\xff\xff'],
