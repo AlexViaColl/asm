@@ -1356,6 +1356,7 @@ def test_assemble():
         ['FRNDINT',                         b'\xd9\xfc'],
         ['FRSTOR [ecx+0x8]',                b'\xdd\x61\x08'],
         ['FRSTOR [esi+0x0]',                b'\xdd\x66\x00'],
+        ['FS DEC ebx',                      b'\x64\x4b'],
         ['FSAVE [ecx+0x8]',                 b'\x9b\xdd\x71\x08'],
         ['FSAVE [esi+0x8]',                 b'\x9b\xdd\x76\x08'],
         ['FSCALE',                          b'\xd9\xfd'],

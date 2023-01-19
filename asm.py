@@ -3325,6 +3325,11 @@ def assemble(line, state):
         return b'\x9b\xdd' + pack('<B', modrm) + b'\x08'
     elif opcode == 'FNSAVE':
         assert False, 'Not implemented'
+    elif opcode == 'FS':
+        state['eip'] += 1
+        inst = assemble(line[3:], state)
+        state['eip'] -= 1
+        return b'\x64' + inst
     elif opcode == 'FSCALE':
         return b'\xd9\xfd'
     elif opcode == 'FSIN':
