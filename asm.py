@@ -3333,6 +3333,19 @@ def assemble(line, state):
         return b'\xd9\xfb'
     elif opcode == 'FSQRT':
         return b'\xd9\xfa'
+    elif opcode == 'FSTCW':
+        assert tokens[1].value == 'WORD'
+        assert tokens[2].value == 'PTR'
+        assert tokens[3].value == '['
+        if tokens[4].value == 'esp':
+            return b'\x9b\xd9\x3c\x24'
+        else:
+            assert tokens[5].value == '-'
+            disp = int(tokens[6].value, base=16)
+            if disp <= 0x7f:
+                return b'\x9b\xd9\x7d' + pack('<b', -disp)
+            else:
+                return b'\x9b\xd9\xbd' + pack('<i', -disp)
     elif opcode == 'FSTP':
         if tokens[1].value == 'st':
             assert tokens[2].value == '('
