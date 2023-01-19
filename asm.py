@@ -3134,6 +3134,16 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'FFREE':
         assert False, 'Not implemented'
+    elif opcode == 'FICOM':
+        if tokens[3].value in SEGMENTS:
+            return b'\x3e\xda\x52\x00'
+        elif tokens[1].value == 'WORD':
+            return b'\xde\x52\x00'
+        elif tokens[1].value == 'DWORD':
+            base = REGISTERS.index(tokens[4].value)
+            disp = int(tokens[6].value, base=16)
+            modrm = 0b01010000 | base
+            return b'\xda' + pack('<B', modrm) + pack('<B', disp)
     elif opcode.startswith('FICOM'):
         assert False, 'Not implemented'
     elif opcode == 'FIDIVR':
