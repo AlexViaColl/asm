@@ -4493,6 +4493,11 @@ def assemble(line, state):
         assert tokens[2].value == ','
         ib = int(tokens[3].value, base=16)
         return b'\x0f\x71' + pack('<B', 0xe0 + dst) + pack('<B', ib)
+    elif opcode == 'PSRLD':
+        dst = int(tokens[1].value[-1])
+        assert tokens[2].value == ','
+        ib = int(tokens[3].value, base=16)
+        return b'\x0f\x72' + pack('<B', 0xd0 + dst) + pack('<B', ib)
     elif opcode == 'PSUBSW':
         dst = REGISTERSMM.index(tokens[1].value)
         assert tokens[2].value == ','

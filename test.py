@@ -1607,6 +1607,7 @@ def test_assemble():
         ['PSLLW mm0, 0x2',                  b'\x0f\x71\xf0\x02'],
         ['PSRAW mm0, 0x2',                  b'\x0f\x71\xe0\x02'],
         ['PSRAW mm4, 0x2',                  b'\x0f\x71\xe4\x02'],
+        ['PSRLD mm6, 0x12',                 b'\x0f\x72\xd6\x12'],
         ['PSUBSW mm0, mm7',                 b'\x0f\xe9\xc7'],
         ['PSUBSW mm0, QWORD PTR [ebp-0x4c]',b'\x0f\xe9\x45\xb4'],
         ['PSUBSW mm3, QWORD PTR [ebp-0x4c]',b'\x0f\xe9\x5d\xb4'],
