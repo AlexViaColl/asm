@@ -1680,6 +1680,7 @@ def test_assemble():
         ['SHRD ecx, ebx, 0x10',             b'\x0f\xac\xd9\x10'],
         ['SHRD eax, edx, cl',               b'\x0f\xad\xd0'],
         ['SAVEPREVSSP',                     b'\xf3\x0f\x01\xea'],
+        ['SCAS eax, DWORD PTR es:[edi]',    b'\xaf'],
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
         ['SETA cl',                         b'\x0f\x97\xc1'],
         ['SETBE al',                        b'\x0f\x96\xc0'],

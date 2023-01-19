@@ -4795,8 +4795,13 @@ def assemble(line, state):
         return b'\xf3\x0f\x01\xea'
     elif opcode == 'SBB':
         return b'\x1c\x6b'
+    elif opcode == 'SCAS':
+        if tokens[1].value == 'eax':
+            return b'\xaf'
+        else:
+            return b'\xae'
     elif opcode.startswith('SCAS'):
-        return b'\xae'
+        assert False, 'Not implemented'
     elif opcode == 'SERIALIZE':
         return b'\x0f\x01\xe8'
     elif opcode == 'SETA':
