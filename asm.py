@@ -4470,6 +4470,20 @@ def assemble(line, state):
         assert tokens[2].value == ','
         ib = int(tokens[3].value, base=16)
         return b'\x0f\x71' + pack('<B', 0xe0 + dst) + pack('<B', ib)
+    elif opcode == 'PSUBSW':
+        dst = REGISTERSMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xe9' + pack('<B', modrm)
+        elif tokens[5].value == 'ds':
+            modrm = 0b00000101 | dst << 3
+            m = int(tokens[7].value, base=16)
+            return b'\x0f\xe9' + pack('<B', modrm) + pack('<I', m)
+        else:
+            modrm = 0b01000101 | dst << 3
+            return b'\x0f\xe9' + pack('<B', modrm) + b'\xb4'
     elif opcode == 'PSUBW':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
