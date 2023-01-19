@@ -1554,6 +1554,9 @@ def test_assemble():
         ['MOVAPD xmm2, XMMWORD PTR [esp+0x1b0]', b'\x66\x0f\x28\x94\x24\xb0\x01\x00\x00'],
         ['MOVAPD XMMWORD PTR [esp+0xc0], xmm0', b'\x66\x0f\x29\x84\x24\xc0\x00\x00\x00'],
         ['MOVAPD XMMWORD PTR [esp+0xe0], xmm2', b'\x66\x0f\x29\x94\x24\xe0\x00\x00\x00'],
+        ['MOVDQA xmm1, XMMWORD PTR ds:0x8e9bd0', b'\x66\x0f\x6f\x0d\xd0\x9b\x8e\x00'],
+        ['MOVDQA xmm2, XMMWORD PTR ds:0x8e9be0', b'\x66\x0f\x6f\x15\xe0\x9b\x8e\x00'],
+        ['MOVDQA xmm3, xmm1',               b'\x66\x0f\x6f\xd9'],
 
         ['MOVMSKPS eax, xmm1',              b'\x0f\x50\xc1'],
         ['MOVMSKPS ebx, xmm6',              b'\x0f\x50\xde'],

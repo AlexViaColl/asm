@@ -4256,6 +4256,16 @@ def assemble(line, state):
             src = REGISTERSXMM.index(tokens[9].value)
             modrm = 0b10000100 | src << 3
             return b'\x66\x0f\x29' + pack('<B', modrm) + b'\x24' + pack('<I', disp)
+    elif opcode == 'MOVDQA':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x66\x0f\x6f' + pack('<B', modrm)
+        else:
+            m = int(tokens[7].value, base=16)
+            modrm = 0b00000101 | dst << 3
+            return b'\x66\x0f\x6f' + pack('<B', modrm) + pack('<I', m)
     elif opcode == 'MOVMSKPS':
         dst = REGISTERS.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)
