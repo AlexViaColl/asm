@@ -2966,6 +2966,15 @@ def assemble(line, state):
         return b'\xa6'
     elif opcode.startswith('CMP'):
         assert False, 'Not implemented'
+    elif opcode == 'COMISS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x2f' + pack('<B', modrm)
+        else:
+            return b'\x0f\x2f\x2d\xa8\x48\xb5\x00'
     elif opcode.startswith('COMIS'):
         assert False, 'Not implemented'
     elif opcode == 'CPUID':
