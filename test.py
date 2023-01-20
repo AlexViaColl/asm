@@ -1258,6 +1258,7 @@ def test_assemble():
         ['CMPNLEPS xmm0, xmm3',             b'\x0f\xc2\xc3\x06'],
         ['CMPNLTPS xmm0, XMMWORD PTR ds:0x889ae0', b'\x0f\xc2\x05\xe0\x9a\x88\x00\x05'],
         ['CMPNLTPS xmm2, XMMWORD PTR ds:0x889ae0', b'\x0f\xc2\x15\xe0\x9a\x88\x00\x05'],
+        ['CMPS DWORD PTR ds:[esi], DWORD PTR es:[edi]', b'\xa7'],
         ['COMISS xmm5, DWORD PTR ds:0xb548a8', b'\x0f\x2f\x2d\xa8\x48\xb5\x00'],
         ['COMISS xmm0, xmm2',               b'\x0f\x2f\xc2'],
         ['COMISS xmm1, xmm0',               b'\x0f\x2f\xc8'],
