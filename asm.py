@@ -3157,7 +3157,11 @@ def assemble(line, state):
     elif opcode.startswith('FDIV'):
         assert False, 'Not implemented'
     elif opcode == 'FFREE':
-        assert False, 'Not implemented'
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == '('
+        i = int(tokens[3].value)
+        assert tokens[4].value == ')'
+        return b'\xdd' + pack('<B', 0xc0 + i)
     elif opcode == 'FICOM':
         if tokens[3].value in SEGMENTS:
             return b'\x3e\xda\x52\x00'

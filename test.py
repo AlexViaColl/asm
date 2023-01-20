@@ -1366,6 +1366,7 @@ def test_assemble():
         ['FPREM1',                          b'\xd9\xf5'],
         ['FPTAN',                           b'\xd9\xf2'],
         ['FRNDINT',                         b'\xd9\xfc'],
+        ['FFREE st(0)',                     b'\xdd\xc0'],
         ['FRSTOR [ecx+0x8]',                b'\xdd\x61\x08'],
         ['FRSTOR [esi+0x0]',                b'\xdd\x66\x00'],
         ['FS DEC ebx',                      b'\x64\x4b'],
