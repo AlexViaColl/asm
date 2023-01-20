@@ -1617,6 +1617,8 @@ def test_assemble():
         ['PCONFIG',                         b'\x0f\x01\xc5'],
         ['PF2ID mm4, mm4',                  b'\x0f\x0f\xe4\x1d'],
         ['PFCMPEQ mm3, mm4',                b'\x0f\x0f\xdc\xb0'],
+        ['PFCMPGE mm1, QWORD PTR [esi]',    b'\x0f\x0f\x0e\x90'],
+        ['PFCMPGE mm3, QWORD PTR ds:0x883008', b'\x0f\x0f\x1d\x08\x30\x88\x00\x90'],
         ['PFCMPGT mm5, QWORD PTR ds:0x882ff0', b'\x0f\x0f\x2d\xf0\x2f\x88\x00\xa0'],
         ['PFCMPGT mm2, mm0',                b'\x0f\x0f\xd0\xa0'],
         ['PFMAX mm0, mm6',                  b'\x0f\x0f\xc6\xa4'],
