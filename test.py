@@ -1293,6 +1293,7 @@ def test_assemble():
         ['FDECSTP',                         b'\xd9\xf6'],
         ['FICOM DWORD PTR [edx+0x0]',       b'\xda\x52\x00'],
         ['FICOM DWORD PTR [ebx+0x64]',      b'\xda\x53\x64'],
+        ['FICOM WORD PTR [edi*2+0x7d14c800]', b'\xde\x14\x7d\x00\xc8\x14\x7d'],
         ['FICOM WORD PTR [edx+0x0]',        b'\xde\x52\x00'],
         ['FICOM DWORD PTR ds:[edx+0x0]',    b'\x3e\xda\x52\x00'],
         ['FIDIVR WORD PTR [edi+0x0]',       b'\xde\x7f\x00'],

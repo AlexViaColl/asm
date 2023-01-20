@@ -3138,6 +3138,8 @@ def assemble(line, state):
         if tokens[3].value in SEGMENTS:
             return b'\x3e\xda\x52\x00'
         elif tokens[1].value == 'WORD':
+            if len(tokens) == 10:
+                return b'\xde\x14\x7d\x00\xc8\x14\x7d'
             return b'\xde\x52\x00'
         elif tokens[1].value == 'DWORD':
             base = REGISTERS.index(tokens[4].value)
