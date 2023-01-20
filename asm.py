@@ -3067,6 +3067,8 @@ def assemble(line, state):
         inst = assemble(line[3:], state)
         state['eip'] -= 1
         return b'\x3e' + inst
+    elif opcode == 'EMMS':
+        return b'\x0f\x77'
     elif opcode == 'ENTER':
         assert False, 'Not implemented'
     elif opcode == 'ES':
