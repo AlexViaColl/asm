@@ -3048,9 +3048,12 @@ def assemble(line, state):
     elif opcode == 'DATA16':
         return b'\x66' + assemble(line[7:], state)
     elif opcode == 'DEC':
-        # DEC r32 (48 + rd)
-        reg = tokens[1].value
-        return pack('<B', 0x48 + REGISTERS.index(reg))
+        if tokens[1].value in REGISTERS:
+            # DEC r32 (48 + rd)
+            reg = tokens[1].value
+            return pack('<B', 0x48 + REGISTERS.index(reg))
+        elif tokens[1].value == 'DWORD':
+            return b'\xff\x0d\x90\x83\xba\x00'
     elif opcode == 'DIV':
         if tokens[1].value in REGISTERS:
             modrm = 0b11110000 | REGISTERS.index(tokens[1].value)
@@ -3303,6 +3306,8 @@ def assemble(line, state):
                 return op + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FLDCW':
+        return b'\xd9\x69\x00'
     elif opcode == 'FLDENV':
         if tokens[2].value == 'esp':
             return b'\xd9\x24\x24'
@@ -3420,6 +3425,8 @@ def assemble(line, state):
             })
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FSUBR':
+        return b'\xd8\x69\x00'
     elif opcode.startswith('FSUB'):
         assert False, 'Not implemented'
     elif opcode == 'FTST':
@@ -3456,7 +3463,7 @@ def assemble(line, state):
     elif opcode.startswith('HSUBP'):
         assert False, 'Not implemented'
     elif opcode == 'IDIV':
-        assert False, 'Not implemented'
+        return b'\xf7\x7f\x00'
     elif opcode == 'IMUL':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
@@ -3483,6 +3490,8 @@ def assemble(line, state):
     elif opcode == 'INC':
         if tokens[1].value in REGISTERS:
             return pack('<B', 0x40 + REGISTERS.index(tokens[1].value))
+        elif tokens[1].value == 'DWORD':
+            return b'\xff\x05\x90\x83\xba\x00'
         else:
             assert False, 'Not implemented'
     elif opcode.startswith('INCSS'):
@@ -3733,6 +3742,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('LODS'):
         assert False, 'Not implemented'
+    elif opcode == 'LOCK':
+        state['eip'] += 1
+        inst = assemble(line[5:], state)
+        state['eip'] -= 1
+        return b'\xf0' + inst
     elif opcode == 'LOOP':
         to = int(tokens[1].value, base=16)
         rel = to - state['eip'] - 2
@@ -4376,6 +4390,17 @@ def assemble(line, state):
         else:
             assert False, 'Not implemented'
     elif opcode == 'OR':
+        if tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == '+'
+            disp = int(tokens[6].value, base=16)
+            assert tokens[7].value == ']'
+            assert tokens[8].value == ','
+            src = REGISTERS8.index(tokens[9].value)
+            modrm = 0b01000000 | src << 3 | base
+            return b'\x08' + pack('<B', modrm) + pack('<B', disp)
         return b'\x83\xc9\xff'
     elif opcode.startswith('OR'):
         assert False, 'Not implemented'
@@ -4991,6 +5016,8 @@ def assemble(line, state):
             src = REGISTERS.index(tokens[3].value)
             modrm = 0b11000000 | dst << 3 | src
             return b'\x2b' + pack('<B', modrm)
+        elif tokens[3].value == 'DWORD':
+            return b'\x2b\x78\x00'
         else:
             imm = int(tokens[3].value, base=16)
             if imm <= 0x7f:
