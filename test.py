@@ -1591,6 +1591,8 @@ def test_assemble():
         ['NOP',                             b'\x90'],
         ['NOT ecx',                         b'\xf7\xd1'],
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
+        ['OUT 0x42, al',                    b'\xe6\x42'],
+        ['OUT 0x42, eax',                   b'\xe7\x42'],
         ['PACKSSWB mm1, mm7',               b'\x0f\x63\xcf'],
         ['PACKSSWB mm2, mm2',               b'\x0f\x63\xd2'],
         ['PACKSSWB mm6, mm6',               b'\x0f\x63\xf6'],

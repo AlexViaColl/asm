@@ -4378,7 +4378,17 @@ def assemble(line, state):
     elif opcode.startswith('OR'):
         assert False, 'Not implemented'
     elif opcode == 'OUT':
-        return b'\xee'
+        if tokens[1].value == 'dx':
+            if tokens[3].value == 'eax':
+                return b'\xef'
+            else:
+                return b'\xee'
+        elif tokens[3].value == 'al':
+            ib = int(tokens[1].value, base=16)
+            return b'\xe6' + pack('<B', ib)
+        elif tokens[3].value == 'eax':
+            ib = int(tokens[1].value, base=16)
+            return b'\xe7' + pack('<B', ib)
     elif opcode.startswith('OUTS'):
         assert False, 'Not implemented'
     elif opcode.startswith('PABS'):
