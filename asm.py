@@ -4785,6 +4785,14 @@ def assemble(line, state):
             return b'\xd1\xc4'
     elif opcode in ['RCR', 'ROR']:
         assert False, 'Not implemented'
+    elif opcode == 'RCPPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x53' + pack('<B', modrm)
+        elif tokens[3].value == 'XMMWORD':
+            return b'\x0f\x53\x54\x24\x30'
     elif opcode == 'RCPSS':
         dst = REGISTERSXMM.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)

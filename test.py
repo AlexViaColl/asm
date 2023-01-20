@@ -1675,6 +1675,8 @@ def test_assemble():
         ['RCL BYTE PTR [ebx], cl',          b'\xd2\x13'],
         ['RCL cl, cl',                      b'\xd2\xd1'],
         ['RCL bl, cl',                      b'\xd2\xd3'],
+        ['RCPPS xmm0, xmm1',                b'\x0f\x53\xc1'],
+        ['RCPPS xmm2, XMMWORD PTR [esp+0x30]',b'\x0f\x53\x54\x24\x30'],
         ['RCPSS xmm2, xmm0',                b'\xf3\x0f\x53\xd0'],
         ['RDMSR',                           b'\x0f\x32'],
         ['RDPKRU',                          b'\x0f\x01\xee'],
