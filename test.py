@@ -1294,6 +1294,8 @@ def test_assemble():
         ['FNCLEX',                          b'\xdb\xe2'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],
+        ['FDIVRP st(0), st',                b'\xde\xf0'],
+        ['FDIVRP st(1), st',                b'\xde\xf1'],
         ['FICOM DWORD PTR [edx+0x0]',       b'\xda\x52\x00'],
         ['FICOM DWORD PTR [ebx+0x64]',      b'\xda\x53\x64'],
         ['FICOM WORD PTR [edi*2+0x7d14c800]', b'\xde\x14\x7d\x00\xc8\x14\x7d'],

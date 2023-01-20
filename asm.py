@@ -3139,6 +3139,14 @@ def assemble(line, state):
         return b'\xd9\xff'
     elif opcode == 'FDECSTP':
         return b'\xd9\xf6'
+    elif opcode == 'FDIVRP':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == '('
+        i = int(tokens[3].value)
+        assert tokens[4].value == ')'
+        assert tokens[5].value == ','
+        assert tokens[6].value == 'st'
+        return b'\xde' + pack('<B', 0xf0 + i)
     elif opcode.startswith('FDIV'):
         assert False, 'Not implemented'
     elif opcode == 'FFREE':
