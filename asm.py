@@ -2306,11 +2306,19 @@ def assemble(line, state):
             assert tokens[2].value == 'PTR'
             if tokens[3].value in SEGMENTS:
                 assert tokens[4].value == ':'
-                m = int(tokens[5].value, base=16)
-                assert tokens[6].value == ','
-                src = REGISTERS8.index(tokens[7].value)
-                modrm = 0b00000101 | src << 3
-                return b'\x00' + pack('<B', modrm) + pack('<I', m)
+                if tokens[5].value == '[':
+                    base = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERS8.index(tokens[9].value)
+                    modrm = 0b00010000 | src << 3 | base
+                    return b'\x00' + pack('<B', modrm)
+                else:
+                    m = int(tokens[5].value, base=16)
+                    assert tokens[6].value == ','
+                    src = REGISTERS8.index(tokens[7].value)
+                    modrm = 0b00000101 | src << 3
+                    return b'\x00' + pack('<B', modrm) + pack('<I', m)
             elif tokens[3].value == '[':
                 reg = REGISTERS.index(tokens[4].value)
                 if tokens[5].value == '+':
@@ -2330,7 +2338,11 @@ def assemble(line, state):
                             src = REGISTERS8.index(tokens[13].value)
                             modrm = 0b01000100 | src << 3
                             sib = 0b00000000 | scale << 6 | idx << 3 | reg
-                            return b'\x00' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                            if disp <= 0xff:
+                                return b'\x00' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                            else:
+                                modrm = 0b10000100 | src << 3
+                                return b'\x00' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                         elif tokens[9].value == '-':
                             disp = -int(tokens[10].value, base=16)
                             assert tokens[11].value == ']'
@@ -2367,6 +2379,21 @@ def assemble(line, state):
                     else:
                         modrm = 0b10000000 | src << 3 | reg
                         return b'\x00' + pack('<B', modrm) + pack('<i', disp)
+                elif tokens[5].value == '*':
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[6].value]
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    assert tokens[10].value == ','
+                    assert tokens[11].value == 'ch'
+                    modrm = 0x2c
+                    sib = 0x5d
+                    return b'\x00' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                 elif tokens[5].value == ']':
                     assert tokens[6].value == ','
                     if tokens[7].value in REGISTERS8:
@@ -3081,7 +3108,10 @@ def assemble(line, state):
     elif opcode == 'DAS':
         return b'\x2f'
     elif opcode == 'DATA16':
-        return b'\x66' + assemble(line[7:], state)
+        prefix = b''
+        if 'ss:' in line:
+            prefix = b'\x36'
+        return prefix + b'\x66' + assemble(line[7:], state)
     elif opcode == 'DEC':
         if tokens[1].value in REGISTERS:
             # DEC r32 (48 + rd)
@@ -5271,13 +5301,20 @@ def assemble(line, state):
                     else:
                         modrm = 0b10000000 | reg
                         return b'\xf6' + pack('<B', modrm) + pack('<I', disp) + pack('<B', ib)
-                if tokens[5].value == '-':
+                elif tokens[5].value == '-':
                     disp = -int(tokens[6].value, base=16)
                     assert tokens[7].value == ']'
                     assert tokens[8].value == ','
                     ib = int(tokens[9].value, base=16)
                     modrm = 0b01000000 | reg
                     return b'\xf6' + pack('<B', modrm) + pack('<b', disp) + pack('<B', ib)
+                elif tokens[5].value == ']':
+                    assert tokens[6].value == ','
+                    src = REGISTERS8.index(tokens[7].value)
+                    modrm = 0x00
+                    return b'\x84' + pack('<B', modrm)
+                else:
+                    assert False
         elif tokens[1].value in REGISTERS8:
             rm8 = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','
