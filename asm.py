@@ -4752,6 +4752,11 @@ def assemble(line, state):
         src = int(tokens[3].value[-1])
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\xf9' + pack('<B', modrm)
+    elif opcode == 'PSWAPD':
+        dst = REGISTERSMM.index(tokens[1].value)
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x0f' + pack('<B', modrm) + b'\xbb'
     elif opcode.startswith('PS'):
         assert False, 'Not implemented'
     elif opcode.startswith('PT'):
