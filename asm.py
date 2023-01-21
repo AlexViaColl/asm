@@ -4505,6 +4505,23 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'PALIGNR':
         assert False, 'Not implemented'
+    elif opcode == 'PANDN':
+        prefix = b''
+        if tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+        elif tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xdf' + pack('<B', modrm)
+        elif tokens[3].value == 'QWORD':
+            pass
+        elif tokens[3].value == 'XMMWORD':
+            prefix = b'\x66'
+        m = int(tokens[7].value, base=16)
+        return prefix + b'\x0f\xdf\x1d' + pack('<I', m)
     elif opcode in ['PAND', 'PANDN']:
         assert False, 'Not implemented'
     elif opcode == 'PAUSE':
