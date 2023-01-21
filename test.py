@@ -1607,6 +1607,8 @@ def test_assemble():
         ['MULPD xmm0, xmm0',                b'\x66\x0f\x59\xc0'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],
+        ['NOT BYTE PTR [eax]',              b'\xf6\x10'],
+        ['NOT cl',                          b'\xf6\xd1'],
         ['NOT ecx',                         b'\xf7\xd1'],
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
         ['OUT 0x42, al',                    b'\xe6\x42'],

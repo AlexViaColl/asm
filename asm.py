@@ -4419,6 +4419,16 @@ def assemble(line, state):
         if tokens[1].value in REGISTERS:
             reg = REGISTERS.index(tokens[1].value)
             return b'\xf7' + pack('<B', 0b11010000 | reg)
+        elif tokens[1].value in REGISTERS8:
+            reg = REGISTERS8.index(tokens[1].value)
+            return b'\xf6' + pack('<B', 0b11010000 | reg)
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == ']'
+            modrm = 0b00010000 | base
+            return b'\xf6' + pack('<B', modrm)
         else:
             assert False, 'Not implemented'
     elif opcode == 'OR':
