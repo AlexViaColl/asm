@@ -2548,6 +2548,11 @@ def assemble(line, state):
             assert False, 'Unreachable'
     elif opcode == 'ANDPD':
         return b'\x66\x0f\x54\x05\x00\x9b\x88\x00'
+    elif opcode == 'ANDNPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x55' + pack('<B', modrm)
     elif opcode.startswith('AND'):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
