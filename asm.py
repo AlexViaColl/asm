@@ -5132,6 +5132,9 @@ def assemble(line, state):
         return b'\x0f\x97\xc1'
     elif opcode == 'SETBE':
         return b'\x0f\x96\xc0'
+    elif opcode == 'SETLE':
+        reg = REGISTERS8.index(tokens[1].value)
+        return b'\x0f\x9e' + pack('<B', 0xc0 + reg)
     elif opcode == 'SETO':
         return b'\x0f\x90\x90\x90\x90\x90\x90'
     elif opcode.startswith('SET'):

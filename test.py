@@ -1771,6 +1771,8 @@ def test_assemble():
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
         ['SETA cl',                         b'\x0f\x97\xc1'],
         ['SETBE al',                        b'\x0f\x96\xc0'],
+        ['SETLE al',                        b'\x0f\x9e\xc0'],
+        ['SETLE dl',                        b'\x0f\x9e\xc2'],
         ['SETO BYTE PTR [eax-0x6f6f6f70]',  b'\x0f\x90\x90\x90\x90\x90\x90'],
         ['SFENCE',                          b'\x0f\xae\xf8'],
         ['SGDTD [ecx]',                     b'\x0f\x01\x01'],
