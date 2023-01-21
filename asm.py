@@ -4848,6 +4848,17 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PT'):
         assert False, 'Not implemented'
+    elif opcode == 'PUNPCKHWD':
+        prefix = b''
+        if tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+            src = REGISTERSMM.index(tokens[3].value)
+        elif tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+            src = REGISTERSXMM.index(tokens[3].value)
+            prefix = b'\x66'
+        modrm = 0b11000000 | dst << 3 | src
+        return prefix + b'\x0f\x69' + pack('<B', modrm)
     elif opcode.startswith('PUNPCK'):
         assert False, 'Not implemented'
     elif opcode == 'PUSH':

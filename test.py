@@ -1696,6 +1696,8 @@ def test_assemble():
         ['PSUBSW mm2, QWORD PTR ds:0x890f30',b'\x0f\xe9\x15\x30\x0f\x89\x00'],
         ['PSUBW mm1, mm6',                  b'\x0f\xf9\xce'],
         ['PSWAPD mm3, mm0',                 b'\x0f\x0f\xd8\xbb'],
+        ['PUNPCKHWD mm3, mm7',              b'\x0f\x69\xdf'],
+        ['PUNPCKHWD xmm3, xmm7',            b'\x66\x0f\x69\xdf'],
         ['PUSH es',                         b'\x06'],
         ['PUSH cs',                         b'\x0e'],
         ['PUSH ss',                         b'\x16'],
