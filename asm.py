@@ -4501,6 +4501,11 @@ def assemble(line, state):
             return b'\x0f\x67' + pack('<B', modrm)
     elif opcode.startswith('PACK'):
         assert False, 'Not implemented'
+    elif opcode == 'PADDB':
+        dst = REGISTERSMM.index(tokens[1].value)
+        src = REGISTERSMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\xfc' + pack('<B', modrm)
     elif opcode.startswith('PADD'):
         assert False, 'Not implemented'
     elif opcode == 'PALIGNR':
