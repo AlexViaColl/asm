@@ -2568,6 +2568,30 @@ def assemble(line, state):
         inst = b'\xf2' + assemble(line[4:], state)
         state['eip'] -= 1
         return inst
+    elif opcode == 'BOUND':
+        dst = REGISTERS.index(tokens[1].value)
+        assert tokens[2].value == ','
+        assert tokens[3].value == 'QWORD'
+        assert tokens[4].value == 'PTR'
+        assert tokens[5].value == '['
+        base = REGISTERS.index(tokens[6].value)
+        if tokens[7].value == ']':
+            modrm = 0b00000000 | dst << 3 | base
+            return b'\x62' + pack('<B', modrm)
+        elif tokens[7].value == '+':
+            if tokens[8].value in REGISTERS:
+                assert tokens[9].value == '*'
+                assert tokens[10].value == '1'
+                if tokens[11].value == '+':
+                    disp = int(tokens[12].value, base=16)
+                    return b'\x62\x6c\x00' + pack('<B', disp)
+                elif tokens[11].value == '-':
+                    disp = -int(tokens[12].value, base=16)
+                    return b'\x62\x6c\x00' + pack('<b', disp)
+            else:
+                disp = int(tokens[8].value, base=16)
+                modrm = 0b01000000 | dst << 3 | base
+                return b'\x62' + pack('<B', modrm) + pack('<B', disp)
     elif opcode == 'BSWAP':
         modrm = 0xc8 + REGISTERS.index(tokens[1].value)
         return b'\x0f' + pack('<B', modrm)
