@@ -4829,6 +4829,18 @@ def assemble(line, state):
         assert tokens[2].value == ','
         ib = int(tokens[3].value, base=16)
         return b'\x0f\x71' + pack('<B', 0xf0 + dst) + pack('<B', ib)
+    elif opcode == 'PSRAD':
+        prefix = b''
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+            prefix = b'\x66'
+        elif tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+        else:
+            assert False
+        assert tokens[2].value == ','
+        ib = int(tokens[3].value, base=16)
+        return prefix + b'\x0f\x72' + pack('<B', 0xe0 + dst) + pack('<B', ib)
     elif opcode == 'PSRAW':
         dst = int(tokens[1].value[-1])
         assert tokens[2].value == ','
