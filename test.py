@@ -1483,6 +1483,8 @@ def test_assemble():
         ['LOCK IDIV DWORD PTR [edi+0x0]',   b'\xf0\xf7\x7f\x00'],
         ['LOCK INC DWORD PTR ds:0xba8390',  b'\xf0\xff\x05\x90\x83\xba\x00'],
         ['LOCK DEC DWORD PTR ds:0xba8390',  b'\xf0\xff\x0d\x90\x83\xba\x00'],
+        ['LODS al, BYTE PTR ds:[esi]',      b'\xac'],
+        ['LODS eax, BYTE PTR ds:[esi]',     b'\xad'],
         #['LOOP 0x49e688',                   b'\xe2\x49'],
         #['LOOP 0x4ae2dd',                   b'\xe2\x4a'],
         ['MFENCE',                          b'\x0f\xae\xf0'],

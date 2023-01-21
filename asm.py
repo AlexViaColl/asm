@@ -3781,13 +3781,20 @@ def assemble(line, state):
         return b'\x0f\xae\xe8'
     elif opcode in ['LGDT', 'LIDT', 'LLDT', 'LMSW', 'LOADIWKEY']:
         assert False, 'Not implemented'
-    elif opcode.startswith('LODS'):
-        assert False, 'Not implemented'
     elif opcode == 'LOCK':
         state['eip'] += 1
         inst = assemble(line[5:], state)
         state['eip'] -= 1
         return b'\xf0' + inst
+    elif opcode == 'LODS':
+        if tokens[1].value == 'al':
+            return b'\xac'
+        elif tokens[1].value == 'eax':
+            return b'\xad'
+        else:
+            assert False
+    elif opcode.startswith('LODS'):
+        assert False, 'Not implemented'
     elif opcode == 'LOOP':
         to = int(tokens[1].value, base=16)
         rel = to - state['eip'] - 2
