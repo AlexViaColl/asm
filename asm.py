@@ -3180,6 +3180,27 @@ def assemble(line, state):
         return b'\xde\x7f\x00'
     elif opcode == 'FILD':
         assert False, 'Not implemented'
+    elif opcode == 'FIMUL':
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if base == REGISTERS.index('esp'):
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                return b'\xda\x4c\x24' + pack('<B', disp)
+            else:
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                if disp <= 0x7f:
+                    modrm = 0b01001000 | base
+                    return b'\xda' + pack('<B', modrm) + pack('<B', disp)
+                else:
+                    return b'\xda\x8d\x2c\x03\x00\x00'
+        elif tokens[1].value == 'WORD':
+            return b'\xde\x4a\x00'
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FINCSTP':
         return b'\xd9\xf7'
     elif opcode == 'FINIT':
