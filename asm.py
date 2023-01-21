@@ -4600,6 +4600,24 @@ def assemble(line, state):
         src = REGISTERSMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x0f' + pack('<B', modrm) + b'\x97'
+    elif opcode == 'PFSUBR':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x0f' + pack('<B', modrm) + b'\xaa'
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                modrm = 0b00000101 | dst << 3
+                m = int(tokens[7].value, base=16)
+                return b'\x0f\x0f' + pack('<B', modrm) + pack('<I', m) + b'\xaa'
+            elif tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == ']'
+                return b'\x0f\x0f\x01\xaa'
+            else:
+                assert False
     elif opcode == 'PI2FD':
         dst = REGISTERSMM.index(tokens[1].value)
         src = REGISTERSMM.index(tokens[3].value)
