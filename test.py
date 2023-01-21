@@ -1671,6 +1671,7 @@ def test_assemble():
         ['PFPNACC mm3, mm3',                b'\x0f\x0f\xdb\x8e'],
         ['PFRCP mm2, mm3',                  b'\x0f\x0f\xd3\x96'],
         ['PFRCPIT1 mm4, mm2',               b'\x0f\x0f\xe2\xa6'],
+        ['PFRCPIT2 mm0, mm4',               b'\x0f\x0f\xc4\xb6'],
         ['PFRSQIT1 mm0, mm2',               b'\x0f\x0f\xc2\xa7'],
         ['PFRSQRT mm4, mm0',                b'\x0f\x0f\xe0\x97'],
         ['PFSUBR mm0, QWORD PTR [ecx]',     b'\x0f\x0f\x01\xaa'],
