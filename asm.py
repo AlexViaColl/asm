@@ -3227,6 +3227,33 @@ def assemble(line, state):
         i = int(tokens[3].value)
         assert tokens[4].value == ')'
         return b'\xdd' + pack('<B', 0xc0 + i)
+    elif opcode == 'FIADD':
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return b'\xda\x05' + pack('<I', m)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    return b'\xda\x03'
+                elif tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    if base == REGISTERS.index('esp'):
+                        if disp <= 0xff:
+                            return b'\xda\x44\x24' + pack('<B', disp)
+                        else:
+                            return b'\xda\x86' + pack('<I', disp)
+                    else:
+                        if disp <= 0xff:
+                            return b'\xda\x46' + pack('<B', disp)
+                        else:
+                            return b'\xda\x86' + pack('<I', disp)
+        elif tokens[1].value == 'WORD':
+            return b'\xde\x43\x00'
+        else:
+            assert False
     elif opcode == 'FICOM':
         if tokens[3].value in SEGMENTS:
             return b'\x3e\xda\x52\x00'
