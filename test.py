@@ -1728,6 +1728,8 @@ def test_assemble():
         ['REPNZ data16 ADD BYTE PTR [edx+esi*8+0x66], bh', b'\xf2\x66\x00\x7c\xf2\x66'],
         ['REPNZ SCAS al, BYTE PTR es:[edi]',b'\xf2\xae'],
         ['REPNZ RCL DWORD PTR [ecx+0x0], 1',b'\xf2\xd1\x51\x00'],
+        ['REPZ ADC esp, DWORD PTR [esi+0x0]',b'\xf3\x13\x66\x00'],
+        ['REPZ CMPS WORD ds:[esi], WORD PTR es:[edi]', b'\x66\xf3\xa7'],
         ['RET 0x10',                        b'\xc2\x10\x00'],
         ['RET',                             b'\xc3'],
         ['RETF',                            b'\xcb'],
