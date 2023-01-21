@@ -3633,21 +3633,24 @@ def assemble(line, state):
         return b'\x0f\x02\x68\x00'
     elif opcode == 'LDS':
         dst = REGISTERS.index(tokens[1].value)
-        base = REGISTERS.index(tokens[6].value)
-        modrm = 0b01000000 | dst << 3 | base
-        if tokens[1].value == 'eax':
-            return b'\xc5' + pack('<B', modrm) + b'\x69'
-        elif tokens[1].value == 'ecx':
-            return b'\xc5' + pack('<B', modrm) + b'\x00'
-        elif tokens[1].value == 'edx':
-            return b'\xc5' + pack('<B', modrm) + b'\x90'
-        elif tokens[1].value == 'esp':
-            return b'\xc5' + pack('<B', modrm) + b'\x00'
-        elif tokens[1].value == 'ebp':
-            prefix = b'\x3e'
-            return prefix + b'\xc5' + pack('<B', modrm) + b'\x00'
-        elif tokens[1].value == 'esi':
-            return b'\xc5\x75\x5a'
+        assert tokens[2].value == ','
+        assert tokens[3].value == 'FWORD'
+        assert tokens[4].value == 'PTR'
+        if tokens[5].value == '[':
+            base = REGISTERS.index(tokens[6].value)
+            modrm = 0b01000000 | dst << 3 | base
+            assert tokens[7].value == '+'
+            if tokens[8].value in REGISTERS:
+                return b'\xc5\x54\x00\x90'
+            else:
+                disp = int(tokens[8].value, base=16)
+                return b'\xc5' + pack('<B', modrm) + pack('<B', disp)
+        elif tokens[5].value == 'ds':
+            return b'\x3e\xc5\x69\x00'
+        elif tokens[5].value == 'ss':
+            return b'\x36\xc5\x69\x00'
+        else:
+            assert False
     elif opcode.startswith('LD'):
         assert False, 'Not implemented'
     elif opcode == 'LEA':
