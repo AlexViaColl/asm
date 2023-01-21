@@ -1645,6 +1645,8 @@ def test_assemble():
         ['PACKUSWB mm0, QWORD PTR [eax]',   b'\x0f\x67\x00'],
         ['PADDB mm1, mm5',                  b'\x0f\xfc\xcd'],
         ['PADDB mm2, mm1',                  b'\x0f\xfc\xd1'],
+        ['PADDSW mm0, QWORD PTR ds:0x889ea8',b'\x0f\xed\x05\xa8\x9e\x88\x00'],
+        ['PADDSW mm0, mm1',                 b'\x0f\xed\xc1'],
         ['PANDN mm3, QWORD PTR ds:0x8e9990',b'\x0f\xdf\x1d\x90\x99\x8e\x00'],
         ['PANDN xmm3, XMMWORD PTR ds:0x8e9bb0',b'\x66\x0f\xdf\x1d\xb0\x9b\x8e\x00'],
         ['PANDN mm5, mm3',                  b'\x0f\xdf\xeb'],
