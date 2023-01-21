@@ -4864,8 +4864,6 @@ def assemble(line, state):
             return b'\xd0' + pack('<B', modrm)
         elif tokens[1].value == 'esp':
             return b'\xd1\xc4'
-    elif opcode in ['RCR', 'ROR']:
-        assert False, 'Not implemented'
     elif opcode == 'RCPPS':
         dst = REGISTERSXMM.index(tokens[1].value)
         if tokens[3].value in REGISTERSXMM:
@@ -4880,6 +4878,28 @@ def assemble(line, state):
         modrm = 0b11000000 | dst << 3 | src
         return b'\xf3\x0f\x53' + pack('<B', modrm)
     elif opcode.startswith('RCP'):
+        assert False, 'Not implemented'
+    elif opcode == 'RCR':
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            if tokens[3].value == 'cl':
+                return b'\xd3\xdf'
+            else:
+                modrm = 0b11011000 | dst
+                return b'\xd1' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            modrm = 0b11011000 | dst
+            if tokens[3].value == '1':
+                return b'\xd0' + pack('<B', modrm)
+            else:
+                ib = int(tokens[3].value, base=16)
+                return b'\xc0' + pack('<B', modrm) + pack('<B', ib)
+        elif tokens[1].value == 'BYTE':
+            return b'\xd0\x18'
+        else:
+            assert False, 'Not implemented'
+    elif opcode == 'ROR':
         assert False, 'Not implemented'
     elif opcode in ['RDFSBASE', 'RDGSBASE']:
         assert False, 'Not implemented'
