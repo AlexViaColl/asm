@@ -1732,6 +1732,8 @@ def test_assemble():
         ['ROL BYTE PTR [esi-0x7942ff81], cl', b'\xd2\x86\x7f\x00\xbd\x86'],
         ['ROL DWORD PTR [edx+0x0], cl',     b'\xd3\x42\x00'],
         ['RSM',                             b'\x0f\xaa'],
+        ['RSQRTSS xmm3, xmm1',              b'\xf3\x0f\x52\xd9'],
+        ['RSQRTSS xmm5, xmm4',              b'\xf3\x0f\x52\xec'],
         ['SAHF',                            b'\x9e'],
         ['SAR esi, 0x2',                    b'\xc1\xfe\x02'],
         ['SAR eax, 1',                      b'\xd1\xf8'],

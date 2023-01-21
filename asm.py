@@ -4965,6 +4965,11 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'RSM':
         return b'\x0f\xaa'
+    elif opcode == 'RSQRTSS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\xf3\x0f\x52' + pack('<B', modrm)
     elif opcode.startswith('RS'):
         assert False, 'Not implemented'
     elif opcode == 'SAHF':
