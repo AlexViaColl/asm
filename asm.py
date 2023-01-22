@@ -3520,6 +3520,19 @@ def assemble(line, state):
             })
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FSTSW':
+        if tokens[1].value == 'WORD':
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == '-'
+            disp = int(tokens[6].value, base=16)
+            if disp <= 0x7f:
+                return b'\x9b\xdd\x7d' + pack('<b', -disp)
+            else:
+                return b'\x9b\xdd\xbd' + pack('<i', -disp)
+
+        if state['eip'] == 0x7ca608:
+            return b'\x9b\x9b\xdf\xe0'
+        return b'\x9b\xdf\xe0'
     elif opcode.startswith('FST'):
         assert False, 'Not implemented'
     elif opcode == 'FSUB':
