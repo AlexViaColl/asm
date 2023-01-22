@@ -1834,6 +1834,7 @@ def test_assemble():
         ['SETBE al',                        b'\x0f\x96\xc0'],
         ['SETE BYTE PTR [esp+0x18]',        b'\x0f\x94\x44\x24\x18'],
         ['SETE BYTE PTR [esp+0x90]',        b'\x0f\x94\x84\x24\x90\x00\x00\x00'],
+        ['SETG cl',                         b'\x0f\x9f\xc1'],
         ['SETGE dl',                        b'\x0f\x9d\xc2'],
         ['SETL BYTE PTR [esp+0x13]',        b'\x0f\x9c\x44\x24\x13'],
         ['SETL BYTE PTR [esp+0x17]',        b'\x0f\x9c\x44\x24\x17'],

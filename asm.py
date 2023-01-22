@@ -5496,6 +5496,9 @@ def assemble(line, state):
         else:
             reg = REGISTERS8.index(tokens[1].value)
             return b'\x0f\x94' + pack('<B', 0xc0 + reg)
+    elif opcode == 'SETG':
+        reg = REGISTERS8.index(tokens[1].value)
+        return b'\x0f\x9f' + pack('<B', 0xc0 + reg)
     elif opcode == 'SETGE':
         reg = REGISTERS8.index(tokens[1].value)
         return b'\x0f\x9d' + pack('<B', 0xc0 + reg)
