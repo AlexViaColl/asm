@@ -5625,6 +5625,24 @@ def assemble(line, state):
         assert tokens[1].value == '['
         assert tokens[3].value == ']'
         return b'\x0f\x01' + pack('<B', REGISTERS.index(tokens[2].value))
+    elif opcode == 'SHUFPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            ib = int(tokens[5].value, base=16)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xc6' + pack('<B', modrm) + pack('<B', ib)
+        elif tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            assert tokens[7].value == '+'
+            disp = int(tokens[8].value, base=16)
+            assert tokens[9].value == ']'
+            assert tokens[10].value == ','
+            ib = int(tokens[11].value, base=16)
+            modrm = 0b01000100 | dst << 3
+            return b'\x0f\xc6' + pack('<B', modrm) + b'\x24' + pack('<B', disp) + pack('<B', ib)
     elif opcode.startswith('SH'):
         assert False, 'Not implemented'
     elif opcode in ['SIDT', 'SLDT', 'SMSW']:
