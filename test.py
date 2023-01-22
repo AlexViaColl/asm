@@ -1691,6 +1691,7 @@ def test_assemble():
         ['PREFETCHW BYTE PTR ds:0xd0d0d0d', b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'],
         ['PSLLD mm6, 0xd',                  b'\x0f\x72\xf6\x0d'],
         ['PSLLD xmm1, 0xd',                 b'\x66\x0f\x72\xf1\x0d'],
+        ['PSLLQ mm1, 0x20',                 b'\x0f\x73\xf1\x20'],
         ['PSLLW mm0, 0x2',                  b'\x0f\x71\xf0\x02'],
         ['PSRAD xmm0, 0x1f',                b'\x66\x0f\x72\xe0\x1f'],
         ['PSRAW mm0, 0x2',                  b'\x0f\x71\xe0\x02'],
