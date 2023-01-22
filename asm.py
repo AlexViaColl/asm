@@ -5341,7 +5341,90 @@ def assemble(line, state):
         else:
             assert False, 'Not implemented'
     elif opcode == 'ROR':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            if tokens[3].value == 'cl':
+                return b'\xd3\xca'
+            else:
+                ib = int(tokens[3].value, base=16)
+                if dst == REGISTERS.index('esp'):
+                    return b'\xc1\xcc' + pack('<B', ib)
+                else:
+                    modrm = 0b11011000 | dst
+                    return b'\xc1' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            modrm = 0b11011000 | dst
+            if tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11000000 | src << 3 | dst
+                return b'\xd2' + pack('<B', modrm)
+            elif tokens[3].value == '1':
+                return b'\xc0' + pack('<B', modrm)
+            else:
+                ib = int(tokens[3].value, base=16)
+                return b'\xc0' + pack('<B', modrm) + pack('<B', ib)
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                if tokens[9].value == 'cl':
+                    return b'\xd2\x49\x00'
+                elif tokens[9].value == '1':
+                    if disp <= 0x7f:
+                        return b'\xd0\x49\x00'
+                    else:
+                        return b'\xd0\x8d' + pack('<I', disp)
+                else:
+                    assert False
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                if tokens[9].value == 'cl':
+                    return b'\xd2\x49\x00'
+                elif tokens[9].value == '1':
+                    if disp <= 0x7f:
+                        return b'\xd0\x49\x00'
+                    else:
+                        return b'\xd0\x8b' + pack('<i', -disp)
+                else:
+                    assert False
+            else:
+                assert False
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                if tokens[9].value == 'cl':
+                    return b'\xd3\x4a\x00'
+                else:
+                    ib = int(tokens[9].value, base=16)
+                    if disp <= 0x7f:
+                        return b'\xc1\x49' + pack('<B', disp) + pack('<B', ib)
+                    else:
+                        return b'\xc1\x8a' + pack('<I', disp) + pack('<B', ib)
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                if tokens[9].value == '1':
+                    modrm = 0b10001000 | base
+                    return b'\xd1' + pack('<B', modrm) + pack('<i', -disp)
+                else:
+                    assert False
+            else:
+                assert False
+        else:
+            assert False, 'Not implemented'
     elif opcode in ['RDFSBASE', 'RDGSBASE']:
         assert False, 'Not implemented'
     elif opcode == 'RDMSR':
