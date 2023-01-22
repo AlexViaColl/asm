@@ -1386,6 +1386,11 @@ def test_assemble():
 
         ['FNINIT',                          b'\xdb\xe3'],
         ['FNOP',                            b'\xd9\xd0'],
+        ['FNSTCW WORD PTR [eax+0x69]',      b'\xd9\x78\x69'],
+        ['FNSTCW WORD PTR [esp+0x0]',       b'\xd9\x7c\x24\x00'],
+        ['FNSTCW WORD PTR [esp+0x1c]',      b'\xd9\x7c\x24\x1c'],
+        ['FNSTCW WORD PTR [ebp+0x4]',       b'\xd9\x7d\x04'],
+        ['FNSTCW WORD PTR [ebp-0x8]',       b'\xd9\x7d\xf8'],
         ['FNSTENV [esp]',                   b'\xd9\x34\x24'],
         ['FPATAN',                          b'\xd9\xf3'],
         ['FPREM',                           b'\xd9\xf8'],

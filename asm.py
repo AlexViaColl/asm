@@ -3457,6 +3457,29 @@ def assemble(line, state):
             assert False, 'Not implemented'
     elif opcode == 'FNOP':
         return b'\xd9\xd0'
+    elif opcode == 'FNSTCW':
+        if tokens[1].value == 'WORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                if base == REGISTERS.index('esp'):
+                    return b'\xd9\x7c\x24' + pack('<b', disp)
+                else:
+                    modrm = 0b01111000 | base
+                    return b'\xd9' + pack('<B', modrm) + pack('<b', disp)
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                if base == REGISTERS.index('esp'):
+                    assert False
+                else:
+                    modrm = 0b01111000 | base
+                    return b'\xd9' + pack('<B', modrm) + pack('<b', -disp)
+            else:
+                assert False
+        else:
+            assert False
     elif opcode == 'FNSTENV':
         return b'\xd9\x34\x24'
     elif opcode == 'FPATAN':
