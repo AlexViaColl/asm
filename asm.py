@@ -5481,6 +5481,21 @@ def assemble(line, state):
         return b'\x0f\x97\xc1'
     elif opcode == 'SETBE':
         return b'\x0f\x96\xc0'
+    elif opcode == 'SETE':
+        if tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == '+'
+            disp = int(tokens[6].value, base=16)
+            assert tokens[7].value == ']'
+            if disp <= 0x7f:
+                return b'\x0f\x94\x44\x24' + pack('<B', disp)
+            else:
+                return b'\x0f\x94\x84\x24' + pack('<I', disp)
+        else:
+            reg = REGISTERS8.index(tokens[1].value)
+            return b'\x0f\x94' + pack('<B', 0xc0 + reg)
     elif opcode == 'SETGE':
         reg = REGISTERS8.index(tokens[1].value)
         return b'\x0f\x9d' + pack('<B', 0xc0 + reg)
