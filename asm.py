@@ -4824,6 +4824,17 @@ def assemble(line, state):
         return b'\x0f\x0d\x0d\x0d\x0d\x0d\x0d'
     elif opcode.startswith('PREFETCH'):
         assert False, 'Not implemented'
+    elif opcode == 'PSLLD':
+        prefix = b''
+        if tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+        elif tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+            prefix = b'\x66'
+
+        assert tokens[2].value == ','
+        ib = int(tokens[3].value, base=16)
+        return prefix + b'\x0f\x72' + pack('<B', 0xf0 + dst) + pack('<B', ib)
     elif opcode == 'PSLLW':
         dst = REGISTERSMM.index(tokens[1].value)
         assert tokens[2].value == ','
