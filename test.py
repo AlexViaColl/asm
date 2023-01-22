@@ -1838,6 +1838,8 @@ def test_assemble():
         ['SETL dl',                         b'\x0f\x9c\xc2'],
         ['SETLE al',                        b'\x0f\x9e\xc0'],
         ['SETLE dl',                        b'\x0f\x9e\xc2'],
+        ['SETNE BYTE PTR [ecx+0x0]',        b'\x0f\x95\x69\x00'],
+        ['SETNE cl',                        b'\x0f\x95\xc1'],
         ['SETO BYTE PTR [eax-0x6f6f6f70]',  b'\x0f\x90\x90\x90\x90\x90\x90'],
         ['SFENCE',                          b'\x0f\xae\xf8'],
         ['SGDTD [ecx]',                     b'\x0f\x01\x01'],
