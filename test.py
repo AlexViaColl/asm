@@ -1831,6 +1831,7 @@ def test_assemble():
         ['SCAS eax, DWORD PTR es:[edi]',    b'\xaf'],
         ['SERIALIZE',                       b'\x0f\x01\xe8'],
         ['SETA cl',                         b'\x0f\x97\xc1'],
+        ['SETB al',                         b'\x0f\x92\xc0'],
         ['SETBE al',                        b'\x0f\x96\xc0'],
         ['SETE BYTE PTR [esp+0x18]',        b'\x0f\x94\x44\x24\x18'],
         ['SETE BYTE PTR [esp+0x90]',        b'\x0f\x94\x84\x24\x90\x00\x00\x00'],
