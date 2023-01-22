@@ -1373,6 +1373,7 @@ def test_assemble():
         ['FLDENV [esp]',                    b'\xd9\x24\x24'],
         ['FLDL2E',                          b'\xd9\xea'],
         ['FLDLG2',                          b'\xd9\xec'],
+        ['FLDLN2',                          b'\xd9\xed'],
         ['FLDPI',                           b'\xd9\xeb'],
 
         ['FMUL DWORD PTR [eax]',            b'\xd8\x08'],

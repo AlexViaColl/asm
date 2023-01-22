@@ -3436,6 +3436,8 @@ def assemble(line, state):
         return b'\xd9\xea'
     elif opcode == 'FLDLG2':
         return b'\xd9\xec'
+    elif opcode == 'FLDLN2':
+        return b'\xd9\xed'
     elif opcode == 'FLDPI':
         return b'\xd9\xeb'
     elif opcode.startswith('FLD'):
