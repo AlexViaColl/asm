@@ -3268,6 +3268,59 @@ def assemble(line, state):
             return b'\xda' + pack('<B', modrm) + pack('<B', disp)
     elif opcode.startswith('FICOM'):
         assert False, 'Not implemented'
+    elif opcode == 'FIDIV':
+        if tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if base == REGISTERS.index('esp'):
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                if disp <= 0x7f:
+                    return b'\xda\x74\x24' + pack('<B', disp)
+                else:
+                    return b'\xda\xb4\x24' + pack('<I', disp)
+            else:
+                if tokens[5].value == ']':
+                    modrm = 0b00110110
+                    return b'\xda' + pack('<B', modrm)
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[8].value]
+                        assert tokens[9].value == '+'
+                        disp = int(tokens[10].value, base=16)
+                        sib = 0b00000000 | scale << 6 | idx << 3 | base
+                        return b'\xda\x74' + pack('<B', sib) + b'\x08'
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        if disp <= 0x7f:
+                            modrm = 0b01110000 | base
+                            return b'\xda' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            assert False
+                elif tokens[5].value == '*':
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[6].value]
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b00110100
+                    sib = 0b00001101 | scale << 6
+                    return b'\xda' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+        elif tokens[1].value == 'WORD':
+            assert False
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FIDIVR':
         return b'\xde\x7f\x00'
     elif opcode == 'FILD':
