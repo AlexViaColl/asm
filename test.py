@@ -1717,6 +1717,8 @@ def test_assemble():
         ['PUNPCKHBW mm0, mm6',              b'\x0f\x68\xc6'],
         ['PUNPCKHWD mm3, mm7',              b'\x0f\x69\xdf'],
         ['PUNPCKHWD xmm3, xmm7',            b'\x66\x0f\x69\xdf'],
+        ['PUNPCKLWD mm6, mm7',              b'\x0f\x61\xf7'],
+        ['PUNPCKLWD xmm1, xmm7',            b'\x66\x0f\x61\xcf'],
         ['PUSH es',                         b'\x06'],
         ['PUSH cs',                         b'\x0e'],
         ['PUSH ss',                         b'\x16'],
