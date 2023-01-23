@@ -3135,7 +3135,9 @@ def assemble(line, state):
     elif opcode == 'EMMS':
         return b'\x0f\x77'
     elif opcode == 'ENTER':
-        assert False, 'Not implemented'
+        ib1 = int(tokens[1].value, base=16)
+        ib2 = int(tokens[3].value, base=16)
+        return b'\xc8' + pack('<H', ib1) + pack('<B', ib2)
     elif opcode == 'ES':
         state['eip'] += 1
         inst = assemble(line[3:], state)
