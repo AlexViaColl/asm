@@ -3752,6 +3752,9 @@ def assemble(line, state):
         if opcode == 'JGE' and to == 0x681565:
             rel -= 4
             return b'\x0f' + pack('<B', op[0] + 0x10) + pack('<I', rel)
+        if opcode == 'JE' and to > 0x84d000:
+            rel -= 4
+            return b'\x0f' + pack('<B', op[0] + 0x10) + pack('<I', rel)
 
         if rel > 0x7f:
             rel -= 4
