@@ -4568,6 +4568,11 @@ def assemble(line, state):
             m = int(tokens[7].value, base=16)
             modrm = 0b00000101 | dst << 3
             return b'\x66\x0f\x6f' + pack('<B', modrm) + pack('<I', m)
+    elif opcode == 'MOVLHPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        src = REGISTERSXMM.index(tokens[3].value)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x16' + pack('<B', modrm)
     elif opcode == 'MOVMSKPS':
         dst = REGISTERS.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)
