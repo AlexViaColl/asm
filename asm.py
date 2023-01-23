@@ -4652,6 +4652,22 @@ def assemble(line, state):
             modrm = 0b01000000 | src << 3 | base
             return b'\x08' + pack('<B', modrm) + pack('<B', disp)
         return b'\x83\xc9\xff'
+    elif opcode == 'ORPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x56' + pack('<B', modrm)
+        elif tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            assert tokens[7].value == '+'
+            disp = int(tokens[8].value, base=16)
+            assert tokens[9].value == ']'
+            return b'\x0f\x56\x54\x24' + pack('<B', disp)
+        else:
+            assert False
     elif opcode.startswith('OR'):
         assert False, 'Not implemented'
     elif opcode == 'OUT':

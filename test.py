@@ -1657,6 +1657,8 @@ def test_assemble():
         ['NOT cl',                          b'\xf6\xd1'],
         ['NOT ecx',                         b'\xf7\xd1'],
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
+        ['ORPS xmm2, XMMWORD PTR [esp+0x10]',b'\x0f\x56\x54\x24\x10'],
+        ['ORPS xmm2, xmm5',                 b'\x0f\x56\xd5'],
         ['OUT 0x42, al',                    b'\xe6\x42'],
         ['OUT 0x42, eax',                   b'\xe7\x42'],
         ['PACKSSWB mm1, mm7',               b'\x0f\x63\xcf'],
