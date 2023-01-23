@@ -3980,6 +3980,10 @@ def assemble(line, state):
         to = int(tokens[1].value, base=16)
         rel = to - state['eip'] - 2
         return b'\xe2' + pack('<b', rel)
+    elif opcode == 'LOOPE':
+        to = int(tokens[1].value, base=16)
+        rel = to - state['eip'] - 2
+        return b'\xe1' + pack('<b', rel)
     elif opcode.startswith('LOOP'):
         assert False, 'Not implemented'
     elif opcode in ['LSL', 'LTR', 'LZCNT']:
