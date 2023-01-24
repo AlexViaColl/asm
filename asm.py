@@ -3170,6 +3170,29 @@ def assemble(line, state):
         if tokens[1].value in REGISTERS:
             modrm = 0b11110000 | REGISTERS.index(tokens[1].value)
             return b'\xf7' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS8:
+            modrm = 0b11110000 | REGISTERS8.index(tokens[1].value)
+            return b'\xf6' + pack('<B', modrm)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return b'\xf7\x35' + pack('<I', m)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        return b'\xf7\x74\x24' + pack('<B', disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01110000 | base
+                            return b'\xf7' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            return b'\xf7\xb6' + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    return b'\xf7\x75' + pack('<b', -disp)
     elif opcode.startswith('DIV'):
         assert False, 'Not implemented'
     elif opcode.startswith('DP'):
