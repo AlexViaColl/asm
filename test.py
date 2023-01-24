@@ -1155,6 +1155,8 @@ def test_assemble():
         ['ADD eax, 0xfffffffe',             b'\x83\xc0\xfe'],
 
         ['ADDPD xmm0, xmm2',                b'\x66\x0f\x58\xc2'],
+        ['ADDSS xmm0, DWORD PTR ds:0x8e9a30',b'\xf3\x0f\x58\x05\x30\x9a\x8e\x00'],
+        ['ADDSS xmm4, xmm5',                b'\xf3\x0f\x58\xe5'],
 
         ['ADDR16 ADD ah, bh',               b'\x67\x00\xfc'],
 

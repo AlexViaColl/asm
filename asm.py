@@ -2496,7 +2496,16 @@ def assemble(line, state):
         return b'\x67' + assemble(line[7:], state)
     elif opcode == 'ADDPD':
         return b'\x66\x0f\x58\xc2'
-    elif opcode in ['ADDPS', 'ADDSD', 'ADDSS', 'ADDSUBPD', 'ADDSUBPS']:
+    elif opcode == 'ADDSS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+        elif tokens[3].value == 'DWORD':
+            m = int(tokens[7].value, base=16)
+            return b'\xf3\x0f\x58\x05' + pack('<I', m)
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\xf3\x0f\x58' + pack('<B', modrm)
+    elif opcode in ['ADDPS', 'ADDSD', 'ADDSUBPD', 'ADDSUBPS']:
         assert False, 'Not implemented'
     elif opcode == 'ADOX':
         assert False, 'Not implemented'
