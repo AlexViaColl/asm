@@ -1715,6 +1715,7 @@ def test_assemble():
         ['PFSUBR mm7, QWORD PTR ds:0x882f80',b'\x0f\x0f\x3d\x80\x2f\x88\x00\xaa'],
         ['PFSUBR mm2, mm4',                 b'\x0f\x0f\xd4\xaa'],
         ['PI2FD mm2, mm2',                  b'\x0f\x0f\xd2\x0d'],
+        ['PMADDWD mm4, mm6',                b'\x0f\xf5\xe6'],
         ['PMAXSW mm6, QWORD PTR ds:0x8e99d0', b'\x0f\xee\x35\xd0\x99\x8e\x00'],
         ['PMAXSW xmm1, QWORD PTR ds:0x8e9bf0', b'\x66\x0f\xee\x0d\xf0\x9b\x8e\x00'],
         ['PMOVMSKB ecx, mm6',               b'\x0f\xd7\xce'],

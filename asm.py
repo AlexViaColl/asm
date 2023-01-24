@@ -4959,6 +4959,16 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode.startswith('PINS'):
         assert False, 'Not implemented'
+    elif opcode == 'PMADDWD':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xf5' + pack('<B', modrm)
+        else:
+            m = int(tokens[7].value, base=16)
+            modrm = 0b00000101 | dst << 3
+            return b'\x0f\xf5' + pack('<B', modrm) + pack('<I', m)
     elif opcode == 'PMAXSW':
         dst = int(tokens[1].value[-1])
         if tokens[1].value.startswith('x'):
