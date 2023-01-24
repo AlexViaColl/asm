@@ -1537,6 +1537,7 @@ def test_assemble():
         ['LODS eax, BYTE PTR ds:[esi]',     b'\xad'],
         #['LOOP 0x49e688',                   b'\xe2\x49'],
         #['LOOP 0x4ae2dd',                   b'\xe2\x4a'],
+        #['LOOPNE 0x42ecc1',                 b'\xe0\x42'],
         ['MFENCE',                          b'\x0f\xae\xf0'],
         ['MONITOR',                         b'\x0f\x01\xc8'],
 
