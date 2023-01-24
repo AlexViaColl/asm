@@ -4734,7 +4734,12 @@ def assemble(line, state):
             ib = int(tokens[1].value, base=16)
             return b'\xe7' + pack('<B', ib)
     elif opcode.startswith('OUTS'):
-        assert False, 'Not implemented'
+        if tokens[3].value == 'BYTE':
+            return b'\x6e'
+        elif tokens[3].value == 'DWORD':
+            return b'\x6f'
+        else:
+            assert False
     elif opcode.startswith('PABS'):
         assert False, 'Not implemented'
     elif opcode == 'PACKSSWB':

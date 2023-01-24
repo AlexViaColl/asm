@@ -1671,6 +1671,8 @@ def test_assemble():
         ['ORPS xmm2, xmm5',                 b'\x0f\x56\xd5'],
         ['OUT 0x42, al',                    b'\xe6\x42'],
         ['OUT 0x42, eax',                   b'\xe7\x42'],
+        ['OUTS dx, BYTE PTR ds:[esi]',      b'\x6e'],
+        ['OUTS dx, DWORD PTR ds:[esi]',     b'\x6f'],
         ['PACKSSWB mm1, mm7',               b'\x0f\x63\xcf'],
         ['PACKSSWB mm2, mm2',               b'\x0f\x63\xd2'],
         ['PACKSSWB mm6, mm6',               b'\x0f\x63\xf6'],
