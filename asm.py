@@ -5985,10 +5985,87 @@ def assemble(line, state):
     elif opcode == 'XBEGIN':
         assert False, 'Not implemented'
     elif opcode == 'XCHG':
-        dst = REGISTERS.index(tokens[1].value)
-        assert tokens[2].value == ','
-        src = REGISTERS.index(tokens[3].value)
-        return pack('<B', 0x90 | dst)
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            assert tokens[2].value == ','
+            src = REGISTERS.index(tokens[3].value)
+            return pack('<B', 0x90 | dst)
+        elif tokens[1].value in REGISTERS8:
+            modrm = 0b11100000
+            return b'\x86' + pack('<B', modrm)
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                assert tokens[6].value == ','
+                if tokens[7].value == 'al':
+                    return b'\x86\x00'
+                else:
+                    assert False
+            elif tokens[5].value == '+':
+                if tokens[6].value in REGISTERS:
+                    idx = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '*'
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[8].value]
+                    assert tokens[9].value == '+'
+                    disp = int(tokens[10].value, base=16)
+                    assert tokens[11].value == ']'
+                    assert tokens[12].value == ','
+                    src = REGISTERS8.index(tokens[13].value)
+                    modrm = 0b00000100 | scale << 6 | src << 3
+                    sib = 0b01000000 | idx << 3 | base
+                    if disp <= 0xff:
+                        return b'\x86' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                    else:
+                        return b'\x86\x8c\x4a' + pack('<I', disp)
+                else:
+                    disp = int(tokens[6].value, base=16)
+                    src = REGISTERS8.index(tokens[9].value)
+                    modrm = 0b01000000 | src << 3 | base
+                    return b'\x86' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == '-':
+                return b'\x86\xbd\x49\x00\xf3\xbf'
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    assert tokens[6].value == ','
+                    if base == REGISTERS.index('esp'):
+                        return b'\x87\x04\x24'
+                    else:
+                        src = REGISTERS.index(tokens[7].value)
+                        modrm = 0b00000000 | src << 3 | base
+                        return b'\x87' + pack('<B', modrm)
+                elif tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERS.index(tokens[9].value)
+                    modrm = 0b01000000 | src << 3 | base
+                    return b'\x87' + pack('<B', modrm) + pack('<B', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERS.index(tokens[9].value)
+                    modrm = 0b10000000 | src << 3 | base
+                    if disp <= 0xff:
+                        assert False
+                    else:
+                        return b'\x87' + pack('<B', modrm) + pack('<i', -disp)
+            elif tokens[3].value == 'ds':
+                return b'\x3e\x87\x4a\x00'
+            else:
+                assert False
+        else:
+            assert False
     elif opcode == 'XEND':
         return b'\x0f\x01\xd5'
     elif opcode == 'XGETBV':
