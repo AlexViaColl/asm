@@ -1721,6 +1721,8 @@ def test_assemble():
         ['PMOVMSKB ecx, xmm3',              b'\x66\x0f\xd7\xcb'],
         ['PMULHW mm0, QWORD PTR ds:0x889e88', b'\x0f\xe5\x05\x88\x9e\x88\x00'],
         ['PMULHW mm1, QWORD PTR ds:0x889e90', b'\x0f\xe5\x0d\x90\x9e\x88\x00'],
+        ['PMULLW mm0, QWORD PTR ds:0x889e30', b'\x0f\xd5\x05\x30\x9e\x88\x00'],
+        ['PMULLW mm0, mm1',                 b'\x0f\xd5\xc1'],
         ['POP ecx',                         b'\x59'],
         ['POPA',                            b'\x61'],
         ['POPF',                            b'\x9d'],

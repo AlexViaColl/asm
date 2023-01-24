@@ -4982,6 +4982,16 @@ def assemble(line, state):
         m = int(tokens[7].value, base=16)
         modrm = 0b00000101 | dst << 3
         return b'\x0f\xe5' + pack('<B', modrm) + pack('<I', m)
+    elif opcode == 'PMULLW':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xd5' + pack('<B', modrm)
+        else:
+            m = int(tokens[7].value, base=16)
+            modrm = 0b00000101 | dst << 3
+            return b'\x0f\xd5' + pack('<B', modrm) + pack('<I', m)
     elif opcode.startswith('PM'):
         assert False, 'Not implemented'
     elif opcode == 'POP':
