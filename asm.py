@@ -2589,7 +2589,54 @@ def assemble(line, state):
     elif opcode.startswith('AND'):
         assert False, 'Not implemented'
     elif opcode == 'ARPL':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS16:
+            dst = REGISTERS16.index(tokens[1].value) 
+            src = REGISTERS16.index(tokens[3].value) 
+            modrm = 0b11000000 | src << 3 | dst
+            return b'\x63' + pack('<B', modrm)
+        elif tokens[1].value == 'WORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ss':
+                return b'\x36\x63\x00'
+            elif tokens[3].value == '[':
+                if tokens[4].value in REGISTERS:
+                    base = REGISTERS.index(tokens[4].value)
+                elif tokens[4].value in REGISTERS16:
+                    base = REGISTERS16.index(tokens[4].value)
+                    return b'\x67\x63\x66\x00'
+                if tokens[5].value == ']':
+                    return b'\x63\x00'
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[8].value]
+                        disp = int(tokens[10].value, base=16)
+                        assert tokens[11].value == ']'
+                        assert tokens[12].value == ','
+                        src = REGISTERS16.index(tokens[13].value)
+                        if tokens[9].value == '+':
+                            return b'\x63\x6c\x00' + pack('<B', disp)
+                        else:
+                            return b'\x63\x6c\x00' + pack('<b', -disp)
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        assert tokens[7].value == ']'
+                        assert tokens[8].value == ','
+                        src = REGISTERS16.index(tokens[9].value)
+                        modrm = 0b01000000 | src << 3 | base
+                        return b'\x63' + pack('<B', modrm) + pack('<B', disp)
+                else:
+                    assert False
+            else:
+                assert False
+        else:
+            assert False
     elif opcode == 'BND':
         state['eip'] += 1
         inst = b'\xf2' + assemble(line[4:], state)
