@@ -2590,6 +2590,27 @@ def assemble(line, state):
             assert False, 'Unreachable'
     elif opcode == 'ANDPD':
         return b'\x66\x0f\x54\x05\x00\x9b\x88\x00'
+    elif opcode == 'ANDPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x54' + pack('<B', modrm)
+        elif tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '+'
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                modrm = 0b01000100 | dst << 3
+                return b'\x0f\x54' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+            elif tokens[5].value == 'ds':
+                modrm = 0b00000101 | dst << 3
+                m = int(tokens[7].value, base=16)
+                return b'\x0f\x54' + pack('<B', modrm) + pack('<I', m)
+        else:
+            assert False
     elif opcode == 'ANDNPS':
         dst = REGISTERSXMM.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)
@@ -5785,6 +5806,9 @@ def assemble(line, state):
             if tokens[3].value in REGISTERS8:
                 # SHL r/m32, CL (D3 /4)
                 src = REGISTERS8.index(tokens[3].value)
+                if tokens[1].value in ['ebp', 'esi']:
+                    modrm = 0b11110000 | dst
+                    return b'\xd3' + pack('<B', modrm)
                 modrm = 0b11100000 | dst
                 return b'\xd3' + pack('<B', modrm)
             else:
@@ -5792,6 +5816,15 @@ def assemble(line, state):
                 imm = int(tokens[3].value, base=16)
                 modrm = 0b11100000 + REGISTERS.index(tokens[1].value)
                 return b'\xc1' + pack('<B', modrm) + pack('<B', imm)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            modrm = 0b11100000 | dst
+            if tokens[3].value == 'cl':
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11100000 | dst
+                return b'\xd2' + pack('<B', modrm)
+            ib = int(tokens[3].value, base=16)
+            return b'\xc0' + pack('<B', modrm) + pack('<B', ib)
     elif opcode == 'SHR':
         if tokens[1].value in REGISTERS:
             # SHR r/m32, imm8 (C1 /r5 ib)
