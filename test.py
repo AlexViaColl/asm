@@ -1330,6 +1330,7 @@ def test_assemble():
         ['FNCLEX',                          b'\xdb\xe2'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],
+        ['FDIVP st(1), st',                 b'\xde\xf9'],
         ['FDIVRP st(0), st',                b'\xde\xf0'],
         ['FDIVRP st(1), st',                b'\xde\xf1'],
         ['FIADD DWORD PTR [ebx]',           b'\xda\x03'],
