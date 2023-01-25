@@ -4690,7 +4690,40 @@ def assemble(line, state):
     elif opcode == 'MPSADBW':
         assert False, 'Not implemented'
     elif opcode == 'MUL':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            modrm = 0b11100000 | dst
+            return b'\xf7' + pack('<B', modrm)
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xf6\x64\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01100000 | base
+                    return b'\xf6' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == ']':
+                modrm = 0b00100000 | base
+                return b'\xf6' + pack('<B', modrm)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xf7\x64\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01100000 | base
+                    return b'\xf7' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == ']':
+                modrm = 0b00100000 | base
+                return b'\xf7' + pack('<B', modrm)
     elif opcode == 'MULPD':
         dst = REGISTERSXMM.index(tokens[1].value)
         if tokens[3].value in REGISTERSXMM:
