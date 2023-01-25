@@ -1971,6 +1971,12 @@ def test_assemble():
         ['XLAT',                            b'\xd7'],
         ['XOR eax, eax',                    b'\x33\xc0'], # Could also be \x31\xc0
         ['XORPD xmm0, xmm0',                b'\x66\x0f\x57\xc0'],
+        ['XORPS xmm2, XMMWORD PTR ds:0x885650',b'\x0f\x57\x15\x50\x56\x88\x00'],
+        ['XORPS xmm3, XMMWORD PTR ds:0x885640',b'\x0f\x57\x1d\x40\x56\x88\x00'],
+        ['XORPS xmm0, XMMWORD PTR [esp+0x10]',b'\x0f\x57\x44\x24\x10'],
+        ['XORPS xmm1, XMMWORD PTR [esp+0x20]',b'\x0f\x57\x4c\x24\x20'],
+        ['XORPS xmm1, XMMWORD PTR [esp+0x90]',b'\x0f\x57\x8c\x24\x90\x00\x00\x00'],
+        ['XORPS xmm0, xmm0',                b'\x0f\x57\xc0'],
         ['XSETBV',                          b'\x0f\x01\xd1'],
         ['XTEST',                           b'\x0f\x01\xd6'],
     ]
