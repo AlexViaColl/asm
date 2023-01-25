@@ -1943,6 +1943,8 @@ def test_assemble():
         ['UNPCKHPS xmm0, XMMWORD PTR [esp+0x20]',b'\x0f\x15\x44\x24\x20'],
         ['UNPCKHPS xmm3, XMMWORD PTR [esp+0x30]',b'\x0f\x15\x5c\x24\x30'],
         ['UNPCKHPS xmm1, xmm0',             b'\x0f\x15\xc8'],
+        ['UNPCKLPS xmm0, XMMWORD PTR [esp+0x30]',b'\x0f\x14\x44\x24\x30'],
+        ['UNPCKLPS xmm1, xmm0',             b'\x0f\x14\xc8'],
         ['VZEROALL',                        b'\xc5\xfc\x77'],
         ['VZEROUPPER',                      b'\xc5\xf8\x77'],
         ['WAIT',                            b'\x9b'],

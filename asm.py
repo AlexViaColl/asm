@@ -6041,6 +6041,21 @@ def assemble(line, state):
             assert tokens[9].value == ']'
             modrm = 0b01000100 | dst << 3
             return b'\x0f\x15' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+    elif opcode == 'UNPCKLPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x14' + pack('<B', modrm)
+        else:
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            assert tokens[7].value == '+'
+            disp = int(tokens[8].value, base=16)
+            assert tokens[9].value == ']'
+            modrm = 0b01000100 | dst << 3
+            return b'\x0f\x14' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
     elif opcode.startswith('UNPCK'):
         assert False, 'Not implemented'
     elif opcode == 'VZEROALL':
