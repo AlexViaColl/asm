@@ -3568,7 +3568,36 @@ def assemble(line, state):
         else:
             assert False, 'Not implemented'
     elif opcode == 'FLDCW':
-        return b'\xd9\x69\x00'
+        assert tokens[1].value == 'WORD'
+        assert tokens[2].value == 'PTR'
+        assert tokens[3].value == '['
+        base = REGISTERS.index(tokens[4].value)
+        if tokens[5].value == '+':
+            sign = 1
+        elif tokens[5].value == '-':
+            sign = -1
+        elif tokens[5].value == ']':
+            if base == REGISTERS.index('esp'):
+                return b'\xd9\x2c\x24'
+            else:
+                modrm = 0x2a
+                return b'\xd9' + pack('<B', modrm)
+        disp = int(tokens[6].value, base=16)
+        assert tokens[7].value == ']'
+        if base == REGISTERS.index('esp'):
+            if state['eip'] == 0x7cee36:
+                return b'\x9b\xd9\x6c\x24' + pack('<B', disp)
+            return b'\xd9\x6c\x24' + pack('<B', disp)
+        else:
+            modrm = 0b01101000 | base
+            if sign == 1:
+                return b'\xd9' + pack('<B', modrm) + pack('<B', disp)
+            else:
+                if disp <= 0x7f:
+                    return b'\xd9' + pack('<B', modrm) + pack('<b', -disp)
+                else:
+                    modrm = 0b10101000 | base
+                    return b'\xd9' + pack('<B', modrm) + pack('<i', -disp)
     elif opcode == 'FLDENV':
         if tokens[2].value == 'esp':
             return b'\xd9\x24\x24'
