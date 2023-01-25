@@ -3307,6 +3307,8 @@ def assemble(line, state):
         return b'\xda' + pack('<B', 0xc8 + i)
     elif opcode.startswith('FCMOV'):
         assert False, 'Not implemented'
+    elif opcode == 'FCOMPP':
+        return b'\xde\xd9'
     elif opcode.startswith('FCOM'):
         assert False, 'Not implemented'
     elif opcode == 'FCOS':

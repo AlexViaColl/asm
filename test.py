@@ -1331,6 +1331,7 @@ def test_assemble():
         ['FCMOVBE st, st(4)',               b'\xda\xd4'],
         ['FCMOVE st, st(4)',                b'\xda\xcc'],
         ['FNCLEX',                          b'\xdb\xe2'],
+        ['FCOMPP',                          b'\xde\xd9'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],
         ['FDIVP st(1), st',                 b'\xde\xf9'],
