@@ -1679,6 +1679,15 @@ def test_assemble():
 
         ['MOVS WORD PTR es:[edi], WORD PTR ds:[esi]', b'\x66\xa5'],
         ['MOVSX edx, BYTE PTR [ecx]',       b'\x0f\xbe\x11'],
+        ['MOVUPS xmm2, XMMWORD PTR [ecx]',  b'\x0f\x10\x11'],
+        ['MOVUPS xmm2, XMMWORD PTR [ebx]',  b'\x0f\x10\x13'],
+        ['MOVUPS xmm3, XMMWORD PTR [ecx]',  b'\x0f\x10\x19'],
+        ['MOVUPS xmm3, XMMWORD PTR [ecx+0x30]',b'\x0f\x10\x59\x30'],
+        ['MOVUPS xmm4, XMMWORD PTR [ecx+0x10]',b'\x0f\x10\x61\x10'],
+        ['MOVUPS XMMWORD PTR [eax], xmm1',  b'\x0f\x11\x08'],
+        ['MOVUPS XMMWORD PTR [ecx], xmm1',  b'\x0f\x11\x09'],
+        ['MOVUPS XMMWORD PTR [edi+eax*1], xmm3',b'\x0f\x11\x1c\x07'],
+        ['MOVUPS XMMWORD PTR [edi+eax*1], xmm4',b'\x0f\x11\x24\x07'],
 
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
         ['MUL BYTE PTR [ebx+0x66]',         b'\xf6\x63\x66'],

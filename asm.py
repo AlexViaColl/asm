@@ -4747,6 +4747,45 @@ def assemble(line, state):
         assert tokens[7].value == ']'
         modrm = 0b00000000 | dst << 3 | reg
         return b'\x0f\xbe' + pack('<B', modrm)
+    elif opcode == 'MOVUPS':
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        elif tokens[1].value == 'XMMWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                assert tokens[6].value == ','
+                src = REGISTERSXMM.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | base
+                return b'\x0f\x11' + pack('<B', modrm)
+            elif tokens[5].value == '+':
+                idx = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '*'
+                scale = {
+                    '1': 0b00,
+                    '2': 0b01,
+                    '4': 0b10,
+                    '8': 0b11,
+                }[tokens[8].value]
+                assert tokens[9].value == ']'
+                assert tokens[10].value == ','
+                src = REGISTERSXMM.index(tokens[11].value)
+                modrm = 0b00000100 | src << 3
+                return b'\x0f\x11' + pack('<B', modrm) + b'\x07'
+        if tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            if tokens[7].value == ']':
+                modrm = 0b00000000 | dst << 3 | base
+                return b'\x0f\x10' + pack('<B', modrm)
+            elif tokens[7].value == '+':
+                modrm = 0b01000000 | dst << 3 | base
+                disp = int(tokens[8].value, base=16)
+                return b'\x0f\x10' + pack('<B', modrm) + pack('<B', disp)
+        else:
+            assert False
     elif opcode.startswith('MOV'):
         assert False, 'Not implemented'
     elif opcode == 'MPSADBW':
