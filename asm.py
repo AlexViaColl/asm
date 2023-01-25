@@ -6041,6 +6041,26 @@ def assemble(line, state):
         if tokens[3].value in REGISTERSXMM:
             return b'\x66\x0f\x5c' + pack('<B', 0xd0 + REGISTERSXMM.index(tokens[3].value))
         return b'\x66\x0f\x5c\x94\x24\x30\x01\x00\x00'
+    elif opcode == 'SUBPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x5c' + pack('<B', modrm)
+        elif tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '+'
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                modrm = 0b01000100 | dst << 3
+                return b'\x0f\x5c' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+            elif tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                return b'\x0f\x5c\x05' + pack('<I', m)
+        else:
+            assert False
     elif opcode == 'SUBSS':
         dst = REGISTERSXMM.index(tokens[1].value)
         if tokens[3].value in REGISTERSXMM:
