@@ -1710,6 +1710,7 @@ def test_assemble():
         ['PCMPGTD mm3, mm5',                b'\x0f\x66\xdd'],
         ['PCMPGTD mm6, mm0',                b'\x0f\x66\xf0'],
         ['PCONFIG',                         b'\x0f\x01\xc5'],
+        ['PFACC mm4, mm2',                  b'\x0f\x0f\xe2\xae'],
         ['PF2ID mm4, mm4',                  b'\x0f\x0f\xe4\x1d'],
         ['PFCMPEQ mm3, mm4',                b'\x0f\x0f\xdc\xb0'],
         ['PFCMPGE mm1, QWORD PTR [esi]',    b'\x0f\x0f\x0e\x90'],
