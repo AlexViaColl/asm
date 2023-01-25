@@ -3331,6 +3331,8 @@ def assemble(line, state):
         return b'\xde' + pack('<B', 0xf0 + i)
     elif opcode.startswith('FDIV'):
         assert False, 'Not implemented'
+    elif opcode == 'FEMMS':
+        return b'\x0f\x0e'
     elif opcode == 'FFREE':
         assert tokens[1].value == 'st'
         assert tokens[2].value == '('

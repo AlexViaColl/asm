@@ -1336,6 +1336,7 @@ def test_assemble():
         ['FDIVP st(1), st',                 b'\xde\xf9'],
         ['FDIVRP st(0), st',                b'\xde\xf0'],
         ['FDIVRP st(1), st',                b'\xde\xf1'],
+        ['FEMMS',                           b'\x0f\x0e'],
         ['FIADD DWORD PTR [ebx]',           b'\xda\x03'],
         ['FIADD DWORD PTR ds:0xb575bc',     b'\xda\x05\xbc\x75\xb5\x00'],
         ['FIADD DWORD PTR [esp+0x4]',       b'\xda\x44\x24\x04'],
