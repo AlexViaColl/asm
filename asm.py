@@ -3548,7 +3548,13 @@ def assemble(line, state):
                 if tokens[4].value in REGISTERS:
                     reg = REGISTERS.index(tokens[4].value)
                     if tokens[5].value == ']':
-                        return op + pack('<B', 0x0 + reg)
+                        if reg == REGISTERS.index('esp'):
+                            if tokens[1].value == 'TBYTE':
+                                return op + b'\x2c\x24'
+                            else:
+                                return op + b'\x04\x24'
+                        else:
+                            return op + pack('<B', 0x0 + reg)
                     elif tokens[5].value == '+':
                         if tokens[6].value in REGISTERS:
                             idx = REGISTERS.index(tokens[6].value)
@@ -3560,9 +3566,23 @@ def assemble(line, state):
                                 '8': 0b11,
                             }[tokens[8].value]
                             if tokens[9].value == '-':
-                                ib = (~int(tokens[10].value, base=16) & 0xff) + 1
+                                im = int(tokens[10].value, base=16)
+                                sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                                if im <= 0x7f:
+                                    modrm = 0b01000100
+                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<b', -im)
+                                else:
+                                    modrm = 0b10000100
+                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<i', -im)
                             elif tokens[9].value == '+':
-                                ib = int(tokens[10].value, base=16)
+                                im = int(tokens[10].value, base=16)
+                                sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                                if im <= 0x7f:
+                                    modrm = 0b01000100
+                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', im)
+                                else:
+                                    modrm = 0b10000100
+                                    return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', im)
                             elif tokens[9].value == ']':
                                 modrm = 0b00000100
                                 sib = 0b00000000 | scale << 6 | idx << 3 | reg
@@ -3577,6 +3597,8 @@ def assemble(line, state):
                                 sib = 0b00100100
                                 if disp <= 0x7f:
                                     modrm = 0b01000000 | reg
+                                    if tokens[1].value == 'TBYTE':
+                                        modrm |= 0b00101000
                                     return op + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                                 else:
                                     modrm = 0b10000000 | reg
@@ -3598,26 +3620,44 @@ def assemble(line, state):
                         assert tokens[7].value == '+'
                         disp = int(tokens[8].value, base=16)
                         modrm = 0b00000100
-                        sib = 0b00000101 | scale << 6
+                        #if tokens[1].value == '
+                        sib = 0b00000101 | scale << 6 | reg << 3
                         return op + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
-                    else:
+                    elif tokens[5].value == '-':
                         im = int(tokens[6].value, base=16)
                         #print(ib, hex(ib))
-                        if im <= 0xff:
-                            im = (~im & 0xff) + 1
-                            modrm = 0b01000000 | reg
-                            return b'\xd9' + pack('<B', modrm) + pack('<B', im)
+                        if reg == REGISTERS.index('esp'):
+                            if im <= 0x7f:
+                                modrm = 0b01000000 | reg
+                                return op + pack('<B', modrm) + pack('<b', -im)
+                            else:
+                                return op + b'\x84\x24' + pack('<i', -im)
                         else:
-                            im = (~im & 0xffffffff) + 1
-                            return b'\xd9\x81' + pack('<I', im)
+                            if im <= 0x7f:
+                                modrm = 0b01000000 | reg
+                                if tokens[1].value == 'TBYTE':
+                                    modrm |= 0b00101000
+                                return op + pack('<B', modrm) + pack('<b', -im)
+                            else:
+                                modrm = 0b10000000 | reg
+                                if tokens[1].value == 'TBYTE':
+                                    modrm |= 0b00101000
+                                return op + pack('<B', modrm) + pack('<i', -im)
                 else:
                     assert False, 'Not implemented'
             elif tokens[3].value in SEGMENTS:
                 seg = SEGMENTS.index(tokens[3].value)
                 assert tokens[4].value == ':'
-                modrm = 0b00000101
-                im = int(tokens[5].value, base=16)
-                return op + pack('<B', modrm) + pack('<I', im)
+                if tokens[5].value == '[':
+                    return b'\x65' + op + b'\x69\x00'
+                else:
+                    modrm = 0b00000101
+                    if tokens[1].value == 'TBYTE':
+                        modrm = 0b00101101
+                        if tokens[3].value == 'ds':
+                            op = b'\xdb'
+                    im = int(tokens[5].value, base=16)
+                    return op + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Not implemented'
     elif opcode == 'FLDCW':
