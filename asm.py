@@ -3638,7 +3638,7 @@ def assemble(line, state):
         return b'\xd9\xeb'
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
-    elif opcode.startswith('FMUL'):
+    elif opcode == 'FMUL':
         if tokens[1].value == 'st':
             assert tokens[2].value == ','
             assert tokens[3].value == 'st'
@@ -3651,6 +3651,16 @@ def assemble(line, state):
                 'DWORD': [b'\xd8', 1],
                 'QWORD': [b'\xdc', 1],
             })
+        else:
+            assert False, 'Not implemented'
+    elif opcode == 'FMULP':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            assert tokens[5].value == ','
+            assert tokens[6].value == 'st'
+            return b'\xde' + pack('<B', 0xc8 + i)
         else:
             assert False, 'Not implemented'
     elif opcode == 'FNOP':
