@@ -3468,6 +3468,34 @@ def assemble(line, state):
         return b'\xdb\xe3'
     elif opcode == 'FIST':
         return b'\xdb\x52\x00'
+    elif opcode == 'FISTP':
+        if tokens[1].value in ['DWORD', 'QWORD']:
+            op = {'DWORD': b'\xdb', 'QWORD': b'\xdf'}[tokens[1].value]
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return op + b'\x5c\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01011000 | base
+                    if tokens[1].value == 'QWORD':
+                        modrm |= 0b00100000
+                    return op + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return op + b'\x5c\x24' + pack('<b', -disp)
+                else:
+                    modrm = 0b01011000 | base
+                    if tokens[1].value == 'QWORD':
+                        modrm |= 0b00100000
+                    return op + pack('<B', modrm) + pack('<b', -disp)
+        else:
+            assert False
     elif opcode == 'FISTTP':
         op = {'WORD': b'\xdf', 'DWORD': b'\xdb', 'QWORD': b'\xdd'}[tokens[1].value]
         base = REGISTERS.index(tokens[4].value)

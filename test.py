@@ -1367,6 +1367,13 @@ def test_assemble():
         ['FINCSTP',                         b'\xd9\xf7'],
         ['FINIT',                           b'\x9b\xdb\xe3'],
         ['FIST DWORD PTR [edx+0x0]',        b'\xdb\x52\x00'],
+
+        ['FISTP DWORD PTR [esp+0x0]',       b'\xdb\x5c\x24\x00'],
+        ['FISTP DWORD PTR [ebp+0x14]',      b'\xdb\x5d\x14'],
+        ['FISTP DWORD PTR [ebp-0x14]',      b'\xdb\x5d\xec'],
+        ['FISTP QWORD PTR [edx+0x0]',       b'\xdf\x7a\x00'],
+        ['FISTP QWORD PTR [ebp-0xc]',       b'\xdf\x7d\xf4'],
+
         ['FISTTP DWORD PTR [edx+0x0]',      b'\xdb\x4a\x00'],
         ['FISTTP QWORD PTR [eax+0x0]',      b'\xdd\x48\x00'],
         ['FISTTP QWORD PTR [edx+0x0]',      b'\xdd\x4a\x00'],
