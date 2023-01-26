@@ -3789,7 +3789,60 @@ def assemble(line, state):
         else:
             assert False, 'Not implemented'
     elif opcode == 'FSUBR':
-        return b'\xd8\x69\x00'
+        if tokens[1].value in ['DWORD', 'QWORD']:
+            op = {'DWORD': b'\xd8', 'QWORD': b'\xdc'}[tokens[1].value]
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return op + b'\x2d' + pack('<I', m)
+            elif tokens[3].value == 'fs':
+                return b'\x64' + op + b'\x69\x00'
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    modrm = 0b00101000 | base
+                    return op + pack('<B', modrm)
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        return op + b'\x2c\x07'
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    if base == REGISTERS.index('esp'):
+                        if disp <= 0x7f:
+                            return op + b'\x6c\x24' + pack('<B', disp)
+                        else:
+                            return op + b'\xac\x24' + pack('<I', disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01101000 | base
+                            return op + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10101000 | base
+                            return op + pack('<B', modrm) + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    if disp <= 0x7f:
+                        modrm = 0b01101000 | base
+                        return op + pack('<B', modrm) + pack('<b', -disp)
+                    else:
+                        modrm = 0b10101000 | base
+                        return op + pack('<B', modrm) + pack('<i', -disp)
+        elif tokens[1].value == 'st':
+            if tokens[2].value == ',':
+                assert tokens[3].value == 'st'
+                assert tokens[4].value == '('
+                i = int(tokens[5].value)
+                assert tokens[6].value == ')'
+                return b'\xd8' + pack('<B', 0xe8 + i)
+            elif tokens[2].value == '(':
+                i = int(tokens[3].value)
+                assert tokens[4].value == ')'
+                assert tokens[5].value == ','
+                assert tokens[6].value == 'st'
+                return b'\xdc' + pack('<B', 0xe0 + i)
+        else:
+            assert False
     elif opcode == 'FSUBRP':
         assert tokens[1].value == 'st'
         assert tokens[2].value == '('
