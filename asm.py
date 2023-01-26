@@ -4941,6 +4941,37 @@ def assemble(line, state):
         src = REGISTERSMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\xfc' + pack('<B', modrm)
+    elif opcode == 'PADDD':
+        prefix = b''
+        if tokens[1].value in REGISTERSXMM:
+            prefix = b'\x66'
+            dst = REGISTERSXMM.index(tokens[1].value)
+            src = REGISTERSXMM.index(tokens[3].value)
+        else:
+            dst = REGISTERSMM.index(tokens[1].value)
+            if tokens[3].value in REGISTERSMM:
+                src = REGISTERSMM.index(tokens[3].value)
+            elif tokens[3].value == 'QWORD':
+                assert tokens[4].value == 'PTR'
+                if tokens[5].value == '[':
+                    base = REGISTERS.index(tokens[6].value)
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    modrm = 0b01000101 | dst << 3
+                    if tokens[7].value == '+':
+                        return b'\x0f\xfe' + pack('<B', modrm) + pack('<B', disp)
+                    elif tokens[7].value == '-':
+                        if disp <= 0x7f:
+                            return b'\x0f\xfe' + pack('<B', modrm) + pack('<b', -disp)
+                        else:
+                            modrm = 0b10000101 | dst << 3
+                            return b'\x0f\xfe' + pack('<B', modrm) + pack('<i', -disp)
+                elif tokens[5].value == 'ds':
+                    modrm = 0b00000101 | dst << 3
+                    m = int(tokens[7].value, base=16)
+                    return b'\x0f\xfe' + pack('<B', modrm) + pack('<I', m)
+        modrm = 0b11000000 | dst << 3 | src
+        return prefix + b'\x0f\xfe' + pack('<B', modrm)
     elif opcode == 'PADDSW':
         dst = REGISTERSMM.index(tokens[1].value)
         assert tokens[2].value == ','
