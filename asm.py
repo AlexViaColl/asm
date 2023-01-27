@@ -3752,6 +3752,8 @@ def assemble(line, state):
                     return op + pack('<B', modrm) + pack('<I', im)
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FLD1':
+        return b'\xd9\xe8'
     elif opcode == 'FLDCW':
         assert tokens[1].value == 'WORD'
         assert tokens[2].value == 'PTR'

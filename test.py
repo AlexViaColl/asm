@@ -1441,6 +1441,7 @@ def test_assemble():
         ['FLD QWORD PTR [ebx+0x0]',         b'\xdd\x43\x00'],
         ['FLD QWORD PTR [ebp-0x20]',        b'\xdd\x45\xe0'],
         ['FLD QWORD PTR [ebp+eax*8-0xc10]', b'\xdd\x84\xc5\xf0\xf3\xff\xff'],
+        ['FLD1',                            b'\xd9\xe8'],
         ['FLDCW WORD PTR [edx]',            b'\xd9\x2a'],
         ['FLDCW WORD PTR [ecx+0x0]',        b'\xd9\x69\x00'],
         ['FLDCW WORD PTR [esp+0x4]',        b'\xd9\x6c\x24\x04'],
