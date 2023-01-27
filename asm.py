@@ -5122,6 +5122,39 @@ def assemble(line, state):
         assert False, 'Not implemented'
     elif opcode == 'PALIGNR':
         assert False, 'Not implemented'
+    elif opcode == 'PAND':
+        prefix = b''
+        if tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+        elif tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        assert tokens[2].value == ','
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xdb' + pack('<B', modrm)
+        elif tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x66\x0f\xdb' + pack('<B', modrm)
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '-'
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                modrm = 0b01000101 | dst << 3
+                return b'\x0f\xdb' + pack('<B', modrm) + pack('<b', -disp)
+            else:
+                modrm = 0b00000101 | dst << 3
+                m = int(tokens[7].value, base=16)
+                return prefix + b'\x0f\xdb' + pack('<B', modrm) + pack('<I', m)
+        elif tokens[3].value == 'XMMWORD':
+            prefix = b'\x66'
+        modrm = 0b00000101 | dst << 3
+        m = int(tokens[7].value, base=16)
+        return prefix + b'\x0f\xdb' + pack('<B', modrm) + pack('<I', m)
     elif opcode == 'PANDN':
         prefix = b''
         if tokens[1].value in REGISTERSMM:
@@ -5139,8 +5172,6 @@ def assemble(line, state):
             prefix = b'\x66'
         m = int(tokens[7].value, base=16)
         return prefix + b'\x0f\xdf\x1d' + pack('<I', m)
-    elif opcode in ['PAND', 'PANDN']:
-        assert False, 'Not implemented'
     elif opcode == 'PAUSE':
         return b'\xf3\x90'
     elif opcode in ['PAVGB', 'PAVGW', 'PBLENDVB', 'PBLENDW', 'PCLMULQDQ', '']:
