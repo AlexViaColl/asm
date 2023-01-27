@@ -3323,6 +3323,52 @@ def assemble(line, state):
         assert tokens[5].value == ','
         assert tokens[6].value == 'st'
         return b'\xde' + pack('<B', 0xf8 + i)
+    elif opcode == 'FDIVR':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == ','
+            assert tokens[3].value == 'st'
+            assert tokens[4].value == '('
+            i = int(tokens[5].value)
+            assert tokens[6].value == ')'
+            return b'\xd8' + pack('<B', 0xf8 + i)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    if disp <= 0x7f:
+                        return b'\xd8\x7c\x24' + pack('<B', disp)
+                    else:
+                        return b'\xd8\xbc\x24' + pack('<I', disp)
+                else:
+                    if disp <= 0x7f:
+                        modrm = 0b01111000 | base
+                        return b'\xd8' + pack('<B', modrm) + pack('<B', disp)
+                    else:
+                        modrm = 0b10111000 | base
+                        return b'\xd8' + pack('<B', modrm) + pack('<I', disp)
+            elif tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return b'\xd8\x3d' + pack('<I', m)
+        elif tokens[1].value == 'QWORD':
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return b'\xdc\x3d' + pack('<I', m)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                assert tokens[5].value == '+'
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xdc\x7c\x24' + pack('<B', disp)
+                else:
+                    return b'\xdc\x7f' + pack('<B', disp)
+        else:
+            assert False
     elif opcode == 'FDIVRP':
         assert tokens[1].value == 'st'
         assert tokens[2].value == '('
