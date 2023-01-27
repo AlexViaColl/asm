@@ -3315,6 +3315,52 @@ def assemble(line, state):
         return b'\xd9\xff'
     elif opcode == 'FDECSTP':
         return b'\xd9\xf6'
+    elif opcode == 'FDIV':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == ','
+            assert tokens[3].value == 'st'
+            assert tokens[4].value == '('
+            i = int(tokens[5].value)
+            assert tokens[6].value == ')'
+            return b'\xd8' + pack('<B', 0xf0 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            op = {'DWORD': b'\xd8', 'QWORD': b'\xdc'}[tokens[1].value]
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return op + b'\x35' + pack('<I', m)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    return op + pack('<B', 0x30 | base)
+                elif tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        if disp <= 0x7f:
+                            return op + b'\x74\x24' + pack('<B', disp)
+                        else:
+                            return op + b'\xb4\x24' + pack('<I', disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01110000 | base
+                            return op + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10110000 | base
+                            return op + pack('<B', modrm) + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        if disp <= 0x7f:
+                            return op + b'\x74\x24' + pack('<b', -disp)
+                        else:
+                            return op + b'\xb4\x24' + pack('<i', -disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01110000 | base
+                            return op + pack('<B', modrm) + pack('<b', -disp)
+                        else:
+                            modrm = 0b10110000 | base
+                            return op + pack('<B', modrm) + pack('<i', -disp)
     elif opcode == 'FDIVP':
         assert tokens[1].value == 'st'
         assert tokens[2].value == '('
