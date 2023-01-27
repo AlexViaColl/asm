@@ -5785,7 +5785,33 @@ def assemble(line, state):
     elif opcode == 'PUSHF':
         return b'\x9c'
     elif opcode == 'PXOR':
-        assert False, 'Not implemented'
+        prefix = b''
+        if tokens[1].value in REGISTERSMM:
+            dst = REGISTERSMM.index(tokens[1].value)
+            if tokens[3].value in REGISTERSMM:
+                src = REGISTERSMM.index(tokens[3].value)
+            elif tokens[3].value == 'QWORD':
+                tokens[4].value == 'PTR'
+                if tokens[5].value == 'ds':
+                    m = int(tokens[7].value, base=16)
+                    modrm = 0b00000101 | dst << 3
+                    return b'\x0f\xef' + pack('<B', modrm) + pack('<I', m)
+                elif tokens[5].value == '[':
+                    base = REGISTERS.index(tokens[6].value)
+                    if tokens[7].value == ']':
+                        modrm = 0b00000000 | dst << 3 | base
+                        return b'\x0f\xef' + pack('<B', modrm)
+                    elif tokens[7].value == '+':
+                        disp = int(tokens[8].value, base=16)
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0f\xef' + pack('<B', modrm) + pack('<B', disp)
+        elif tokens[1].value in REGISTERSXMM:
+            prefix = b'\x66'
+            dst = REGISTERSXMM.index(tokens[1].value)
+            src = REGISTERSXMM.index(tokens[3].value)
+
+        modrm = 0b11000000 | dst << 3 | src
+        return prefix + b'\x0f\xef' + pack('<B', modrm)
     elif opcode == 'RCL':
         if tokens[1].value in REGISTERS8:
             dst = REGISTERS8.index(tokens[1].value)
