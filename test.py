@@ -1728,6 +1728,8 @@ def test_assemble():
         ['MULPD xmm0, XMMWORD PTR [esp+0xe0]', b'\x66\x0f\x59\x84\x24\xe0\x00\x00\x00'],
         ['MULPD xmm0, XMMWORD PTR [esp+0x150]',b'\x66\x0f\x59\x84\x24\x50\x01\x00\x00'],
         ['MULPD xmm0, xmm0',                b'\x66\x0f\x59\xc0'],
+        ['MULSS xmm5, DWORD PTR ds:0x8e9960',b'\xf3\x0f\x59\x2d\x60\x99\x8e\x00'],
+        ['MULSS xmm4, xmm0',                b'\xf3\x0f\x59\xe0'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
         ['NOP',                             b'\x90'],
         ['NOT BYTE PTR [eax]',              b'\xf6\x10'],

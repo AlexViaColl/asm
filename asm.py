@@ -4965,6 +4965,22 @@ def assemble(line, state):
         else:
             disp = int(tokens[8].value, base=16)
             return b'\x66\x0f\x59\x84\x24' + pack('<I', disp)
+    elif opcode == 'MULSS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\xf3\x0f\x59' + pack('<B', modrm)
+        elif tokens[3].value == 'DWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\xf3\x0f\x59' + pack('<B', modrm) + pack('<I', m)
+        else:
+            assert False
+            disp = int(tokens[8].value, base=16)
+            return b'\x66\x0f\x59\x84\x24' + pack('<I', disp)
     elif opcode.startswith('MUL'):
         assert False, 'Not implemented'
     elif opcode == 'MWAIT':
