@@ -5320,6 +5320,29 @@ def assemble(line, state):
         src = REGISTERSMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x0f' + pack('<B', modrm) + b'\xae'
+    elif opcode == 'PFADD':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x0f' + pack('<B', modrm) + b'\x9e'
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\x0f\x0f' + pack('<B', modrm) + pack('<I', m) + b'\x9e'
+            elif tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '+'
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                if base == REGISTERS.index('esp'):
+                    modrm = 0b01000100 | dst << 3
+                    return b'\x0f\x0f' + pack('<B', modrm) + b'\x24' + pack('<B', disp) + b'\x9e'
+                else:
+                    modrm = 0b01000010 | dst << 3
+                    return b'\x0f\x0f' + pack('<B', modrm) + pack('<B', disp) + b'\x9e'
     elif opcode == 'PF2ID':
         dst = REGISTERSMM.index(tokens[1].value)
         src = REGISTERSMM.index(tokens[3].value)
