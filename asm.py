@@ -3854,6 +3854,8 @@ def assemble(line, state):
         return b'\xd9\xed'
     elif opcode == 'FLDPI':
         return b'\xd9\xeb'
+    elif opcode == 'FLDZ':
+        return b'\xd9\xee'
     elif opcode.startswith('FLD'):
         assert False, 'Not implemented'
     elif opcode == 'FMUL':

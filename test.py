@@ -1465,6 +1465,7 @@ def test_assemble():
         ['FLDLG2',                          b'\xd9\xec'],
         ['FLDLN2',                          b'\xd9\xed'],
         ['FLDPI',                           b'\xd9\xeb'],
+        ['FLDZ',                            b'\xd9\xee'],
 
         ['FMUL DWORD PTR [eax]',            b'\xd8\x08'],
         ['FMUL DWORD PTR ds:0x86e734',      b'\xd8\x0d\x34\xe7\x86\x00'],
