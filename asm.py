@@ -4988,6 +4988,72 @@ def assemble(line, state):
         src = REGISTERSXMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x16' + pack('<B', modrm)
+    elif opcode == 'MOVLPS':
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        elif tokens[1].value == 'QWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                assert tokens[6].value == ','
+                src = REGISTERSXMM.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | base
+                return b'\x0f\x13' + pack('<B', modrm)
+            elif tokens[5].value == '+':
+                if tokens[6].value in REGISTERS:
+                    idx = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '*'
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[8].value]
+                    assert tokens[9].value == ']'
+                    assert tokens[10].value == ','
+                    src = REGISTERSXMM.index(tokens[11].value)
+                    modrm = 0b00000100 | scale << 6 | src << 3
+                    return b'\x0f\x13' + pack('<B', modrm) + b'\x07'
+                    
+                else:
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERSXMM.index(tokens[9].value)
+                    modrm = 0b01000000 | src << 3 | base
+                    return b'\x0f\x13' + pack('<B', modrm) + pack('<B', disp)
+
+        if tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            if tokens[7].value == ']':
+                if base == REGISTERS.index('esp'):
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0f\x12' + pack('<B', modrm) + b'\x24'
+                else:
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0f\x12' + pack('<B', modrm)
+            elif tokens[7].value == '+':
+                if tokens[8].value in REGISTERS:
+                    idx = REGISTERS.index(tokens[8].value)
+                    assert tokens[9].value == '*'
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[10].value]
+                    modrm = 0b00000100 | scale << 6 | dst << 3
+                    return b'\x0f\x12' + pack('<B', modrm) + b'\x16'
+                else:
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\x0f\x12' + pack('<B', modrm) + pack('<B', disp)
+        else:
+            assert False
     elif opcode == 'MOVMSKPS':
         dst = REGISTERS.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)

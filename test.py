@@ -1731,6 +1731,17 @@ def test_assemble():
         ['MOVLHPS xmm2, xmm1',              b'\x0f\x16\xd1'],
         ['MOVLHPS xmm3, xmm1',              b'\x0f\x16\xd9'],
 
+        ['MOVLPS xmm0, QWORD PTR [ebx]',    b'\x0f\x12\x03'],
+        ['MOVLPS xmm1, QWORD PTR [eax]',    b'\x0f\x12\x08'],
+        ['MOVLPS xmm1, QWORD PTR [esi+edx*1]',b'\x0f\x12\x0c\x16'],
+        ['MOVLPS xmm5, QWORD PTR [esi+edx*1]',b'\x0f\x12\x2c\x16'],
+        ['MOVLPS xmm1, QWORD PTR [esp]',    b'\x0f\x12\x0c\x24'],
+        ['MOVLPS xmm1, QWORD PTR [ecx+0x10]',b'\x0f\x12\x49\x10'],
+        ['MOVLPS QWORD PTR [edi+eax*1], xmm0',b'\x0f\x13\x04\x07'],
+        ['MOVLPS QWORD PTR [edx], xmm1',    b'\x0f\x13\x0a'],
+        ['MOVLPS QWORD PTR [ecx+0x10], xmm3',b'\x0f\x13\x59\x10'],
+        ['MOVLPS QWORD PTR [edx+0x10], xmm5',b'\x0f\x13\x6a\x10'],
+
         ['MOVMSKPS eax, xmm1',              b'\x0f\x50\xc1'],
         ['MOVMSKPS ebx, xmm6',              b'\x0f\x50\xde'],
 
