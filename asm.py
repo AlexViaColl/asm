@@ -4943,6 +4943,46 @@ def assemble(line, state):
         src = REGISTERSXMM.index(tokens[3].value)
         modrm = 0b11000000 | dst << 3 | src
         return b'\x0f\x12' + pack('<B', modrm)
+    elif opcode == 'MOVHPS':
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        elif tokens[1].value == 'QWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                assert tokens[6].value == ','
+                src = REGISTERSXMM.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | base
+                return b'\x0f\x17' + pack('<B', modrm)
+            elif tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                assert tokens[8].value == ','
+                src = REGISTERSXMM.index(tokens[9].value)
+                modrm = 0b01000000 | src << 3 | base
+                return b'\x0f\x17' + pack('<B', modrm) + pack('<B', disp)
+
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x16' + pack('<B', modrm)
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            assert tokens[5].value == '['
+            base = REGISTERS.index(tokens[6].value)
+            if tokens[7].value == ']':
+                modrm = 0b00000000 | dst << 3 | base
+                return b'\x0f\x16' + pack('<B', modrm)
+            elif tokens[7].value == '+':
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                if base == REGISTERS.index('esp'):
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\x0f\x16' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\x0f\x16' + pack('<B', modrm) + pack('<B', disp)
     elif opcode == 'MOVLHPS':
         dst = REGISTERSXMM.index(tokens[1].value)
         src = REGISTERSXMM.index(tokens[3].value)

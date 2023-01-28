@@ -1720,6 +1720,14 @@ def test_assemble():
         ['MOVDQA xmm2, XMMWORD PTR ds:0x8e9be0', b'\x66\x0f\x6f\x15\xe0\x9b\x8e\x00'],
         ['MOVDQA xmm3, xmm1',               b'\x66\x0f\x6f\xd9'],
         ['MOVHLPS xmm2, xmm0',              b'\x0f\x12\xd0'],
+
+        ['MOVHPS xmm0, QWORD PTR [ebx+0x8]',b'\x0f\x16\x43\x08'],
+        ['MOVHPS xmm1, QWORD PTR [eax+0x8]',b'\x0f\x16\x48\x08'],
+        ['MOVHPS xmm1, QWORD PTR [esp+0x8]',b'\x0f\x16\x4c\x24\x08'],
+        ['MOVHPS xmm1, QWORD PTR [ecx]',    b'\x0f\x16\x09'],
+        ['MOVHPS QWORD PTR [edx], xmm0',    b'\x0f\x17\x02'],
+        ['MOVHPS QWORD PTR [edx+0x8], xmm1',b'\x0f\x17\x4a\x08'],
+
         ['MOVLHPS xmm2, xmm1',              b'\x0f\x16\xd1'],
         ['MOVLHPS xmm3, xmm1',              b'\x0f\x16\xd9'],
 
