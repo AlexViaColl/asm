@@ -3307,6 +3307,62 @@ def assemble(line, state):
         return b'\xda' + pack('<B', 0xc8 + i)
     elif opcode.startswith('FCMOV'):
         assert False, 'Not implemented'
+    elif opcode == 'FCOM':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            return b'\xd8' + pack('<B', 0xd0 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            op = {'DWORD': b'\xd8', 'QWORD': b'\xdc'}[tokens[1].value]
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                return op + b'\x15' + pack('<I', m)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    modrm = 0b00010000 | base
+                    return op + pack('<B', modrm)
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[8].value]
+                        assert tokens[9].value == ']'
+                        modrm = 0b00000000 | scale << 6 | idx << 3 | base
+                        return op + b'\x14' + pack('<B', modrm)
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        assert tokens[7].value == ']'
+                        if base == REGISTERS.index('esp'):
+                            return op + b'\x54\x24' + pack('<B', disp)
+                        else:
+                            if disp <= 0x7f:
+                                modrm = 0b01010000 | base
+                                return op + pack('<B', modrm) + pack('<B', disp)
+                            else:
+                                modrm = 0b10010000 | base
+                                return op + pack('<B', modrm) + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    if base == REGISTERS.index('esp'):
+                        return op + b'\x54\x24' + pack('<b', -disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01010000 | base
+                            return op + pack('<B', modrm) + pack('<b', -disp)
+                        else:
+                            modrm = 0b10010000 | base
+                            return op + pack('<B', modrm) + pack('<i', -isp)
+        else:
+            assert False
     elif opcode == 'FCOMPP':
         return b'\xde\xd9'
     elif opcode.startswith('FCOM'):
