@@ -5205,6 +5205,89 @@ def assemble(line, state):
             return b'\x66\xa5'
         else:
             return b'\xa5'
+    elif opcode == 'MOVSS':
+        if tokens[1].value in REGISTERSXMM:
+            dst = REGISTERSXMM.index(tokens[1].value)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == ']':
+                assert tokens[6].value == ','
+                src = REGISTERSXMM.index(tokens[7].value)
+                modrm = 0b00000000 | src << 3 | base
+                return b'\xf3\x0f\x11' + pack('<B', modrm)
+            elif tokens[5].value == '+':
+                if tokens[6].value in REGISTERS:
+                    assert tokens[7].value == '*'
+                    scale = {
+                        '1': 0b00,
+                        '2': 0b01,
+                        '4': 0b10,
+                        '8': 0b11,
+                    }[tokens[8].value]
+                    assert tokens[9].value == '+'
+                    disp = int(tokens[10].value, base=16)
+                    assert tokens[11].value == ']'
+                    assert tokens[12].value == ','
+                    src = REGISTERSXMM.index(tokens[13].value)
+                    return b'\xf3\x0f\x11\x5c\x07' + pack('<B', disp)
+                else:
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    src = REGISTERSXMM.index(tokens[9].value)
+                    modrm = 0b01000000 | src << 3 | base
+                    if base == REGISTERS.index('esp'):
+                        return b'\xf3\x0f\x11' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+                    else:
+                        return b'\xf3\x0f\x11' + pack('<B', modrm) + pack('<B', disp)
+
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\xf3\x0f\x10' + pack('<B', modrm)
+        elif tokens[3].value == 'DWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\xf3\x0f\x10' + pack('<B', modrm) + pack('<I', m)
+            elif tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\xf3\x0f\x10' + pack('<B', modrm)
+                elif tokens[7].value == '+':
+                    if tokens[8].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[8].value)
+                        assert tokens[9].value == '*'
+                        scale = {
+                            '1': 0b00,
+                            '2': 0b01,
+                            '4': 0b10,
+                            '8': 0b11,
+                        }[tokens[10].value]
+                        if tokens[11].value == ']':
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\xf3\x0f\x10\x04' + pack('<B', sib)
+                        elif tokens[11].value == '+':
+                            disp = int(tokens[12].value, base=16)
+                            assert tokens[13].value == ']'
+                            modrm = 0b01000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\xf3\x0f\x10' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                    else:
+                        disp = int(tokens[8].value, base=16)
+                        assert tokens[9].value == ']'
+                        if base == REGISTERS.index('esp'):
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\xf3\x0f\x10' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+                        else:
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\xf3\x0f\x10' + pack('<B', modrm) + pack('<B', disp)
+        else:
+            assert False
     elif opcode == 'MOVSX':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
