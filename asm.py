@@ -6170,10 +6170,21 @@ def assemble(line, state):
     elif opcode.startswith('PM'):
         assert False, 'Not implemented'
     elif opcode == 'POP':
-        assert len(tokens) == 2
         if tokens[1].value in REGISTERS:
             reg = REGISTERS.index(tokens[1].value)
             return pack('<B', 0x58 + reg)
+        elif tokens[1].value in REGISTERS16:
+            reg = REGISTERS16.index(tokens[1].value)
+            return b'\x66' + pack('<B', 0x58 + reg)
+        elif tokens[1].value in SEGMENTS:
+            seg = SEGMENTS.index(tokens[1].value)
+            modrm = 0b00000111 | seg << 3
+            return pack('<B', modrm)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == 'fs'
+            m = int(tokens[5].value, base=16)
+            return b'\x64\x8f\x05' + pack('<I', m)
     elif opcode == 'POPA':
         return b'\x61'
     elif opcode == 'POPCNT':

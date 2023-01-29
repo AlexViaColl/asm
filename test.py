@@ -2000,7 +2000,12 @@ def test_assemble():
         ['PMULHW mm1, QWORD PTR ds:0x889e90', b'\x0f\xe5\x0d\x90\x9e\x88\x00'],
         ['PMULLW mm0, QWORD PTR ds:0x889e30', b'\x0f\xd5\x05\x30\x9e\x88\x00'],
         ['PMULLW mm0, mm1',                 b'\x0f\xd5\xc1'],
+        
+        ['POP es',                          b'\x07'],
+        ['POP ds',                          b'\x1f'],
         ['POP ecx',                         b'\x59'],
+        ['POP DWORD PTR fs:0x0',            b'\x64\x8f\x05\x00\x00\x00\x00'],
+        ['POP sp',                          b'\x66\x5c'],
         ['POPA',                            b'\x61'],
         ['POPF',                            b'\x9d'],
         ['POR mm3, QWORD PTR ds:0x883040',  b'\x0f\xeb\x1d\x40\x30\x88\x00'],
