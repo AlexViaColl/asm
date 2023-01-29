@@ -4473,10 +4473,15 @@ def assemble(line, state):
                             modrm = 0b10000100 | dst << 3
                             return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', ib)
                 elif tokens[9].value == '-':
-                    modrm = 0b01000100 | dst << 3
+                    disp = int(tokens[10].value, base=16)
+                    assert tokens[11].value == ']'
                     sib = 0b00000000 | scale << 6 | reg << 3 | base
-                    disp = (~int(tokens[10].value, base=16) & 0xff)+1
-                    return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                    if disp <= 0x7f:
+                        modrm = 0b01000100 | dst << 3
+                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', -disp)
+                    else:
+                        modrm = 0b10000100 | dst << 3
+                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<i', -disp)
                 else:
                     modrm = 0b00000100 | dst << 3
                     sib = 0b00000000 | scale << 6 | reg << 3 | base
@@ -4485,16 +4490,19 @@ def assemble(line, state):
                 assert False, 'Unreachable'
             else:
                 disp = int(tokens[6].value, base=16)
+                sib = 0b00100000 | base
+                if dst == REGISTERS.index('esp'):
+                    modrm = 0b10000100 | dst << 3
+                    return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                 if base == REGISTERS.index('esp'):
-                    sib = 0b00100000 | base
                     if disp <= 0x7f:
                         modrm = 0b01000100 | dst << 3
-                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<b', disp)
+                        return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
                     else:
                         modrm = 0b10000100 | dst << 3
                         return b'\x8d' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
                 else:
-                    if disp <= 0x7f:
+                    if disp != 0 and disp <= 0x7f:
                         modrm = 0b01000000 | dst << 3 | base
                         return b'\x8d' + pack('<B', modrm) + pack('<b', disp)
                     else:
@@ -5846,6 +5854,28 @@ def assemble(line, state):
                 return b'\x0f\xed' + pack('<B', modrm) + pack('<I', m)
             else:
                 assert False
+    elif opcode == 'PADDW':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\xfd' + pack('<B', modrm)
+        elif tokens[3].value == 'QWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\x0f\xfd' + pack('<B', modrm) + pack('<I', m)
+            elif tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == '+':
+                    assert False
+                elif tokens[7].value == '-':
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b01000101 | dst << 3
+                    return b'\x0f\xfd' + pack('<B', modrm) + pack('<b', -disp)
+        else:
+            assert False
     elif opcode.startswith('PADD'):
         assert False, 'Not implemented'
     elif opcode == 'PALIGNR':
