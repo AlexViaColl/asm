@@ -1973,6 +1973,14 @@ def test_assemble():
         ['MULPD xmm0, XMMWORD PTR [esp+0xe0]', b'\x66\x0f\x59\x84\x24\xe0\x00\x00\x00'],
         ['MULPD xmm0, XMMWORD PTR [esp+0x150]',b'\x66\x0f\x59\x84\x24\x50\x01\x00\x00'],
         ['MULPD xmm0, xmm0',                b'\x66\x0f\x59\xc0'],
+
+        ['MULPS xmm0, XMMWORD PTR [esp]',   b'\x0f\x59\x04\x24'],
+        ['MULPS xmm0, XMMWORD PTR ds:0x8e9a60',b'\x0f\x59\x05\x60\x9a\x8e\x00'],
+        ['MULPS xmm1, XMMWORD PTR ds:0x8e9a50',b'\x0f\x59\x0d\x50\x9a\x8e\x00'],
+        ['MULPS xmm5, XMMWORD PTR [esp+0x30]',b'\x0f\x59\x6c\x24\x30'],
+        ['MULPS xmm2, XMMWORD PTR [esp+0xb0]',b'\x0f\x59\x94\x24\xb0\x00\x00\x00'],
+        ['MULPS xmm1, xmm0',                b'\x0f\x59\xc8'],
+
         ['MULSS xmm5, DWORD PTR ds:0x8e9960',b'\xf3\x0f\x59\x2d\x60\x99\x8e\x00'],
         ['MULSS xmm4, xmm0',                b'\xf3\x0f\x59\xe0'],
         ['MWAIT',                           b'\x0f\x01\xc9'],
