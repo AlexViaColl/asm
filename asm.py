@@ -6588,6 +6588,38 @@ def assemble(line, state):
                 assert False
         else:
             assert False
+    elif opcode == 'PUNPCKHDQ':
+        dst = REGISTERSMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSMM:
+            src = REGISTERSMM.index(tokens[3].value)
+            modrm = 0b11000000 | dst << 3 | src
+            return b'\x0f\x6a' + pack('<B', modrm)
+        elif tokens[3].value in ['DWORD', 'QWORD']:
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0f\x6a' + pack('<B', modrm)
+                elif tokens[7].value == '+':
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b01000000 | dst << 3 | base
+                    if base == REGISTERS.index('esp'):
+                        return b'\x0f\x6a' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+                    else:
+                        return b'\x0f\x6a' + pack('<B', modrm) + pack('<B', disp)
+                elif tokens[7].value == '-':
+                    disp = int(tokens[8].value, base=16)
+                    modrm = 0b01000000 | dst << 3 | base
+                    return b'\x0f\x6a' + pack('<B', modrm) + pack('<b', -disp)
+                else:
+                    assert False
+            elif tokens[5].value == 'ds':
+                modrm = 0b00000101 | dst << 3
+                m = int(tokens[7].value, base=16)
+                return b'\x0f\x6a' + pack('<B', modrm) + pack('<I', m)
+        else:
+            assert False
     elif opcode == 'PUNPCKHWD':
         prefix = b''
         if tokens[1].value in REGISTERSMM:

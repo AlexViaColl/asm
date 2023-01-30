@@ -2090,6 +2090,11 @@ def test_assemble():
         ['PUNPCKHBW mm1, QWORD PTR [ebp-0x10]', b'\x0f\x68\x4d\xf0'],
         ['PUNPCKHBW mm3, QWORD PTR [ebp-0x10]', b'\x0f\x68\x5d\xf0'],
         ['PUNPCKHBW mm0, mm6',              b'\x0f\x68\xc6'],
+
+        ['PUNPCKHDQ mm6, QWORD PTR [eax]',  b'\x0f\x6a\x30'],
+        ['PUNPCKHDQ mm1, QWORD PTR [esp+0x10]',b'\x0f\x6a\x4c\x24\x10'],
+        ['PUNPCKHDQ mm4, mm2',              b'\x0f\x6a\xe2'],
+
         ['PUNPCKHWD mm3, mm7',              b'\x0f\x69\xdf'],
         ['PUNPCKHWD xmm3, xmm7',            b'\x66\x0f\x69\xdf'],
 
