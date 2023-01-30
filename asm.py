@@ -4403,6 +4403,14 @@ def assemble(line, state):
             })
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FSUBP':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == '('
+        i = int(tokens[3].value)
+        assert tokens[4].value == ')'
+        assert tokens[5].value == ','
+        assert tokens[6].value == 'st'
+        return b'\xde' + pack('<B', 0xe8 | i)
     elif opcode == 'FSUBR':
         if tokens[1].value in ['DWORD', 'QWORD']:
             op = {'DWORD': b'\xd8', 'QWORD': b'\xdc'}[tokens[1].value]

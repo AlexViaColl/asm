@@ -1619,6 +1619,7 @@ def test_assemble():
         ['FSTSW ax',                        b'\x9b\xdf\xe0'],
         #['FSTSW ax',                        b'\x9b\x9b\xdf\xe0'],
         ['FSUB DWORD PTR [ecx*4+0x903174]', b'\xd8\x24\x8d\x74\x31\x90\x00'],
+        ['FSUBP st(1), st',                 b'\xde\xe9'],
         ['FSUBR DWORD PTR ds:0x8777e8',     b'\xd8\x2d\xe8\x77\x87\x00'],
         ['FSUBR DWORD PTR [esi]',           b'\xd8\x2e'],
         ['FSUBR DWORD PTR [ebp-0x4]',       b'\xd8\x6d\xfc'],
