@@ -4492,6 +4492,12 @@ def assemble(line, state):
         return b'\x9b'
     elif opcode == 'FXAM':
         return b'\xd9\xe5'
+    elif opcode == 'FXCH':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == '('
+        i = int(tokens[3].value)
+        assert tokens[4].value == ')'
+        return b'\xd9' + pack('<B', 0xc8 | i)
     elif opcode.startswith('FXCH'):
         assert False, 'Not implemented'
     elif opcode.startswith('FX'):

@@ -1635,6 +1635,7 @@ def test_assemble():
         ['FTST',                            b'\xd9\xe4'],
         ['FUCOMP st(6)',                    b'\xdd\xee'],
         ['FXAM',                            b'\xd9\xe5'],
+        ['FXCH st(1)',                      b'\xd9\xc9'],
         ['FYL2X',                           b'\xd9\xf1'],
         ['FYL2XP1',                         b'\xd9\xf9'],
         ['FWAIT',                           b'\x9b'],
