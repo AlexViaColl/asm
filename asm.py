@@ -4480,7 +4480,40 @@ def assemble(line, state):
     elif opcode.startswith('HSUBP'):
         assert False, 'Not implemented'
     elif opcode == 'IDIV':
-        return b'\xf7\x7f\x00'
+        if tokens[1].value in REGISTERS:
+            reg = REGISTERS.index(tokens[1].value)
+            modrm = 0xf8 | reg
+            return b'\xf7' + pack('<B', modrm)
+        prefix = b''
+        if tokens[1].value == 'WORD':
+            prefix = b'\x66'
+        if tokens[1].value in ['DWORD', 'WORD']:
+            assert tokens[2].value == 'PTR'
+            if tokens[3].value in SEGMENTS:
+                prefix = {'ss': b'\x36'}[tokens[3].value]
+                tokens = tokens[2:]
+            if tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    modrm = 0b00111000 | base
+                    return b'\xf7' + pack('<B', modrm)
+                elif tokens[5].value == '+':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    if base == REGISTERS.index('esp'):
+                        if disp <= 0x7f:
+                            modrm = 0b01111000 | base
+                            return b'\xf7' + pack('<B', modrm) + b'\x24' + pack('<B', disp)
+                        else:
+                            modrm = 0b10111000 | base
+                            return b'\xf7' + pack('<B', modrm) + b'\x24' + pack('<I', disp)
+                    else:
+                        if disp <= 0x7f:
+                            modrm = 0b01111000 | base
+                            return prefix + b'\xf7' + pack('<B', modrm) + pack('<B', disp)
+                        else:
+                            modrm = 0b10111000 | base
+                            return b'\xf7' + pack('<B', modrm) + pack('<I', disp)
     elif opcode == 'IMUL':
         dst = REGISTERS.index(tokens[1].value)
         assert tokens[2].value == ','
