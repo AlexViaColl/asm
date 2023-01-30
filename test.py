@@ -1424,6 +1424,7 @@ def test_assemble():
         ['FADD DWORD PTR [ebp+ecx*1-0x160]',b'\xd8\x84\x0d\xa0\xfe\xff\xff'],
         ['FADD DWORD PTR [esi+0xd4]',       b'\xd8\x86\xd4\x00\x00\x00'],
         ['FADD st(0), st',                  b'\xdc\xc0'],
+        ['FADDP st(1), st',                 b'\xde\xc1'],
         ['FBLD TBYTE PTR [ebp-0x5909ffad]', b'\xdf\xa5\x53\x00\xf6\xa6'],
         ['FCHS',                            b'\xd9\xe0'],
         ['FCLEX',                           b'\x9b\xdb\xe2'],

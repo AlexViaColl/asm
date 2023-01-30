@@ -3644,7 +3644,7 @@ def assemble(line, state):
         return b'\xd9\xf0'
     elif opcode == 'FABS':
         return b'\xd9\xe1'
-    elif opcode.startswith('FADD'):
+    elif opcode == 'FADD':
         if tokens[1].value == 'st':
             if tokens[2].value == ',':
                 assert tokens[3].value == 'st'
@@ -3666,6 +3666,14 @@ def assemble(line, state):
             })
         else:
             assert False, 'Not implemented'
+    elif opcode == 'FADDP':
+        assert tokens[1].value == 'st'
+        assert tokens[2].value == '('
+        i = int(tokens[3].value)
+        assert tokens[4].value == ')'
+        assert tokens[5].value == ','
+        assert tokens[6].value == 'st'
+        return b'\xde' + pack('<B', 0xc0 | i)
     elif opcode == 'FBLD':
         assert tokens[1].value == 'TBYTE'
         assert tokens[2].value == 'PTR'
