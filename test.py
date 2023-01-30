@@ -1206,6 +1206,13 @@ def test_assemble():
         ['ADD eax, 0xfffffffe',             b'\x83\xc0\xfe'],
 
         ['ADDPD xmm0, xmm2',                b'\x66\x0f\x58\xc2'],
+
+        ['ADDPS xmm0, XMMWORD PTR ds:0x8e9a70',b'\x0f\x58\x05\x70\x9a\x8e\x00'],
+        ['ADDPS xmm1, XMMWORD PTR ds:0x8899c0',b'\x0f\x58\x0d\xc0\x99\x88\x00'],
+        ['ADDPS xmm2, XMMWORD PTR [esp+0xf0]',b'\x0f\x58\x94\x24\xf0\x00\x00\x00'],
+        ['ADDPS xmm5, XMMWORD PTR [esp+0x100]',b'\x0f\x58\xac\x24\x00\x01\x00\x00'],
+        ['ADDPS xmm1, xmm2',                b'\x0f\x58\xca'],
+
         ['ADDSS xmm0, DWORD PTR ds:0x8e9a30',b'\xf3\x0f\x58\x05\x30\x9a\x8e\x00'],
         ['ADDSS xmm4, xmm5',                b'\xf3\x0f\x58\xe5'],
 

@@ -2715,6 +2715,26 @@ def assemble(line, state):
         return b'\x67' + assemble(line[7:], state)
     elif opcode == 'ADDPD':
         return b'\x66\x0f\x58\xc2'
+    elif opcode == 'ADDPS':
+        dst = REGISTERSXMM.index(tokens[1].value)
+        if tokens[3].value in REGISTERSXMM:
+            src = REGISTERSXMM.index(tokens[3].value)
+        elif tokens[3].value == 'XMMWORD':
+            assert tokens[4].value == 'PTR'
+            if tokens[5].value == 'ds':
+                m = int(tokens[7].value, base=16)
+                modrm = 0b00000101 | dst << 3
+                return b'\x0f\x58' + pack('<B', modrm) + pack('<I', m)
+            elif tokens[5].value == '[':
+                base = REGISTERS.index(tokens[6].value)
+                assert tokens[7].value == '+'
+                disp = int(tokens[8].value, base=16)
+                assert tokens[9].value == ']'
+                modrm = 0b10000000 | dst << 3 | base
+                return b'\x0f\x58' + pack('<B', modrm) + b'\x24' + pack('<I', disp)
+
+        modrm = 0b11000000 | dst << 3 | src
+        return b'\x0f\x58' + pack('<B', modrm)
     elif opcode == 'ADDSS':
         dst = REGISTERSXMM.index(tokens[1].value)
         if tokens[3].value in REGISTERSXMM:
