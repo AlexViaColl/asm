@@ -2100,6 +2100,10 @@ def test_assemble():
         ['PUNPCKLBW mm2, DWORD PTR [ebp-0x10]',b'\x0f\x60\x55\xf0'],
         ['PUNPCKLBW mm0, mm6',              b'\x0f\x60\xc6'],
 
+        ['PUNPCKLDQ mm5, DWORD PTR [edx+0x18]',b'\x0f\x62\x6a\x18'],
+        ['PUNPCKLDQ mm6, DWORD PTR [eax]',  b'\x0f\x62\x30'],
+        ['PUNPCKLDQ mm4, mm2',              b'\x0f\x62\xe2'],
+
         ['PUNPCKLWD mm6, mm7',              b'\x0f\x61\xf7'],
         ['PUNPCKLWD xmm1, xmm7',            b'\x66\x0f\x61\xcf'],
         ['PUSH es',                         b'\x06'],
