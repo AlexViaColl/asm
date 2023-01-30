@@ -4313,6 +4313,25 @@ def assemble(line, state):
             assert False
     elif opcode == 'FNSTENV':
         return b'\xd9\x34\x24'
+    elif opcode == 'FNSTSW':
+        if tokens[1].value in REGISTERS16:
+            dst = REGISTERS16.index(tokens[1].value)
+            return b'\xdf\xe0'
+        elif tokens[1].value == 'WORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xdd\x7c\x24' + pack('<B', disp)
+                else:
+                    return b'\xdd\x7f' + pack('<B', disp)
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                return b'\xdd\x7d' + pack('<b', -disp)
     elif opcode == 'FPATAN':
         return b'\xd9\xf3'
     elif opcode == 'FPREM':
