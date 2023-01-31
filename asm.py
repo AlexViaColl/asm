@@ -5860,20 +5860,59 @@ def assemble(line, state):
                 assert tokens[5].value == '['
                 base = REGISTERS.index(tokens[6].value)
                 if tokens[7].value == ']':
-                    return b'\x0f\xb6\x2a'
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0f\xb6' + pack('<B', modrm)
                 elif tokens[7].value == '+':
-                    disp = int(tokens[8].value, base=16)
-                    if base == REGISTERS.index('esp'):
-                        return b'\x0f\xb6\x74\x24' + pack('<B', disp)
+                    if tokens[8].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[8].value)
+                        assert tokens[9].value == '*'
+                        scale = get_scale(tokens[10].value)
+                        if tokens[11].value == ']':
+                            modrm = 0b00000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', sib)
+                        elif tokens[11].value == '+':
+                            disp = int(tokens[12].value, base=16)
+                            modrm = 0b01000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp)
+                        elif tokens[11].value == '-':
+                            disp = int(tokens[12].value, base=16)
+                            modrm = 0b01000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', sib) + pack('<b', -disp)
                     else:
-                        modrm = 0b01000000 | dst << 3 | base
-                        return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', disp)
+                        disp = int(tokens[8].value, base=16)
+                        if base == REGISTERS.index('esp'):
+                            return b'\x0f\xb6\x74\x24' + pack('<B', disp)
+                        else:
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', disp)
+                elif tokens[7].value == '-':
+                    if tokens[8].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[8].value)
+                        assert tokens[9].value == '*'
+                        scale = get_scale(tokens[10].value)
+                        if tokens[11].value == ']':
+                            assert False
+                        elif tokens[11].value == '+':
+                            assert False
+                            disp = int(tokens[12].value, base=16)
+                            return b'\x0f\xb6\x4c\x01' + pack('<B', disp)
+                    else:
+                        disp = int(tokens[8].value, base=16)
+                        if base == REGISTERS.index('esp'):
+                            return b'\x0f\xb6\x74\x24' + pack('<b', -disp)
+                        else:
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\x0f\xb6' + pack('<B', modrm) + pack('<b', -disp)
             elif tokens[3].value == 'WORD':
                 assert tokens[4].value == 'PTR'
                 assert tokens[5].value == '['
                 base = REGISTERS.index(tokens[6].value)
                 if tokens[7].value == ']':
-                    return b'\x0f\xb7\x2a'
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0f\xb7' + pack('<B', modrm)
                 elif tokens[7].value == '+':
                     disp = int(tokens[8].value, base=16)
                     if base == REGISTERS.index('esp'):
