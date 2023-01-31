@@ -2004,7 +2004,17 @@ def test_assemble():
         ['MOVUPS XMMWORD PTR [edi+eax*1], xmm3',b'\x0f\x11\x1c\x07'],
         ['MOVUPS XMMWORD PTR [edi+eax*1], xmm4',b'\x0f\x11\x24\x07'],
 
+        ['MOVZX bp, BYTE PTR [edx]',        b'\x66\x0f\xb6\x2a'],
+        ['MOVZX cx, BYTE PTR [ebp+0x19]',   b'\x66\x0f\xb6\x4d\x19'],
+        ['MOVZX si, BYTE PTR [esp+0x3c]',   b'\x66\x0f\xb6\x74\x24\x3c'],
+        ['MOVZX ax, al',                    b'\x66\x0f\xb6\xc0'],
+        ['MOVZX dx, dl',                    b'\x66\x0f\xb6\xd2'],
+        ['MOVZX eax, BYTE PTR [ebp+0x6e]',  b'\x0f\xb6\x45\x6e'],
+        ['MOVZX esi, bl',                   b'\x0f\xb6\xf3'],
+        ['MOVZX eax, WORD PTR [ebx+0xe]',   b'\x0f\xb7\x43\x0e'],
         ['MOVZX eax, WORD PTR [ebp-0x2c]',  b'\x0f\xb7\x45\xd4'],
+        ['MOVZX ecx, dx',                   b'\x0f\xb7\xca'],
+
         ['MUL BYTE PTR [ebx+0x66]',         b'\xf6\x63\x66'],
         ['MUL DWORD PTR [edi]',             b'\xf7\x27'],
         ['MUL DWORD PTR [esp+0x30]',        b'\xf7\x64\x24\x30'],

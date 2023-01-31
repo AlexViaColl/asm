@@ -5845,7 +5845,68 @@ def assemble(line, state):
         else:
             assert False
     elif opcode == 'MOVZX':
-        return b'\x0f\xb7\x45\xd4'
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            if tokens[3].value in REGISTERS16:
+                src = REGISTERS16.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x0f\xb7' + pack('<B', modrm)
+            elif tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x0f\xb6' + pack('<B', modrm)
+            elif tokens[3].value == 'BYTE':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    return b'\x0f\xb6\x2a'
+                elif tokens[7].value == '+':
+                    disp = int(tokens[8].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        return b'\x0f\xb6\x74\x24' + pack('<B', disp)
+                    else:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0f\xb6' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[3].value == 'WORD':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    return b'\x0f\xb7\x2a'
+                elif tokens[7].value == '+':
+                    disp = int(tokens[8].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        return b'\x0f\xb7\x74\x24' + pack('<B', disp)
+                    else:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0f\xb7' + pack('<B', modrm) + pack('<B', disp)
+                elif tokens[7].value == '-':
+                    disp = int(tokens[8].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        return b'\x0f\xb7\x74\x24' + pack('<b', -disp)
+                    else:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0f\xb7' + pack('<B', modrm) + pack('<b', -disp)
+        elif tokens[1].value in REGISTERS16:
+            dst = REGISTERS16.index(tokens[1].value)
+            if tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x66\x0f\xb6' + pack('<B', modrm)
+            elif tokens[3].value == 'BYTE':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    return b'\x66\x0f\xb6\x2a'
+                elif tokens[7].value == '+':
+                    disp = int(tokens[8].value, base=16)
+                    if base == REGISTERS.index('esp'):
+                        return b'\x66\x0f\xb6\x74\x24' + pack('<B', disp)
+                    else:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x66\x0f\xb6' + pack('<B', modrm) + pack('<B', disp)
     elif opcode == 'MOVS':
         if tokens[1].value == 'BYTE':
             return b'\xa4'
