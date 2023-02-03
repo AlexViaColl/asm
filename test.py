@@ -1489,6 +1489,12 @@ def test_assemble():
         ['FIDIV DWORD PTR [esp+0x84]',      b'\xda\xb4\x24\x84\x00\x00\x00'],
         ['FIDIV DWORD PTR [edi+0x28]',      b'\xda\x77\x28'],
         ['FIDIVR WORD PTR [edi+0x0]',       b'\xde\x7f\x00'],
+
+        ['FILD DWORD PTR [esp+0x1c]',       b'\xdb\x44\x24\x1c'],
+        ['FILD WORD PTR [edx+0x0]',         b'\xdf\x42\x00'],
+        ['FILD QWORD PTR fs:[ecx+0x0]',     b'\x64\xdf\x69\x00'],
+        #['FILD QWORD PTR [ecx+0x0]',        b'\x9b\xdf\x69\x00'],
+
         ['FIMUL DWORD PTR [edx+0x0]',       b'\xda\x4a\x00'],
         ['FIMUL DWORD PTR [esp+0x14]',      b'\xda\x4c\x24\x14'],
         ['FIMUL DWORD PTR [esp+0x1c]',      b'\xda\x4c\x24\x1c'],
