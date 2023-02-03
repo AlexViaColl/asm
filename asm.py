@@ -4616,11 +4616,76 @@ def assemble(line, state):
                             modrm = 0b10111000 | base
                             return b'\xf7' + pack('<B', modrm) + pack('<I', disp)
     elif opcode == 'IMUL':
-        dst = REGISTERS.index(tokens[1].value)
-        assert tokens[2].value == ','
-        src = REGISTERS.index(tokens[3].value)
-        modrm = 0b11000000 | dst << 3 | src
-        return b'\x0f\xaf' + pack('<B', modrm)
+        if tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            if len(tokens) == 2:
+                modrm = 0b11101000 | dst
+                return b'\xf7' + pack('<B', modrm)
+            else:
+                assert tokens[2].value == ','
+                if tokens[3].value in REGISTERS:
+                    src = REGISTERS.index(tokens[3].value)
+                    if len(tokens) == 4:
+                        modrm = 0b11000000 | dst << 3 | src
+                        return b'\x0f\xaf' + pack('<B', modrm)
+                    else:
+                        assert tokens[4].value == ','
+                        im = int(tokens[5].value, base=16)
+                        return b'\x6b\xda' + pack('<B', im)
+                elif tokens[3].value == 'DWORD':
+                    assert tokens[4].value == 'PTR'
+                    assert tokens[5].value == '['
+                    base = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '+'
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    if len(tokens) == 10:
+                        mod = b''
+                        if base == REGISTERS.index('esp'):
+                            mod = b'\x24'
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\x0f\xaf' + pack('<B', modrm) + mod + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | dst << 3 | base
+                            return b'\x0f\xaf' + pack('<B', modrm) + mod + pack('<I', disp)
+                    else:
+                        im = int(tokens[11].value, base=16)
+                        modrm = 0b01000000 | dst << 3 | base
+                        if im <= 0x7f or im > 0xffffff00:
+                            return b'\x6b' + pack('<B', modrm) + pack('<B', disp) + pack('<B', im & 0xff)
+                        else:
+                            return b'\x69' + pack('<B', modrm) + pack('<B', disp) + pack('<I', im)
+        elif tokens[1].value == 'BYTE':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xf6\x64\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01100000 | base
+                    return b'\xf6' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == ']':
+                modrm = 0b00100000 | base
+                return b'\xf6' + pack('<B', modrm)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                if base == REGISTERS.index('esp'):
+                    return b'\xf7\x64\x24' + pack('<B', disp)
+                else:
+                    modrm = 0b01100000 | base
+                    return b'\xf7' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == ']':
+                modrm = 0b00100000 | base
+                return b'\xf7' + pack('<B', modrm)
     elif opcode == 'IN':
         if tokens[1].value == 'al':
             assert tokens[2].value == ','
