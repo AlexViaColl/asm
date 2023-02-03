@@ -1606,6 +1606,9 @@ def test_assemble():
         ['FSIN',                            b'\xd9\xfe'],
         ['FSINCOS',                         b'\xd9\xfb'],
         ['FSQRT',                           b'\xd9\xfa'],
+
+        ['FST DWORD PTR [esi+0xd4]',        b'\xd9\x96\xd4\x00\x00\x00'],
+
         ['FSTCW WORD PTR [esp]',            b'\x9b\xd9\x3c\x24'],
         ['FSTCW WORD PTR [ebp-0x4]',        b'\x9b\xd9\x7d\xfc'],
         ['FSTCW WORD PTR [ebp-0x2]',        b'\x9b\xd9\x7d\xfe'],

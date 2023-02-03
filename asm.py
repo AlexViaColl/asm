@@ -4366,6 +4366,19 @@ def assemble(line, state):
         return b'\xd9\xfb'
     elif opcode == 'FSQRT':
         return b'\xd9\xfa'
+    elif opcode == 'FST':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            return b'\xdd' + pack('<B', 0xd0 + i)
+        elif tokens[1].value in ['DWORD', 'TBYTE', 'QWORD']:
+            return mxxfp(tokens, {
+                'DWORD': [b'\xd9', 2],
+                'QWORD': [b'\xdd', 2],
+            })
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FSTCW':
         assert tokens[1].value == 'WORD'
         assert tokens[2].value == 'PTR'
