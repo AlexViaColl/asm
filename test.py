@@ -1442,6 +1442,8 @@ def test_assemble():
         ['FCOM st(5)',                      b'\xd8\xd5'],
         ['FCOM QWORD PTR [ecx+edi*1]',      b'\xdc\x14\x39'],
         ['FCOM QWORD PTR ds:0x87a778',      b'\xdc\x15\x78\xa7\x87\x00'],
+        ['FCOMP st(1)',                     b'\xd8\xd9'],
+        ['FCOMP DWORD PTR ds:0x86e70c',     b'\xd8\x1d\x0c\xe7\x86\x00'],
         ['FCOMPP',                          b'\xde\xd9'],
         ['FCOS',                            b'\xd9\xff'],
         ['FDECSTP',                         b'\xd9\xf6'],

@@ -3770,6 +3770,19 @@ def assemble(line, state):
                             return op + pack('<B', modrm) + pack('<i', -isp)
         else:
             assert False
+    elif opcode == 'FCOMP':
+        if tokens[1].value == 'st':
+            assert tokens[2].value == '('
+            i = int(tokens[3].value)
+            assert tokens[4].value == ')'
+            return b'\xd8' + pack('<B', 0xd8 + i)
+        elif tokens[1].value in ['DWORD', 'QWORD']:
+            return mxxfp(tokens, {
+                'DWORD': [b'\xd8', 3],
+                'QWORD': [b'\xdc', 3],
+            })
+        else:
+            assert False, 'Not implemented'
     elif opcode == 'FCOMPP':
         return b'\xde\xd9'
     elif opcode.startswith('FCOM'):
