@@ -2106,7 +2106,15 @@ def test_assemble():
         ['NOT BYTE PTR [eax]',              b'\xf6\x10'],
         ['NOT cl',                          b'\xf6\xd1'],
         ['NOT ecx',                         b'\xf7\xd1'],
+
+        ['OR DWORD PTR [ecx], ecx',         b'\x09\x09'],
+        ['OR edx, eax',                     b'\x0b\xd0'],
+        ['OR al, 0x1',                      b'\x0c\x01'],
+        ['OR eax, 0xfffff000',              b'\x0d\x00\xf0\xff\xff'],
+        ['OR edi, 0xfffff000',              b'\x81\xcf\x00\xf0\xff\xff'],
         ['OR ecx, 0xffffffff',              b'\x83\xc9\xff'],
+        ['OR edi, 0xffffffff',              b'\x83\xcf\xff'],
+
         ['ORPS xmm2, XMMWORD PTR [esp+0x10]',b'\x0f\x56\x54\x24\x10'],
         ['ORPS xmm2, xmm5',                 b'\x0f\x56\xd5'],
         ['OUT 0x42, al',                    b'\xe6\x42'],

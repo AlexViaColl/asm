@@ -6606,7 +6606,38 @@ def assemble(line, state):
             src = REGISTERS8.index(tokens[9].value)
             modrm = 0b01000000 | src << 3 | base
             return b'\x08' + pack('<B', modrm) + pack('<B', disp)
-        return b'\x83\xc9\xff'
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            assert tokens[5].value == ']'
+            assert tokens[6].value == ','
+            src = REGISTERS.index(tokens[7].value)
+            modrm = 0b00000000 | src << 3 | base
+            return b'\x09' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            assert tokens[2].value == ','
+            im = int(tokens[3].value, base=16)
+            return b'\x0c' + pack('<B', im & 0xff)
+        elif tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS:
+                src = REGISTERS.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x0b' + pack('<B', modrm)
+            else:
+                im = int(tokens[3].value, base=16)
+
+                if dst == REGISTERS.index('eax') and im > 0x7f and im < 0xffffff00:
+                    return b'\x0d' + pack('<I', im)
+
+                modrm = 0b11001000 | dst
+                if im <= 0x7f or im > 0xffffff00:
+                    return b'\x83' + pack('<B', modrm) + pack('<B', im & 0xff)
+                else:
+                    return b'\x81' + pack('<B', modrm) + pack('<I', im)
     elif opcode == 'ORPS':
         dst = REGISTERSXMM.index(tokens[1].value)
         if tokens[3].value in REGISTERSXMM:
