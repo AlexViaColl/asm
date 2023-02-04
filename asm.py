@@ -6597,40 +6597,379 @@ def assemble(line, state):
     elif opcode == 'OR':
         if tokens[1].value == 'BYTE':
             assert tokens[2].value == 'PTR'
-            assert tokens[3].value == '['
-            base = REGISTERS.index(tokens[4].value)
-            assert tokens[5].value == '+'
-            disp = int(tokens[6].value, base=16)
-            assert tokens[7].value == ']'
-            assert tokens[8].value == ','
-            src = REGISTERS8.index(tokens[9].value)
-            modrm = 0b01000000 | src << 3 | base
-            return b'\x08' + pack('<B', modrm) + pack('<B', disp)
-        elif tokens[1].value == 'DWORD':
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                assert tokens[6].value == ','
+                im = int(tokens[7].value, base=16)
+                return b'\x80\x0d' + pack('<I', m) + pack('<B', im)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    assert tokens[6].value == ','
+                    if tokens[7].value in REGISTERS8:
+                        src = REGISTERS8.index(tokens[7].value)
+                        modrm = 0b00000000 | src << 3 | base
+                        return b'\x08' + pack('<B', modrm)
+                    else:
+                        im = int(tokens[7].value, base=16)
+                        modrm = 0b00001000 | base
+                        return b'\x80' + pack('<B', modrm) + pack('<B', im)
+                elif tokens[5].value == '+':
+                    if tokens[6].value == 'eiz':
+                        return b'\x08\x64\x66\x00'
+                    elif tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = get_scale(tokens[8].value)
+                        if tokens[9].value == ']':
+                            assert tokens[10].value == ','
+                            if tokens[11].value in REGISTERS8:
+                                src = REGISTERS8.index(tokens[11].value)
+                                modrm = 0b00000100 | src << 3
+                                sib = 0b00000000 | scale << 6 | idx << 3 | base
+                                return b'\x08' + pack('<B', modrm) + pack('<B', sib)
+                            else:
+                                im = int(tokens[11].value, base=16)
+                                modrm = 0b00001100
+                                sib = 0b00000000 | scale << 6 | idx << 3 | base
+                                return b'\x80' + pack('<B', modrm) + pack('<B', sib) + pack('<B', im)
+                        elif tokens[9].value == '+':
+                            disp = int(tokens[10].value, base=16)
+                            assert tokens[11].value == ']'
+                            assert tokens[12].value == ','
+                            im = int(tokens[13].value, base=16)
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            if disp <= 0x7f:
+                                modrm = 0b01001100
+                                return b'\x80' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<B', im)
+                            else:
+                                modrm = 0b01001100
+                                return b'\x80' + pack('<B', modrm) + pack('<B', sib) + pack('<B', disp) + pack('<B', im)
+                        else:
+                            assert False
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        assert tokens[7].value == ']'
+                        assert tokens[8].value == ','
+                        mod = b''
+                        if base == REGISTERS.index('esp'):
+                            mod = b'\x24'
+                        if tokens[9].value in REGISTERS8:
+                            src = REGISTERS8.index(tokens[9].value)
+                            if disp <= 0x7f:
+                                modrm = 0b01000000 | src << 3 | base
+                                return b'\x08' + pack('<B', modrm) + mod + pack('<B', disp)
+                            else:
+                                modrm = 0b10000000 | src << 3 | base
+                                return b'\x08' + pack('<B', modrm) + mod + pack('<I', disp)
+                        else:
+                            im = int(tokens[9].value, base=16)
+                            if disp <= 0x7f:
+                                modrm = 0b01001000 | base
+                                return b'\x80' + pack('<B', modrm) + mod + pack('<B', disp) + pack('<B', im)
+                            else:
+                                modrm = 0b10001000 | base
+                                return b'\x80' + pack('<B', modrm) + mod + pack('<I', disp) + pack('<B', im)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    if tokens[9].value in REGISTERS8:
+                        src = REGISTERS8.index(tokens[9].value)
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | src << 3 | base
+                            return b'\x08' + pack('<B', modrm) + pack('<b', -disp)
+                        else:
+                            modrm = 0b10000000 | src << 3 | base
+                            return b'\x08' + pack('<B', modrm) + pack('<i', -disp)
+                    else:
+                        im = int(tokens[9].value, base=16)
+                        if disp <= 0x7f:
+                            modrm = 0b01001000 | base
+                            return b'\x80' + pack('<B', modrm) + pack('<b', -disp) + pack('<B', im)
+                        else:
+                            modrm = 0b10001000 | base
+                            return b'\x80' + pack('<B', modrm) + pack('<i', -disp) + pack('<B', im)
+        elif tokens[1].value in ['DWORD', 'WORD']:
+            prefix = b''
+            if tokens[1].value == 'WORD':
+                prefix = b'\x66'
             assert tokens[2].value == 'PTR'
-            assert tokens[3].value == '['
-            base = REGISTERS.index(tokens[4].value)
-            assert tokens[5].value == ']'
-            assert tokens[6].value == ','
-            src = REGISTERS.index(tokens[7].value)
-            modrm = 0b00000000 | src << 3 | base
-            return b'\x09' + pack('<B', modrm)
+            if tokens[3].value == 'ds':
+                m = int(tokens[5].value, base=16)
+                assert tokens[6].value == ','
+                if tokens[7].value in REGISTERS:
+                    src = REGISTERS.index(tokens[7].value)
+                    modrm = 0b00000101
+                    return prefix + b'\x09' + pack('<B', modrm) + pack('<I', m)
+                else:
+                    im = int(tokens[7].value, base=16)
+                    if im <= 0x7f or im >= 0xffffff00:
+                        return prefix + b'\x83\x0d' + pack('<I', m) + pack('<B', im & 0xff)
+                    else:
+                        fmt = {'WORD': '<H', 'DWORD': '<I'}[tokens[1].value]
+                        return prefix + b'\x81\x0d' + pack('<I', m) + pack(fmt, im)
+            elif tokens[3].value == '[':
+                base = REGISTERS.index(tokens[4].value)
+                if tokens[5].value == ']':
+                    assert tokens[6].value == ','
+                    if tokens[7].value in REGISTERS:
+                        src = REGISTERS.index(tokens[7].value)
+                        modrm = 0b00000000 | src << 3 | base
+                        return b'\x09' + pack('<B', modrm)
+                    if tokens[7].value in REGISTERS16:
+                        src = REGISTERS16.index(tokens[7].value)
+                        modrm = 0b00000000 | src << 3 | base
+                        return prefix + b'\x09' + pack('<B', modrm)
+                    else:
+                        im = int(tokens[7].value, base=16)
+                        if im <= 0x7f or im >= 0xffffff00:
+                            modrm = 0b00001000 | base
+                            return b'\x83' + pack('<B', modrm) + pack('<B', im & 0xff)
+                        else:
+                            modrm = 0b00001000 | base
+                            fmt = '<I'
+                            if tokens[1].value == 'WORD':
+                                fmt = '<H'
+                            return prefix + b'\x81' + pack('<B', modrm) + pack(fmt, im)
+                elif tokens[5].value == '+':
+                    if tokens[6].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[6].value)
+                        assert tokens[7].value == '*'
+                        scale = get_scale(tokens[8].value)
+                        if tokens[9].value == ']':
+                            assert tokens[10].value == ','
+                            im = int(tokens[11].value, base=16)
+                            modrm = 0b00001100
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            if tokens[1].value == 'WORD':
+                                fmt = '<H'
+                            else:
+                                fmt = '<I'
+                            if im <= 0x7f or im >= 0xffffff00:
+                                return prefix + b'\x83' + pack('<B', modrm) + pack('<B', sib) + pack('<B', im & 0xff)
+                            else:
+                                return prefix + b'\x81' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, im)
+                        elif tokens[9].value in ['+', '-']:
+                            fmt = {'+': '<B', '-': '<b'}[tokens[9].value]
+                            sign = {'+': 1, '-': -1}[tokens[9].value]
+                            disp = int(tokens[10].value, base=16)
+                            assert tokens[11].value == ']'
+                            assert tokens[12].value == ','
+                            if tokens[13].value in REGISTERS:
+                                src = REGISTERS.index(tokens[13].value)
+                                modrm = 0b01000100 | src << 3
+                                sib = 0b00000000 | scale << 6 | idx << 3 | base
+                                return b'\x09' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, sign*disp)
+                            else:
+                                im = int(tokens[13].value, base=16)
+                                modrm = 0b01001100
+                                sib = 0b00000000 | scale << 6 | idx << 3 | base
+                                return b'\x83' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, sign*disp) + pack('<B', im & 0xff)
+                    else:
+                        disp = int(tokens[6].value, base=16)
+                        assert tokens[7].value == ']'
+                        assert tokens[8].value == ','
+                        if tokens[9].value in REGISTERS:
+                            src = REGISTERS.index(tokens[9].value)
+                        elif tokens[9].value in REGISTERS16:
+                            src = REGISTERS16.index(tokens[9].value)
+                        else:
+                            im = int(tokens[9].value, base=16)
+                            modrm = 0b01001000 | base
+                            if im <= 0x7f or im >= 0xffffff00:
+                                if disp <= 0x7f:
+                                    return prefix + b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', im & 0xff)
+                                else:
+                                    modrm = 0b10001000 | base
+                                    return prefix + b'\x83' + pack('<B', modrm) + pack('<I', disp) + pack('<B', im & 0xff)
+                            else:
+                                fmt = '<I'
+                                if tokens[1].value == 'WORD':
+                                    fmt = '<H'
+                                return prefix + b'\x81' + pack('<B', modrm) + pack('<B', disp) + pack(fmt, im)
+
+                        mod = b''
+                        if base == REGISTERS.index('esp'):
+                            mod = b'\x24'
+
+                        modrm = 0b01000000 | src << 3 | base
+                        if disp <= 0x7f:
+                            return prefix + b'\x09' + pack('<B', modrm) + mod + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | src << 3 | base
+                            return prefix + b'\x09' + pack('<B', modrm) + mod + pack('<I', disp)
+                elif tokens[5].value == '-':
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    if tokens[9].value in REGISTERS:
+                        src = REGISTERS.index(tokens[9].value)
+                        modrm = 0b01000101 | src << 3
+                        return b'\x09' + pack('<B', modrm) + pack('<b', -disp)
+                    else:
+                        im = int(tokens[9].value, base=16)
+                        modrm = 0b10001000 | base
+                        if disp <= 0x7f:
+                            modrm = 0b01001000 | base
+                            if tokens[1].value == 'WORD':
+                                return prefix + b'\x81' + pack('<B', modrm) + pack('<b', -disp) + pack('<H', im)
+                            else:
+                                return prefix + b'\x83' + pack('<B', modrm) + pack('<b', -disp) + pack('<B', im & 0xff)
+                        else:
+                            if tokens[1].value == 'WORD':
+                                return prefix + b'\x83' + pack('<B', modrm) + pack('<i', -disp) + pack('<H', im)
+                            else:
+                                if disp <= 0x7f:
+                                    return prefix + b'\x83' + pack('<B', modrm) + pack('<i', -disp) + pack('<B', im)
+                                else:
+                                    return prefix + b'\x83' + pack('<B', modrm) + pack('<i', -disp) + pack('<B', im)
         elif tokens[1].value in REGISTERS8:
             dst = REGISTERS8.index(tokens[1].value)
             assert tokens[2].value == ','
-            im = int(tokens[3].value, base=16)
-            return b'\x0c' + pack('<B', im & 0xff)
+            if tokens[3].value in REGISTERS8:
+                src = REGISTERS8.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return b'\x0a' + pack('<B', modrm)
+            elif tokens[3].value == 'BYTE':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0a' + pack('<B', modrm)
+                elif tokens[7].value == '+':
+                    if tokens[8].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[8].value)
+                        assert tokens[9].value == '*'
+                        scale = get_scale(tokens[10].value)
+                        if tokens[11].value in ['+', '-']:
+                            fmt = {'+': '<B', '-': '<b'}[tokens[11].value]
+                            sign = {'+': 1, '-': -1}[tokens[11].value]
+                            disp = int(tokens[12].value, base=16)
+                            assert tokens[13].value == ']'
+                            modrm = 0b01111100
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\x0a' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, sign*disp)
+                    else:
+                        disp = int(tokens[8].value, base=16)
+                        assert tokens[9].value == ']'
+                        mod = b''
+                        if base == REGISTERS.index('esp'):
+                            mod = b'\x24'
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | dst << 3 | base
+                            return b'\x0a' + pack('<B', modrm) + mod + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | dst << 3 | base
+                            return b'\x0a' + pack('<B', modrm) + mod + pack('<I', disp)
+                elif tokens[7].value == '-':
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    if disp <= 0x7f:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0a' + pack('<B', modrm) + pack('<b', -disp)
+                    else:
+                        modrm = 0b10000000 | dst << 3 | base
+                        return b'\x0a' + pack('<B', modrm) + pack('<i', -disp)
+            else:
+                im = int(tokens[3].value, base=16)
+                if state['eip'] in [0x69d3d8]:
+                    modrm = 0b11001000 | dst
+                    return b'\x82' + pack('<B', modrm) + pack('<B', im & 0xff)
+
+                if dst == REGISTERS8.index('al'):
+                    return b'\x0c' + pack('<B', im & 0xff)
+                else:
+                    modrm = 0b11001000 | dst
+                    return b'\x80' + pack('<B', modrm) + pack('<B', im & 0xff)
+        elif tokens[1].value in REGISTERS16:
+            prefix = b'\x66'
+            dst = REGISTERS16.index(tokens[1].value)
+            assert tokens[2].value == ','
+            if tokens[3].value in REGISTERS16:
+                src = REGISTERS16.index(tokens[3].value)
+                modrm = 0b11000000 | dst << 3 | src
+                return prefix + b'\x0b' + pack('<B', modrm)
+            else:
+                im = int(tokens[3].value, base=16)
+                if dst == REGISTERS16.index('ax'):
+                    return prefix + b'\x0d' + pack('<H', im)
+                else:
+                    modrm = 0b11001000 | dst
+                    return prefix + b'\x81' + pack('<B', modrm) + pack('<H', im)
         elif tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
             if tokens[3].value in REGISTERS:
                 src = REGISTERS.index(tokens[3].value)
+
+                if state['eip'] in [0x4ae280, 0x69d438]:
+                    modrm = 0b11000000 | src << 3 | dst
+                    return b'\x09' + pack('<B', modrm)
+
                 modrm = 0b11000000 | dst << 3 | src
                 return b'\x0b' + pack('<B', modrm)
+            elif tokens[3].value == 'DWORD':
+                assert tokens[4].value == 'PTR'
+                assert tokens[5].value == '['
+                base = REGISTERS.index(tokens[6].value)
+                if tokens[7].value == ']':
+                    modrm = 0b00000000 | dst << 3 | base
+                    return b'\x0b' + pack('<B', modrm)
+                elif tokens[7].value == '+':
+                    if tokens[8].value in REGISTERS:
+                        idx = REGISTERS.index(tokens[8].value)
+                        assert tokens[9].value == '*'
+                        scale = get_scale(tokens[10].value)
+                        if tokens[11].value == ']':
+                            modrm = 0b00000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            return b'\x0b' + pack('<B', modrm) + pack('<B', sib)
+                        elif tokens[11].value in ['+', '-']:
+                            sign = {'+': 1, '-': -1}[tokens[11].value]
+                            fmt = {'+': '<B', '-': '<b'}[tokens[11].value]
+                            disp = int(tokens[12].value, base=16)
+                            assert tokens[13].value == ']'
+                            sib = 0b00000000 | scale << 6 | idx << 3 | base
+                            if disp <= 0x7f:
+                                modrm = 0b01000100 | dst << 3
+                                return b'\x0b' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, sign*disp)
+                            else:
+                                fmt = {'+': '<I', '-': '<i'}[tokens[11].value]
+                                modrm = 0b10000100 | dst << 3
+                                return b'\x0b' + pack('<B', modrm) + pack('<B', sib) + pack(fmt, sign*disp)
+                    else:
+                        disp = int(tokens[8].value, base=16)
+                        assert tokens[9].value == ']'
+                        modrm = 0b01000000 | dst << 3 | base
+                        mod = b''
+                        if base == REGISTERS.index('esp'):
+                            mod = b'\x24'
+                        if disp <= 0x7f:
+                            return b'\x0b' + pack('<B', modrm) + mod + pack('<B', disp)
+                        else:
+                            modrm = 0b10000000 | dst << 3 | base
+                            return b'\x0b' + pack('<B', modrm) + mod + pack('<I', disp)
+                elif tokens[7].value == '-':
+                    disp = int(tokens[8].value, base=16)
+                    assert tokens[9].value == ']'
+                    if disp <= 0x7f:
+                        modrm = 0b01000000 | dst << 3 | base
+                        return b'\x0b' + pack('<B', modrm) + pack('<b', -disp)
+                    else:
+                        modrm = 0b10000000 | dst << 3 | base
+                        return b'\x0b' + pack('<B', modrm) + pack('<i', -disp)
+                elif tokens[7].value == '*':
+                    scale = get_scale(tokens[8].value)
+                    assert tokens[9].value == '+'
+                    disp = int(tokens[10].value, base=16)
+                    assert tokens[11].value == ']'
+                    return b'\x0b\x0c\x0d' + pack('<I', disp)
             else:
                 im = int(tokens[3].value, base=16)
 
-                if dst == REGISTERS.index('eax') and im > 0x7f and im < 0xffffff00:
+                if dst == REGISTERS.index('eax') and im > 0x7f and im <= 0xffffff00:
                     return b'\x0d' + pack('<I', im)
 
                 modrm = 0b11001000 | dst
