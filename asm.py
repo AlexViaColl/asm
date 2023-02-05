@@ -2134,12 +2134,7 @@ def mxxfp(tokens, op_mod ):
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         if tokens[9].value == '-':
                             im = -int(tokens[10].value, base=16)
                             sib = 0b00000000 | scale << 6 | idx << 3 | reg
@@ -2183,12 +2178,7 @@ def mxxfp(tokens, op_mod ):
                                 modrm = 0b10000000 | mod << 3 | reg
                                 return prefix + op + pack('<B', modrm) + pack('<I', disp)
                 elif tokens[5].value == '*':
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[6].value]
+                    scale = get_scale(tokens[6].value)
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     modrm = 0b00000100 | mod << 3
@@ -2317,12 +2307,7 @@ def assemble(line, state):
                 if tokens[6].value in REGISTERS:
                     idx = REGISTERS.index(tokens[6].value)
                     assert tokens[7].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[8].value]
+                    scale = get_scale(tokens[8].value)
                     sib = 0b00000000 | scale << 6 | idx << 3 | reg
                     if tokens[9].value == ']':
                         assert tokens[10].value == ','
@@ -2401,12 +2386,7 @@ def assemble(line, state):
                     if tokens[8].value in REGISTERS:
                         idx = REGISTERS.index(tokens[8].value)
                         assert tokens[9].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[10].value]
+                        scale = get_scale(tokens[10].value)
                         if tokens[11].value == ']':
                             sib = 0b00000000 | scale << 6 | idx << 3 | reg
                             return b'\x12\x14' + pack('<B', sib)
@@ -2481,12 +2461,7 @@ def assemble(line, state):
                         if tokens[8].value in REGISTERS:
                             idx = REGISTERS.index(tokens[8].value)
                             assert tokens[9].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[10].value]
+                            scale = get_scale(tokens[10].value)
                             if tokens[11].value == ']':
                                 modrm = 0b00000100 | dst << 3
                                 sib = 0b00000000 | scale << 6 | idx << 3 | reg
@@ -2503,12 +2478,7 @@ def assemble(line, state):
                             modrm = 0b01000000 | dst << 3 | reg
                             return prefix + b'\x13' + pack('<B', modrm) + pack('<B', disp)
                     elif tokens[7].value == '*':
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         assert tokens[9].value == '+'
                         disp = int(tokens[10].value, base=16)
                         assert tokens[11].value == ']'
@@ -2548,12 +2518,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         if tokens[9].value == '+':
                             disp = int(tokens[10].value, base=16)
                             assert tokens[11].value == ']'
@@ -2603,12 +2568,7 @@ def assemble(line, state):
                         modrm = 0b10000000 | src << 3 | reg
                         return b'\x00' + pack('<B', modrm) + pack('<i', disp)
                 elif tokens[5].value == '*':
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[6].value]
+                    scale = get_scale(tokens[6].value)
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     assert tokens[9].value == ']'
@@ -2972,12 +2932,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         disp = int(tokens[10].value, base=16)
                         assert tokens[11].value == ']'
                         assert tokens[12].value == ','
@@ -3048,12 +3003,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         reg = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         if tokens[9].value == '+':
                             disp = int(tokens[10].value, base=16)
                             sib = 0b10000000 | reg << 3 | base
@@ -3096,12 +3046,7 @@ def assemble(line, state):
                         modrm = 0b10010000 | base
                         return b'\xff' + pack('<B', modrm) + pack('<i', disp)
                 elif tokens[5].value == '*':
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[6].value]
+                    scale = get_scale(tokens[6].value)
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     modrm = 0b00010100
@@ -3188,12 +3133,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         base = REGISTERS.index(tokens[6].value)
                         if tokens[7].value == '*':
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[8].value]
+                            scale = get_scale(tokens[8].value)
                             if tokens[9].value == ']':
                                 assert tokens[10].value == ','
                                 if tokens[11].value in REGISTERS:
@@ -3303,12 +3243,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         base = REGISTERS.index(tokens[6].value)
                         if tokens[7].value == '*':
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[8].value]
+                            scale = get_scale(tokens[8].value)
                             if tokens[9].value == ']':
                                 assert tokens[10].value == ','
                                 if tokens[11].value in REGISTERS:
@@ -3406,12 +3341,7 @@ def assemble(line, state):
                             if tokens[8].value in REGISTERS:
                                 idx = REGISTERS.index(tokens[8].value)
                                 assert tokens[9].value == '*'
-                                scale = {
-                                    '1': 0b00,
-                                    '2': 0b01,
-                                    '4': 0b10,
-                                    '8': 0b11,
-                                }[tokens[10].value]
+                                scale = get_scale(tokens[10].value)
                                 if tokens[11].value == '+':
                                     disp = int(tokens[12].value, base=16)
                                     assert tokens[13].value == ']'
@@ -3478,12 +3408,7 @@ def assemble(line, state):
                     if tokens[8].value in REGISTERS:
                         idx = REGISTERS.index(tokens[8].value)
                         assert tokens[9].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[10].value]
+                        scale = get_scale(tokens[10].value)
                         if tokens[11].value == '+':
                             assert False
                         elif tokens[11].value == '-':
@@ -3824,12 +3749,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         assert tokens[9].value == ']'
                         modrm = 0b00000000 | scale << 6 | idx << 3 | base
                         return op + b'\x14' + pack('<B', modrm)
@@ -4059,12 +3979,7 @@ def assemble(line, state):
                     if tokens[6].value in REGISTERS:
                         idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         assert tokens[9].value == '+'
                         disp = int(tokens[10].value, base=16)
                         sib = 0b00000000 | scale << 6 | idx << 3 | base
@@ -4077,12 +3992,7 @@ def assemble(line, state):
                         else:
                             assert False
                 elif tokens[5].value == '*':
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[6].value]
+                    scale = get_scale(tokens[6].value)
                     assert tokens[7].value == '+'
                     disp = int(tokens[8].value, base=16)
                     modrm = 0b00110100
@@ -4226,12 +4136,7 @@ def assemble(line, state):
                         if tokens[6].value in REGISTERS:
                             idx = REGISTERS.index(tokens[6].value)
                             assert tokens[7].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[8].value]
+                            scale = get_scale(tokens[8].value)
                             if tokens[9].value == '-':
                                 im = int(tokens[10].value, base=16)
                                 sib = 0b00000000 | scale << 6 | idx << 3 | reg
@@ -4278,12 +4183,7 @@ def assemble(line, state):
                                     modrm = 0b10000000 | reg
                                     return op + pack('<B', modrm) + pack('<I', disp)
                     elif tokens[5].value == '*':
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[6].value]
+                        scale = get_scale(tokens[6].value)
                         assert tokens[7].value == '+'
                         disp = int(tokens[8].value, base=16)
                         modrm = 0b00000100
@@ -4859,12 +4759,7 @@ def assemble(line, state):
             assert tokens[3].value == '['
             if tokens[4].value in REGISTERS:
                 if tokens[5].value == '*':
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[6].value]
+                    scale = get_scale(tokens[6].value)
                     if tokens[7].value == '+':
                         disp = int(tokens[8].value, base=16)
                         assert tokens[9].value == ']'
@@ -4955,12 +4850,7 @@ def assemble(line, state):
             if tokens[6].value in REGISTERS:
                 reg = REGISTERS.index(tokens[6].value)
                 assert tokens[7].value == '*'
-                scale = {
-                    '1': 0b00,
-                    '2': 0b01,
-                    '4': 0b10,
-                    '8': 0b11,
-                }[tokens[8].value]
+                scale = get_scale(tokens[8].value)
                 if tokens[9].value == '+':
                     ib = int(tokens[10].value, base=16)
                     if base == REGISTERS.index('esp'):
@@ -5016,12 +4906,7 @@ def assemble(line, state):
                         modrm = 0b10000000 | dst << 3 | base
                         return b'\x8d' + pack('<B', modrm) + pack('<I', disp)
         elif tokens[5].value == '*':
-            scale = {
-                '1': 0b00,
-                '2': 0b01,
-                '4': 0b10,
-                '8': 0b11,
-            }[tokens[6].value]
+            scale = get_scale(tokens[6].value)
             modrm = 0b00000100 | dst << 3
             sib = 0b00000101 | scale << 6 | base << 3
             if tokens[7].value == '+':
@@ -5552,12 +5437,7 @@ def assemble(line, state):
                         if tokens[8].value in REGISTERS:
                             base = REGISTERS.index(tokens[8].value)
                             assert tokens[9].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[10].value]
+                            scale = get_scale(tokens[10].value)
                             sib = 0b00000000 | scale << 6 | base << 3 | reg
                             if tokens[11].value == ']':
                                 modrm = 0b00000100 | dst << 3
@@ -5671,12 +5551,7 @@ def assemble(line, state):
                         if tokens[8].value in REGISTERS:
                             idx = REGISTERS.index(tokens[8].value)
                             assert tokens[9].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[10].value]
+                            scale = get_scale(tokens[10].value)
                             sib = 0b000000000 | scale << 6 | idx << 3 | reg
                             if tokens[11].value == ']':
                                 modrm = 0b00000100 | dst << 3
@@ -5713,12 +5588,7 @@ def assemble(line, state):
                                     modrm = 0b10000000 | dst << 3 | reg
                                     return b'\x8b' + pack('<B', modrm) + pack('<I', disp)
                     elif tokens[7].value == '*':
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[8].value]
+                        scale = get_scale(tokens[8].value)
                         assert tokens[9].value == '+'
                         disp = int(tokens[10].value, base=16)
                         modrm = 0b00000100 | dst << 3
@@ -6058,12 +5928,7 @@ def assemble(line, state):
                 if tokens[6].value in REGISTERS:
                     idx = REGISTERS.index(tokens[6].value)
                     assert tokens[7].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[8].value]
+                    scale = get_scale(tokens[8].value)
                     assert tokens[9].value == ']'
                     assert tokens[10].value == ','
                     src = REGISTERSXMM.index(tokens[11].value)
@@ -6093,12 +5958,7 @@ def assemble(line, state):
                 if tokens[8].value in REGISTERS:
                     idx = REGISTERS.index(tokens[8].value)
                     assert tokens[9].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[10].value]
+                    scale = get_scale(tokens[10].value)
                     modrm = 0b00000100 | scale << 6 | dst << 3
                     return b'\x0f\x12' + pack('<B', modrm) + b'\x16'
                 else:
@@ -6394,12 +6254,7 @@ def assemble(line, state):
             elif tokens[5].value == '+':
                 if tokens[6].value in REGISTERS:
                     assert tokens[7].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[8].value]
+                    scale = get_scale(tokens[8].value)
                     assert tokens[9].value == '+'
                     disp = int(tokens[10].value, base=16)
                     assert tokens[11].value == ']'
@@ -6436,12 +6291,7 @@ def assemble(line, state):
                     if tokens[8].value in REGISTERS:
                         idx = REGISTERS.index(tokens[8].value)
                         assert tokens[9].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[10].value]
+                        scale = get_scale(tokens[10].value)
                         if tokens[11].value == ']':
                             sib = 0b00000000 | scale << 6 | idx << 3 | base
                             return b'\xf3\x0f\x10\x04' + pack('<B', sib)
@@ -6487,12 +6337,7 @@ def assemble(line, state):
                     if tokens[8].value in REGISTERS:
                         idx = REGISTERS.index(tokens[8].value)
                         assert tokens[9].value == '*'
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[10].value]
+                        scale = get_scale(tokens[10].value)
                         if tokens[11].value == ']':
                             modrm = 0b00000100 | dst << 3
                             sib = 0b00000000 | scale << 6 | idx << 3 | base
@@ -6549,12 +6394,7 @@ def assemble(line, state):
                 modrm = 0b00000000 | dst << 3 | base
                 return b'\x0f\xbf' + pack('<B', modrm)
             elif tokens[7].value == '*':
-                scale = {
-                    '1': 0b00,
-                    '2': 0b01,
-                    '4': 0b10,
-                    '8': 0b11,
-                }[tokens[8].value]
+                scale = get_scale(tokens[8].value)
                 assert tokens[9].value == '+'
                 disp = int(tokens[10].value, base=16)
                 assert tokens[11].value == ']'
@@ -6565,12 +6405,7 @@ def assemble(line, state):
                 if tokens[8].value in REGISTERS:
                     idx = REGISTERS.index(tokens[8].value)
                     assert tokens[9].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[10].value]
+                    scale = get_scale(tokens[10].value)
                     if tokens[11].value == ']':
                         modrm = 0b00000100 | dst << 3
                         sib = 0b00000000 | scale << 6 | idx << 3 | base
@@ -6623,12 +6458,7 @@ def assemble(line, state):
             elif tokens[5].value == '+':
                 idx = REGISTERS.index(tokens[6].value)
                 assert tokens[7].value == '*'
-                scale = {
-                    '1': 0b00,
-                    '2': 0b01,
-                    '4': 0b10,
-                    '8': 0b11,
-                }[tokens[8].value]
+                scale = get_scale(tokens[8].value)
                 assert tokens[9].value == ']'
                 assert tokens[10].value == ','
                 src = REGISTERSXMM.index(tokens[11].value)
@@ -7994,12 +7824,7 @@ def assemble(line, state):
                         if tokens[6].value in REGISTERS:
                             reg = REGISTERS.index(tokens[6].value)
                             assert tokens[7].value == '*'
-                            scale = {
-                                '1': 0b00,
-                                '2': 0b01,
-                                '4': 0b10,
-                                '8': 0b11,
-                            }[tokens[8].value]
+                            scale = get_scale(tokens[8].value)
                             if tokens[9].value == ']':
                                 modrm = 0b00110100
                                 sib = 0b00000000 | scale << 6 | reg << 3 | base
@@ -8039,12 +7864,7 @@ def assemble(line, state):
                             modrm = 0b10110101
                             return b'\xff' + pack('<B', modrm) + pack('<i', disp)
                     elif tokens[5].value == '*':
-                        scale = {
-                            '1': 0b00,
-                            '2': 0b01,
-                            '4': 0b10,
-                            '8': 0b11,
-                        }[tokens[6].value]
+                        scale = get_scale(tokens[6].value)
                         assert tokens[7].value == '+'
                         disp = int(tokens[8].value, base=16)
                         modrm = 0b00110100
@@ -9160,12 +8980,7 @@ def assemble(line, state):
                 if tokens[6].value in REGISTERS:
                     idx = REGISTERS.index(tokens[6].value)
                     assert tokens[7].value == '*'
-                    scale = {
-                        '1': 0b00,
-                        '2': 0b01,
-                        '4': 0b10,
-                        '8': 0b11,
-                    }[tokens[8].value]
+                    scale = get_scale(tokens[8].value)
                     assert tokens[9].value == '+'
                     disp = int(tokens[10].value, base=16)
                     assert tokens[11].value == ']'
