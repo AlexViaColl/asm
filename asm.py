@@ -2530,8 +2530,11 @@ def assemble(line, state):
 
                 reg = REGISTERS.index(tokens[4].value)
                 if tokens[5].value == '+':
-                    if tokens[6].value in REGISTERS:
-                        idx = REGISTERS.index(tokens[6].value)
+                    if tokens[6].value in REGISTERS or tokens[6].value == 'eiz':
+                        if tokens[6].value == 'eiz':
+                            idx = 0b100
+                        else:
+                            idx = REGISTERS.index(tokens[6].value)
                         assert tokens[7].value == '*'
                         scale = get_scale(tokens[8].value)
                         if tokens[9].value == '+':
@@ -2607,22 +2610,33 @@ def assemble(line, state):
             assert tokens[3].value == '['
             reg = REGISTERS.index(tokens[4].value)
             if tokens[5].value == '+':
-                disp = int(tokens[6].value, base=16)
-                assert tokens[7].value == ']'
-                assert tokens[8].value == ','
-                if tokens[9].value in REGISTERS:
-                    src = REGISTERS.index(tokens[9].value)
-                    modrm = 0b01000000 | src << 3 | reg
-                    mod = get_mod(reg)
-                    return b'\x01' + pack('<B', modrm) + mod + pack('<B', disp)
+                if tokens[6].value in REGISTERS:
+                    idx = REGISTERS.index(tokens[6].value)
+                    assert tokens[7].value == '*'
+                    scale = get_scale(tokens[8].value)
+                    assert tokens[9].value == ']'
+                    assert tokens[10].value == ','
+                    src = REGISTERS.index(tokens[11].value)
+                    modrm = 0b00000100 | src << 3
+                    sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                    return b'\x01' + pack('<B', modrm) + pack('<B', sib)
                 else:
-                    im = int(tokens[9].value, base=16) & 0xff
-                    if disp <= 0x7f:
-                        modrm = 0b01000000 | reg
-                        return b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', im)
+                    disp = int(tokens[6].value, base=16)
+                    assert tokens[7].value == ']'
+                    assert tokens[8].value == ','
+                    if tokens[9].value in REGISTERS:
+                        src = REGISTERS.index(tokens[9].value)
+                        modrm = 0b01000000 | src << 3 | reg
+                        mod = get_mod(reg)
+                        return b'\x01' + pack('<B', modrm) + mod + pack('<B', disp)
                     else:
-                        modrm = 0b10000000 | reg
-                        return b'\x83' + pack('<B', modrm) + pack('<I', disp) + pack('<B', im)
+                        im = int(tokens[9].value, base=16) & 0xff
+                        if disp <= 0x7f:
+                            modrm = 0b01000000 | reg
+                            return b'\x83' + pack('<B', modrm) + pack('<B', disp) + pack('<B', im)
+                        else:
+                            modrm = 0b10000000 | reg
+                            return b'\x83' + pack('<B', modrm) + pack('<I', disp) + pack('<B', im)
             elif tokens[5].value == '-':
                 disp = -int(tokens[6].value, base=16)
                 assert tokens[7].value == ']'
@@ -2660,24 +2674,54 @@ def assemble(line, state):
                 return b'\x02' + pack('<B', modrm)
             else:
                 ib = int(tokens[3].value, base=16)
-                return b'\x04' + pack('<B', ib)
+                if dst == REGISTERS8.index('al'):
+                    return b'\x04' + pack('<B', ib)
+                else:
+                    modrm = 0b11000000 | dst
+                    return b'\x80' + pack('<B', modrm) + pack('<B', ib)
         elif tokens[1].value in REGISTERS:
             dst = REGISTERS.index(tokens[1].value)
             assert tokens[2].value == ','
             if tokens[3].value == 'DWORD':
                 assert tokens[4].value == 'PTR'
-                assert tokens[5].value == '['
-                reg = REGISTERS.index(tokens[6].value)
-                if tokens[7].value == ']':
-                    modrm = 0b00000000 | dst << 3 | reg
-                    return b'\x03' + pack('<B', modrm)
-                elif tokens[7].value == '-':
-                    im = int(tokens[8].value, base=16)
-                    assert tokens[9].value == ']'
-                    modrm = 0b01000000 | dst << 3 | reg
-                    return b'\x03' + pack('<B', modrm) + pack('<b', -im)
-                else:
-                    assert False
+                if tokens[5].value == 'ds':
+                    m = int(tokens[7].value, base=16)
+                    modrm = 0b00000101 | dst << 3
+                    return b'\x03' + pack('<B', modrm) + pack('<I', m)
+                elif tokens[5].value == '[':
+                    reg = REGISTERS.index(tokens[6].value)
+                    if tokens[7].value == ']':
+                        modrm = 0b00000000 | dst << 3 | reg
+                        return b'\x03' + pack('<B', modrm)
+                    elif tokens[7].value == '+':
+                        if tokens[8].value in REGISTERS:
+                            idx = REGISTERS.index(tokens[8].value)
+                            assert tokens[9].value == '*'
+                            scale = get_scale(tokens[10].value)
+                            assert tokens[11].value == ']'
+                            modrm = 0b00000100 | dst << 3
+                            sib = 0b00000000 | scale << 6 | idx << 3 | reg
+                            return b'\x03' + pack('<B', modrm) + pack('<B', sib)
+                        else:
+                            im = int(tokens[8].value, base=16)
+                            assert tokens[9].value == ']'
+                            modrm = 0b01000000 | dst << 3 | reg
+                            return b'\x03' + pack('<B', modrm) + pack('<B', im)
+                    elif tokens[7].value == '-':
+                        im = int(tokens[8].value, base=16)
+                        assert tokens[9].value == ']'
+                        modrm = 0b01000000 | dst << 3 | reg
+                        return b'\x03' + pack('<B', modrm) + pack('<b', -im)
+                    elif tokens[7].value == '*':
+                        scale = get_scale(tokens[8].value)
+                        assert tokens[9].value == '+'
+                        disp = int(tokens[10].value, base=16)
+                        assert tokens[11].value == ']'
+                        modrm = 0b00000100 | dst << 3
+                        sib = 0b00000101 | scale << 6 | reg << 3
+                        return b'\x03' + pack('<B', modrm) + pack('<B', sib) + pack('<I', disp)
+                    else:
+                        assert False
             elif tokens[3].value in REGISTERS:
                 src = REGISTERS.index(tokens[3].value)
                 modrm = 0b11000000 | dst << 3 | src
@@ -2687,13 +2731,17 @@ def assemble(line, state):
 
                 if state['eip'] in [0x459f26]:
                     return b'\x05' + pack('<I', im)
+                if state['eip'] in [0x46f387, 0x46f3b0, 0x479f11]:
+                    modrm = 0b11000000 | dst
+                    return b'\x81' + pack('<B', modrm) + pack('<I', im)
 
                 if dst == REGISTERS.index('eax') and (im >= 0x80 and im < 0xffffff00):
                     return b'\x05' + pack('<I', im)
-                elif im <= 0x7f or im > 0xffffff00:
+                elif im <= 0x7f:# or im > 0xffffff00:
                     modrm = 0b11000000 | dst
                     return b'\x83' + pack('<B', modrm) + pack('<B', im & 0xff)
-                elif im >= 0xffffff00:
+                #elif im in [0xfffffffe, 0xfffffffc, 0xffffffee, 0xffffffe8, 0xfffffff3, 0xffffffa8]:
+                elif im > 0xffffff00:
                     modrm = 0b11000000 | dst
                     im = im & 0xff
                     return b'\x83' + pack('<B', modrm) + pack('<B', im)
