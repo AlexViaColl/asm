@@ -7466,7 +7466,34 @@ def assemble(line, state):
     elif opcode == 'MWAIT':
         return b'\x0f\x01\xc9'
     elif opcode == 'NEG':
-        assert False, 'Not implemented'
+        if tokens[1].value in REGISTERS8:
+            dst = REGISTERS8.index(tokens[1].value)
+            modrm = 0b11011000 | dst
+            return b'\xf6' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS16:
+            dst = REGISTERS16.index(tokens[1].value)
+            modrm = 0b11011000 | dst
+            return b'\x66\xf7' + pack('<B', modrm)
+        elif tokens[1].value in REGISTERS:
+            dst = REGISTERS.index(tokens[1].value)
+            modrm = 0b11011000 | dst
+            return b'\xf7' + pack('<B', modrm)
+        elif tokens[1].value == 'DWORD':
+            assert tokens[2].value == 'PTR'
+            assert tokens[3].value == '['
+            base = REGISTERS.index(tokens[4].value)
+            if tokens[5].value == '+':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                modrm = 0b01011000 | base
+                return b'\xf7' + pack('<B', modrm) + pack('<B', disp)
+            elif tokens[5].value == '-':
+                disp = int(tokens[6].value, base=16)
+                assert tokens[7].value == ']'
+                modrm = 0b01011000 | base
+                return b'\xf7' + pack('<B', modrm) + pack('<b', -disp)
+        else:
+            assert False
     elif opcode == 'NOP':
         if len(tokens) == 1:
             return b'\x90'
