@@ -141,30 +141,6 @@ def assemble_xxps(tokens, op, word = 'XMMWORD'):
     else:
         assert False
 
-def assemble_adx(tokens, state):
-    if tokens[1].value == 'BYTE':
-        pass
-    elif tokens[1].value == 'WORD':
-        pass
-    elif tokens[1].value == 'DWORD':
-        pass
-    elif tokens[1].value in REGISTERS8:
-        dst = REGISTERS8.index(tokens[1].value)
-        assert tokens[2].value == ','
-        if tokens[3].value in REGISTERS8:
-            pass
-        elif tokens[3].value == 'BYTE':
-            pass
-        else:
-            im = int(tokens[3].value, base=16)
-            op = {'ADC': b'\x14', 'ADD': b'\x04'}[tokens[0].value]
-    elif tokens[1].value in REGISTERS16:
-        dst = REGISTERS16.index(tokens[1].value)
-    elif tokens[1].value in REGISTERS:
-        dst = REGISTERS.index(tokens[1].value)
-    else:
-        assert False
-
 def assemble_adc(tokens, state):
     if tokens[1].value == 'BYTE':
         assert tokens[2].value == 'PTR'
@@ -6325,10 +6301,6 @@ def assemble(line, state):
         return b'\x0f\xaa'
     elif opcode == 'RSQRTSS':
         return b'\xf3' + assemble_xxps(tokens, 0x52)
-        dst = REGISTERSXMM.index(tokens[1].value)
-        src = REGISTERSXMM.index(tokens[3].value)
-        modrm = 0b11000000 | dst << 3 | src
-        return b'\xf3\x0f\x52' + pack('<B', modrm)
     elif opcode.startswith('RS'):
         assert False, 'Not implemented'
     elif opcode == 'SAHF':
